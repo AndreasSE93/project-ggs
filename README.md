@@ -20,7 +20,7 @@ Design patterns
 Server
 ------
 * Ideas
-  *Create a simple server package for our implementation?
+  * Create a simple server package for our implementation?
 
 Stage 1:
 * Be able to start a generic game server. 
@@ -31,3 +31,9 @@ Client
 ------
 
 * Communication to the server
+
+
+
+Thinking
+------
+*  [One way of seeing a problem](https://groups.google.com/forum/#!topic/golang-nuts/I5jajojO10o)
