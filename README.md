@@ -19,8 +19,8 @@ Design patterns
 
 Server
 ------
-Ideas:
-*Create a simple server package for our implementation maybe??
+* Ideas
+  *Create a simple server package for our implementation?
 
 Stage 1:
 * Be able to start a generic game server. 
