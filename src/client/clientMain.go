@@ -1,3 +1,5 @@
+// JUST A SIMPLE CLIENT START, SENDING SOMETHING
+
 package main
 
 import (

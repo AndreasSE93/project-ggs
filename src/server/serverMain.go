@@ -1,3 +1,5 @@
+// JUST A SIMPLE SERVER START, INITIATING A SIMPLE LISTENER
+
 package main
 
 import (
