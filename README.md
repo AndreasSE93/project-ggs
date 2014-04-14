@@ -1,11 +1,11 @@
 Project
 =======
 
-==GO LANG DOCUMENTATION==
-http://golang.org/doc/
+* GO LANG DOCUMENTATION 
+  * [Documentation Root](http://golang.org/doc/)
 
-==GO PACKAGES LIBRARY==
-http://golang.org/pkg/
+* GO PACKAGES LIBRARY
+  * [Packages Root](http://golang.org/pkg/)
 
 * Languages
   * Go (server)
