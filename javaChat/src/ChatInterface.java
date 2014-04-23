@@ -6,15 +6,18 @@ import java.io.IOException;
 
 import javax.swing.*;
 
+import org.json.JSONException;
+
 
 public class ChatInterface implements ActionListener {
 
 	JTextField field;
 	
 	Testclientsocket client; 
-	JTextArea chatPanel;
+	JTextPane chatPanel;
 	String message ="";
 	boolean reconnect = true;
+	String userName;
 	
 	public static void main(String[] args) {
 	
@@ -37,14 +40,15 @@ public class ChatInterface implements ActionListener {
         chat.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         chat.setVisible(true);
         
-
+        userName = (String)JOptionPane.showInputDialog("Write username!");
+        
         field = new JTextField(20);
         
         
-        chatPanel = new JTextArea();
+        chatPanel = new JTextPane();
         chatPanel.setVisible(true);
         chatPanel.setEditable(false);
-
+        chatPanel.setForeground(Color.BLUE);
         chat.add(chatPanel, "North");
         chat.add(field, "South");
         
@@ -60,17 +64,28 @@ public class ChatInterface implements ActionListener {
 	 */
 	public void updateChat(){
     	while(true){
-    		
-    		try {
-				message = message + "\n" + client.recieveMessage();
+    	 		try {
+				Message chat = client.recieveMessage();
+				setText(chat);
 			} catch (IOException e) {
 				testConnection();
 			}
-       		chatPanel.setText(message);
+       		
     		
     	}
 		
 	}
+	
+	public void setText(Message chat){
+		message = message + "\n[" + new java.util.Date() + "]" + chat.username + ">" + chat.message;
+		
+		chatPanel.setText(message);
+		
+		
+		
+		
+	}
+	
 	
 	/*
 	 * Test the connection, if failed lets the user try to connect again 
@@ -91,13 +106,24 @@ public class ChatInterface implements ActionListener {
 		
 		
 	}
-
+	
+	public void createMessage(String message){
+		Message chat = new Message(message, userName, "Red");
+		try {
+			client.encodeJSon(chat);
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		String text = field.getText();
-		client.sendMessage(text);
+		createMessage(text);
+		
 		// TODO Auto-generated method stub
 		
 	}
