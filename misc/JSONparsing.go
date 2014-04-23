@@ -34,6 +34,22 @@ type Response4 struct {
 }
 
 
+/*
+Anta att filen test.json finns och ser ut på följande vis:
+
+{
+    "username":"Viktor",
+    "userid":"1230985",
+    "msg":"Hello Adam!"
+}
+
+
+
+
+*/
+
+
+
 func main() {
 
     // First we'll look at encoding basic data types to
@@ -44,6 +60,17 @@ func main() {
 	// read a json formatted response (from file)
 	file,_ := ioutil.ReadFile("test.json")
 	fmt.Printf("%s",string(file))
+	/*
+	Prints:
+{
+    "username":"Viktor",
+    "userid":"1230985",
+    "msg":"Hello Adam!"
+}
+	
+	*/
+	
+	
 	resul := &Response3{}
 	
         json.Unmarshal([]byte(string(file)), &resul)
@@ -51,8 +78,8 @@ func main() {
 	fmt.Println("#########################")
 	fmt.Println("Converting JSON -> STRUCT")
 	fmt.Println("#########################")
-        fmt.Println(resul.Username)
-        fmt.Println(resul.Message)
+        fmt.Println(resul.Username) // prints: Viktor
+        fmt.Println(resul.Message) // prints: Hello Adam!
 
 
 
@@ -71,7 +98,7 @@ func main() {
 	fmt.Println("#########################")
 	fmt.Println("Converting Struct -> JSON")
 	fmt.Println("#########################")
-	fmt.Println(string(b))
+	fmt.Println(string(b)) // Prints {"Name":"Frank","Msg":"TELE2 YO"}
 
 
 	// Convert the json respond back to struct
@@ -80,8 +107,8 @@ func main() {
 	fmt.Println("#########################")
 	fmt.Println("Converting JSON -> STRUCT")
 	fmt.Println("#########################")
-        fmt.Println(check.Name)
-        fmt.Println(check.Msg)
+        fmt.Println(check.Name) // Prints: Frank
+        fmt.Println(check.Msg) // Prints TELE2 YO
 	
 
 
