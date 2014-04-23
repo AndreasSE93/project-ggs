@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net"
 	"encoding/gob"
+	"container/list"
 )
 
 //Trivial test structs
@@ -30,7 +31,7 @@ type WaitingMonitor struct {
 }
 
 type WaitingLobby struct {
-	Index, Size int64
+	Index, Size int
 	clientChannel chan Connector
 //	clientComm ClientCommunication
 //	readyClients, runningClients  -> map, array or slice?
@@ -87,15 +88,20 @@ func initGameRoom(conn net.Conn) {
 	
 }
 
+func clientListener(client Connector) {
+	connection := client.connection
+	
+}
+
 //Have a channel to created server clients.
 //Now make them available to waitingLobbyManager to continue.
 //Save in slice, array or map?
-func connectionHandler(connectorChannel chan Connector, addToMap chan Connector) {
+func connectionHandler(connectorChannel chan Connector, addToMap chan Connector, waitingLobby chan Connector) {
 	for {
 		client := <- connectorChannel
 		fmt.Println(client.connectorID)
 		addToMap <- client
-		go testConnection(client)
+		go clientListener(client)
 	}
 }
 
@@ -131,17 +137,24 @@ func waitingLobbyManager(lobbyContact chan chan Connector) {
 	connectionChannel := make(chan Connector)
 	lobbyContact <- connectionChannel
 
-	go connectionHandler(connectionChannel, database.add)
+	wlChannel := make(chan Connector)
+	go connectionHandler(connectionChannel, database.add, wlChannel)
 
-	go initWaitingLobby()
+	go initWaitingLobby(wlChannel)
 	handler.InitiatedLobbys += 1;
 	
 }
 
 //A waiting lobby, where two clients will be able to sync up.
 //Then get their own GameRoom
-func initWaitingLobby() {
+func initWaitingLobby(clientContact chan Connector) {
 	fmt.Println("Creating a Waiting Lobby for the Server");	
+	lobbyList := list.New()
+
+	
+
+	go testConnection(client)
+	
 //	lobby := &WaitingLobby{1, 10}
 	
 }
