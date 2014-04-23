@@ -38,17 +38,34 @@ type WaitingLobby struct {
 
 type WaitingHandler struct {
 //	localAddr, remAddr net.Addr
+	databaseOp Database
 	MaxLobbys, InitiatedLobbys int64
-//	allClients, idleClients, busyClients  ->     map, array or slice?
+//	allClients, idleClients, busyClients []byte
 }
 //------------------------------------------------
 
 //A connector struct (AKA Client. Perhaps rename it)
 type Connector struct {
-//	connectorID int64
+	connectorID int
 	connection net.Conn
 	localAddr, remAddr net.Addr
 	//waiter WaitingHandler
+}
+
+type Getter struct {
+	ID int
+	sendBack chan Connector
+}
+
+type Update struct {
+	newConn Connector
+	ID int
+}
+
+type Database struct {
+	add,del chan Connector
+	get chan Getter
+	update chan Update
 }
 
 //Use it as a check that all is completed for a client to know it have a connection to the server
@@ -61,6 +78,7 @@ func testConnection(conn Connector) {
 	dec.Decode(p)
 	dec.Decode(e)
 	fmt.Printf("Received : %+v\n %+v\n", *p, *e);
+
 	enc.Encode(&Noob{"I heard you!"})
 }
 
@@ -72,23 +90,49 @@ func initGameRoom(conn net.Conn) {
 //Have a channel to created server clients.
 //Now make them available to waitingLobbyManager to continue.
 //Save in slice, array or map?
-func connectionHandler(connectorChannel chan Connector) {
+func connectionHandler(connectorChannel chan Connector, addToMap chan Connector) {
 	for {
 		client := <- connectorChannel
-		fmt.Println(&client.connection)
+		fmt.Println(client.connectorID)
+		addToMap <- client
 		go testConnection(client)
+	}
+}
+
+func databaseHandler(operations Database) {
+	clientMap := make(map[int]Connector)
+	for {
+		select {
+		case conn := <-operations.add:
+			clientMap[conn.connectorID] = conn
+		case conn := <-operations.del:
+			delete(clientMap, conn.connectorID)
+		case get := <-operations.get:
+			client:= clientMap[get.ID]
+			get.sendBack <- client
+		case update := <-operations.update:
+			clientMap[update.ID] = update.newConn
+		}
 	}
 }
 
 //Managing which waitinglobby the connectors get to join.
 //Handling spawning of new waitinglobbys.
 func waitingLobbyManager(lobbyContact chan chan Connector) {
-	handler := &WaitingHandler{20, 0}
+	add := make(chan Connector)
+	del := make(chan Connector)
+	get := make(chan Getter)
+	update := make(chan Update)
+	database := &Database{add, del, get, update}
+	handler := &WaitingHandler{*database, 20, 0}
+
+	go databaseHandler(handler.databaseOp)
 
 	connectionChannel := make(chan Connector)
 	lobbyContact <- connectionChannel
 
-	go connectionHandler(connectionChannel)
+	go connectionHandler(connectionChannel, database.add)
+
 	go initWaitingLobby()
 	handler.InitiatedLobbys += 1;
 	
@@ -109,12 +153,20 @@ func requestWaitingPlace() {
 
 //Create a connection. Simulates as a client on the server.
 //CREATE A CONNECTOR(Client) PACKAGE FOR THIS?
-func initConnector(connection net.Conn, lobbyContact chan Connector) {
+func initConnector(connection net.Conn, lobbyContact chan Connector, idCh chan int) {
 	localAddr := connection.LocalAddr()
 	remAddr := connection.RemoteAddr()
-	connector := &Connector{connection, localAddr, remAddr}
+	connector := &Connector{<-idCh, connection, localAddr, remAddr}
 
 	lobbyContact <- *connector	
+}
+
+func idGenerator(idCh chan int) {
+	id := 0
+	for {
+		id++
+		idCh <- id
+	}
 }
 
 //Shall only do minimum that's needed for a request to initiate your own very own server
@@ -123,7 +175,9 @@ func initConnector(connection net.Conn, lobbyContact chan Connector) {
 func main() {
 	fmt.Println("start");
 	lobbyContact := make(chan chan Connector)
+	idChannel := make(chan int)
 	go waitingLobbyManager(lobbyContact)
+	go idGenerator(idChannel)
 
 	//Here to not depend on the channel created in the initiation of the server.
 	clientChannel := <-lobbyContact
@@ -143,6 +197,6 @@ func main() {
 			continue
 		}
 		// a goroutine handles conn so that the loop can accept other connections
-		go initConnector(conn, clientChannel)
+		go initConnector(conn, clientChannel, idChannel)
 	}	
 }
