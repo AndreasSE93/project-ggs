@@ -30,7 +30,7 @@ public class ChatInterface implements ActionListener {
 	/*
 	 * Creates a simple chat GUI
 	 */
-	public void createChatGUI(){
+	public void createChatGUI() {
 				
 		JFrame chat = new JFrame();
 		chat.setLayout(new BorderLayout());
@@ -62,7 +62,7 @@ public class ChatInterface implements ActionListener {
 	/*
 	 * Updates the textChat by receiving message from the server, Handles if a connection failed
 	 */
-	public void updateChat(){
+	public void updateChat() {
     	while(true){
     	 		try {
 				Message chat = client.recieveMessage();
@@ -76,14 +76,10 @@ public class ChatInterface implements ActionListener {
 		
 	}
 	
-	public void setText(Message chat){
+	public void setText(Message chat) {
 		message = message + "\n[" + new java.util.Date() + "]" + chat.username + ">" + chat.message;
 		
 		chatPanel.setText(message);
-		
-		
-		
-		
 	}
 	
 	
@@ -91,7 +87,7 @@ public class ChatInterface implements ActionListener {
 	 * Test the connection, if failed lets the user try to connect again 
 	 *
 	 */
-	public void testConnection(){
+	public void testConnection() {
         while(true){
 		try {
 			client = new Testclientsocket();
@@ -107,7 +103,7 @@ public class ChatInterface implements ActionListener {
 		
 	}
 	
-	public void createMessage(String message){
+	public void createMessage(String message) {
 		Message chat = new Message(message, userName, "Red");
 		try {
 			client.encodeJSon(chat);
