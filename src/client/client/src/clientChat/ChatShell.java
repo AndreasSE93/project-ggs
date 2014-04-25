@@ -15,4 +15,12 @@ public class ChatShell {
 		this.readFromInterface = new TreatInput();
 	}
 	
+	public void Initiate() {
+		
+	}
+	
+	public void ShutDown() {
+		
+	}
+	
 }

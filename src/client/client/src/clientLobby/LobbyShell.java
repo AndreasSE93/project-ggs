@@ -2,16 +2,23 @@ package clientLobby;
 
 import packageManaging.LobbyHandler;
 import graphicalReference.LobbyGUI;
-import clientNetworking.Connection;
 
 public class LobbyShell {
 	
-	LobbyHandler handler;
-	LobbyGUI graphInterface;
+	public LobbyHandler handler;
+	public LobbyGUI graphInterface;
 	
 	public LobbyShell() {
 		this.handler = new LobbyHandler();
 		this.graphInterface = new LobbyGUI();
+	}
+	
+	public void Initiate() {
+		
+	}
+	
+	public void ShutDown() {
+		
 	}
 	
 }

@@ -23,8 +23,22 @@ public class Monitor {
 		try {
 			this.net.connectToServer();
 		} catch (IOException e) {
-			System.out.println("Connection to server failed!" + e);
+			System.out.println("Connection to server failed!\n");
+			e.printStackTrace();
 		}
+		this.lobbyModule.Initiate();
+		this.runner();
+	}
+	
+	private void runner() {
+		try {
+			String firstcall = net.receiveMessage();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		
+		
 	}
 	
 	
