@@ -6,10 +6,10 @@ import clientNetworking.Connection;
 
 public class ChatShell {
 	
-	Connection conn;
-	MessageHandler handler;
-	ChatGUI graphInterface;
-	TreatInput readFromInterface;
+	private Connection conn;
+	public MessageHandler handler;
+	public ChatGUI graphInterface;
+	public TreatInput readFromInterface;
 	
 	public ChatShell(Connection conn) {
 		this.conn = conn;

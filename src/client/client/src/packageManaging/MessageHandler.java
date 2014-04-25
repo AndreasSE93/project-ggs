@@ -3,7 +3,6 @@ package packageManaging;
 import org.json.JSONObject;
 import org.json.JSONException;
 
-import clientNetworking.Handler;
 
 public class MessageHandler extends Handler {
 

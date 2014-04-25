@@ -2,19 +2,21 @@ package clientNetworking;
 
 import java.io.IOException;
 
+import packageManaging.Handler;
+
 public class NetManager {
 	
 	public Handler handler; 
-	public Connection conn;
+	private Connection conn;
 	
-	public NetManager(Handler interactor) {
+	public NetManager(Handler interactor, Connection c) {
 		this.handler = interactor;
+		this.conn = c;
 	}
 	
-	public void connectToServer(String hostIP, int portNum) throws IOException{
-		this.conn = new Connection(hostIP, portNum);
+	public void connectToServer() throws IOException{
 		try {
-			conn.initConnection();
+			this.conn.initConnection();
 		} catch (IOException e) {
 			throw(e);
 		}
