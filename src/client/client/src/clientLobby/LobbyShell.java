@@ -6,12 +6,10 @@ import clientNetworking.Connection;
 
 public class LobbyShell {
 	
-	Connection conn;
 	LobbyHandler handler;
 	LobbyGUI graphInterface;
 	
-	public LobbyShell(Connection conn) {
-		this.conn = conn;
+	public LobbyShell() {
 		this.handler = new LobbyHandler();
 		this.graphInterface = new LobbyGUI();
 	}

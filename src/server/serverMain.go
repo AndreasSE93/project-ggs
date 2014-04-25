@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"net"
 	"encoding/gob"
-	"container/list"
 )
 
 //Trivial test structs
@@ -89,7 +88,7 @@ func initGameRoom(conn net.Conn) {
 }
 
 func clientListener(client Connector) {
-	connection := client.connection
+//	connection := client.connection
 	
 }
 
@@ -102,6 +101,7 @@ func connectionHandler(connectorChannel chan Connector, addToMap chan Connector,
 		fmt.Println(client.connectorID)
 		addToMap <- client
 		go clientListener(client)
+		go testConnection(client)
 	}
 }
 
@@ -149,14 +149,8 @@ func waitingLobbyManager(lobbyContact chan chan Connector) {
 //Then get their own GameRoom
 func initWaitingLobby(clientContact chan Connector) {
 	fmt.Println("Creating a Waiting Lobby for the Server");	
-	lobbyList := list.New()
-
-	
-
-	go testConnection(client)
-	
+//	lobbyList := list.New()
 //	lobby := &WaitingLobby{1, 10}
-	
 }
 
 //Request for a place in a waitingpool, so client can ask for a game start and other things
