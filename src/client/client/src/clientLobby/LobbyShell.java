@@ -2,6 +2,8 @@ package clientLobby;
 
 import java.util.ArrayList;
 
+import clientNetworking.NetManager;
+
 import packageManaging.LobbyHandler;
 import graphicalReference.LobbyGUI;
 
@@ -15,8 +17,8 @@ public class LobbyShell {
 		this.graphInterface = new LobbyGUI();
 	}
 	
-	public void Initiate(ArrayList<String> players,  ArrayList<String> games) {
-		this.graphInterface.render(players, games);
+	public void Initiate(ArrayList<String> players,  ArrayList<String> games, NetManager nm) {
+		this.graphInterface.render(players, games, nm);
 	}
 	
 	public void ShutDown() {

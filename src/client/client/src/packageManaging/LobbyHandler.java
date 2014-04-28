@@ -18,6 +18,7 @@ public class LobbyHandler extends Handler {
 		
 	    obj.put("actionType", mess.actionType);
 	    obj.put("actionId", mess.actionId);
+	    obj.put("Message", mess.mess);
 	   
 		String message = obj.toString();
 		return message;
@@ -39,6 +40,8 @@ public class LobbyHandler extends Handler {
 		for (int i=0; i<JArr2.length(); i++) {
 		    lsm.GameHost.add(JArr2.getString(i));
 		}
+		
+		lsm.s = obj.getString("Message");
 		
 		return lsm;
 	}

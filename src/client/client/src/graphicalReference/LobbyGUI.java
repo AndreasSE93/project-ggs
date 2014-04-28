@@ -8,10 +8,26 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 
+import org.json.JSONException;
+
+import packageManaging.LobbyClientMessage;
+import packageManaging.LobbyHandler;
+import packageManaging.Message;
+import packageManaging.MessageHandler;
+
+import clientNetworking.NetManager;
+
 public class LobbyGUI extends GUI {
 		JPanel chatt;
+		public JTextField field;
+		public JTextPane chatPanel = new JTextPane();
+		
+		public NetManager NM;
 
-	public static void render( ArrayList<String> players ,  ArrayList<String> games) {
+	public void render( ArrayList<String> players,  ArrayList<String> games, NetManager m) {
+		
+		this.NM = m;
+		
 		JFrame lobby = new JFrame();
 		lobby.setLayout(new BorderLayout());
 		lobby.getContentPane().setBackground(Color.LIGHT_GRAY);
@@ -48,7 +64,18 @@ public class LobbyGUI extends GUI {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		String str = this.field.getText();
 		
+		MessageHandler l = (MessageHandler)this.NM.handler;
+		Message mess = new Message(str, "Petter", 10);
+		String sender = "";
+		try {
+			sender = l.encode(mess);
+		} catch (JSONException e1) {
+			e1.printStackTrace();
+		}
+		
+		this.NM.send(sender);
 		
 	}
 	
@@ -67,14 +94,13 @@ public class LobbyGUI extends GUI {
 		});
 	}
 	
-	public static void chatStart(JPanel j){
+	public void chatStart(JPanel j){
 		
 		//String userName = (String)JOptionPane.showInputDialog("Write username!");
         j.setLayout(new BorderLayout());
-        JTextField field = new JTextField(20);
+        this.field = new JTextField(20);
+        field.addActionListener(this);
         
-        
-        JTextPane chatPanel = new JTextPane();
         chatPanel.setVisible(true);
         chatPanel.setEditable(false);
         chatPanel.setForeground(Color.BLUE);
