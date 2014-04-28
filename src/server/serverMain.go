@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net"
 	"encoding/gob"
+	"encoding/json"
 )
 
 //Trivial test structs
@@ -87,9 +88,23 @@ func initGameRoom(conn net.Conn) {
 	
 }
 
+type test struct {
+	UserList [1]string
+	GameHost [1]string
+}
+
 func clientListener(client Connector) {
 //	connection := client.connection
-	
+	//enc := json.NewEncoder(client.connection)
+	userList := [1]string{"a"}
+	gameHost := [1]string{"b"}
+	b, err := json.Marshal(&test{
+		userList,
+		gameHost})
+	fmt.Println(string(b), err)
+	//buf := []byte(string(b) + "\n")
+	c := string(b) + "\n"
+	client.connection.Write([]byte(c))
 }
 
 //Have a channel to created server clients.
