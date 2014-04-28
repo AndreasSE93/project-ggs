@@ -5,14 +5,14 @@ import org.json.JSONException;
 
 
 public class MessageHandler extends Handler {
-
+    
 	public String encode(Message mess) throws JSONException {
 		
 		JSONObject obj = new JSONObject();
 		
 	    obj.put("message", mess.message);
-	    obj.put("color", mess.color);
-	    obj.put("username", mess.username);
+	    obj.put("id", mess.id);
+	    obj.put("user", mess.user);
 
 		String message = obj.toString();
 		return message;
@@ -25,10 +25,12 @@ public class MessageHandler extends Handler {
 		
 		Message chatMessage = new Message();
 		chatMessage.message = obj.getString("message");
-		chatMessage.color =  obj.getString("color");
-		chatMessage.username = obj.getString("username");
+		chatMessage.id =  obj.getInt("id");
+		chatMessage.user = obj.getString("user");
 		
 		return chatMessage;
 		
-	}	
+	}
+
+
 }

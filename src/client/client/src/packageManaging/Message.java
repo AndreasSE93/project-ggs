@@ -1,19 +1,25 @@
 package packageManaging;
 
 public class Message {
-	 String message, username;
-	 String color;
+	 public int id;
+	 public String user;
+	 public String message;
 	 
-	Message(){
-		
-	}
-	
-	Message(String message, String username, String color){
+	 public Message(){
+		 
+		 
+	 }
+
+	public Message(String message, String user, int id){
 		this.message = message;
-		this.username = username;
-		this.color = color;
-		
+		this.user = user;
+		this.id = id;
 		
 	}
 
+	
+	
+	
+	
+	
 }
