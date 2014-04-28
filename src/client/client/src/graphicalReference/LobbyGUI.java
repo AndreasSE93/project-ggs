@@ -3,11 +3,13 @@ package graphicalReference;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DateFormat.Field;
 import java.util.ArrayList;
 
 import javax.swing.*;
 
 public class LobbyGUI extends GUI {
+		JPanel chatt;
 
 	public static void render( ArrayList<String> players ,  ArrayList<String> games) {
 		JFrame lobby = new JFrame();
@@ -36,13 +38,17 @@ public class LobbyGUI extends GUI {
         topPanel.setPreferredSize(preferredSize);
         lobby.add(topPanel, BorderLayout.NORTH);
         lobby.add(bottomPanel, BorderLayout.SOUTH);
+        JPanel chatt = new JPanel();
+        chatStart(chatt);
+        lobby.add(chatt);
+        
         lobby.setVisible(true);
 		
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 	
@@ -61,7 +67,27 @@ public class LobbyGUI extends GUI {
 		});
 	}
 	
+	public static void chatStart(JPanel j){
+		
+		//String userName = (String)JOptionPane.showInputDialog("Write username!");
+        j.setLayout(new BorderLayout());
+        JTextField field = new JTextField(20);
+        
+        
+        JTextPane chatPanel = new JTextPane();
+        chatPanel.setVisible(true);
+        chatPanel.setEditable(false);
+        chatPanel.setForeground(Color.BLUE);
+        j.add(chatPanel, "North");
+        j.add(field, "South");
+        
+        
+		
+        
+		
 
+	}
+	
 	
 
 	@Override
