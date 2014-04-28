@@ -2,6 +2,8 @@ package clientCore;
 
 import java.io.IOException;
 
+import org.json.JSONException;
+
 import clientLobby.LobbyShell;
 import clientNetworking.NetManager;
 import clientNetworking.Connection;
@@ -31,13 +33,13 @@ public class Monitor {
 	}
 	
 	private void runner() {
+		String firstcall;
 		try {
-			String firstcall = net.receiveMessage();
-		} catch (IOException e) {
+			firstcall = net.receiveMessage();
+			this.lobbyModule.handler.decode(firstcall);
+		} catch (IOException | JSONException e) {
 			e.printStackTrace();
 		}
-		
-		
 		
 	}
 	

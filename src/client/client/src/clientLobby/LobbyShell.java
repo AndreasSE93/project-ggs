@@ -14,7 +14,7 @@ public class LobbyShell {
 	}
 	
 	public void Initiate() {
-		
+		this.graphInterface.render();
 	}
 	
 	public void ShutDown() {
