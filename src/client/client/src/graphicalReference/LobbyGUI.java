@@ -76,6 +76,8 @@ public class LobbyGUI extends GUI {
 		}
 		
 		this.NM.send(sender);
+		this.field.setText("");
+		
 		
 	}
 	
@@ -100,11 +102,15 @@ public class LobbyGUI extends GUI {
         j.setLayout(new BorderLayout());
         this.field = new JTextField(20);
         field.addActionListener(this);
-        
+        JScrollPane js = new JScrollPane(chatPanel);
+        Dimension preferredSize = new Dimension(400, 200);
+        js.setPreferredSize(preferredSize);
         chatPanel.setVisible(true);
         chatPanel.setEditable(false);
         chatPanel.setForeground(Color.BLUE);
-        j.add(chatPanel, "North");
+      
+        
+        j.add(js, "North");
         j.add(field, "South");
         
         
