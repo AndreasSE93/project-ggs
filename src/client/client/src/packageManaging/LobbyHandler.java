@@ -31,13 +31,13 @@ public class LobbyHandler extends Handler {
 		
 		LobbyServerMessage lsm = new LobbyServerMessage();
 		
-		JSONArray JArr = obj.getJSONArray("userList");
+		JSONArray JArr = obj.getJSONArray("UserList");
 		for (int i=0; i<JArr.length(); i++) {
-		    lsm.userList.add( JArr.getString(i));
+		    lsm.UserList.add( JArr.getString(i));
 		}
-		JSONArray JArr2 = obj.getJSONArray("userList");
+		JSONArray JArr2 = obj.getJSONArray("GameHost");
 		for (int i=0; i<JArr2.length(); i++) {
-		    lsm.gameHost.add(JArr2.getString(i));
+		    lsm.GameHost.add(JArr2.getString(i));
 		}
 		
 		return lsm;
