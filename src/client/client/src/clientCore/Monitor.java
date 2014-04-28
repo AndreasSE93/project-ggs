@@ -5,6 +5,8 @@ import java.io.IOException;
 import org.json.JSONException;
 
 import packageManaging.LobbyServerMessage;
+import packageManaging.Message;
+import packageManaging.MessageHandler;
 
 import clientLobby.LobbyShell;
 import clientNetworking.NetManager;
@@ -45,11 +47,24 @@ public class Monitor {
 			e.printStackTrace();
 		}
 		if (LM != null) {
-			this.lobbyModule.Initiate(LM.UserList, LM.GameHost);
+			this.lobbyModule.Initiate(LM.UserList, LM.GameHost, this.net);
 		} else {
 			System.out.println("Connection failed");
 		}
 		
+		String mess;
+		LobbyServerMessage LSM = null;
+		
+		while(true) {
+			try {
+				MessageHandler MH = new MessageHandler();
+				mess = net.receiveMessage();
+				Message m = MH.decode(mess);
+				this.lobbyModule.graphInterface.chatPanel.setText(this.lobbyModule.graphInterface.chatPanel.getText() + "\n" + m.message);
+			} catch (IOException | JSONException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	

@@ -7,6 +7,6 @@ public class LobbyServerMessage {
 	public ArrayList <String>  UserList = new ArrayList<String>();
 	public ArrayList <String>  GameHost = new ArrayList<String>();
 	
-	
+	public String s;
  
 }

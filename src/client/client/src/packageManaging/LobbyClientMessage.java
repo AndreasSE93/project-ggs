@@ -7,11 +7,13 @@ public class LobbyClientMessage {
 	
 	public int actionType;
 	public int actionId;
+	
+	public String mess;
 
-	LobbyClientMessage(int actionType, int id){
+	public LobbyClientMessage(int actionType, int id, String s) {
 		this.actionType = actionType;
 		this.actionId = id; 
-	
+		this.mess = s;
 		
 	}
 	
