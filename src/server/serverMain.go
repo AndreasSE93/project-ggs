@@ -93,6 +93,7 @@ func initGameRoom(conn net.Conn) {
 type test struct {
 	UserList [1]string
 	GameHost [1]string
+	Message string
 }
 
 func clientListener(client Connector, conList *list.List) {
@@ -100,9 +101,11 @@ func clientListener(client Connector, conList *list.List) {
 	//enc := json.NewEncoder(client.connection)
 	userList := [1]string{"a"}
 	gameHost := [1]string{"b"}
+	message := "Test"
 	b, err := json.Marshal(&test{
 		userList,
-		gameHost})
+		gameHost,
+		message})
 	fmt.Println(string(b), err)
 	//buf := []byte(string(b) + "\n")
 	c := string(b) + "\n"
@@ -111,6 +114,7 @@ func clientListener(client Connector, conList *list.List) {
 }
 
 func handleChat (conn net.Conn, connlist *list.List) {
+	fmt.Println(connlist)
 	for {
 
 		buf := make([]byte,1024)
@@ -205,7 +209,7 @@ func initConnector(connection net.Conn, lobbyContact chan Connector, idCh chan i
 	localAddr := connection.LocalAddr()
 	remAddr := connection.RemoteAddr()
 	connector := &Connector{<-idCh, connection, localAddr, remAddr}
-	conList.PushBack(connector)
+	conList.PushBack(connector.connection)
 
 	lobbyContact <- *connector
 }
