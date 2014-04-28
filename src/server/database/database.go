@@ -1,37 +1,30 @@
 package database
 
-import "net"
-
-type Connector struct {
-	connectorID int
-	connection net.Conn
-	localAddr, remAddr net.Addr
-	//waiter WaitingHandler
-}
+import "server/connector"
 
 type getter struct {
 	id int
-	sendBack chan Connector
+	sendBack chan connector.Connector
 }
 
 type updater struct {
-	newCon Connector
+	newCon connector.Connector
 	id int
 }
 
 type Database struct {
-	add, del chan Connector
+	add, del chan connector.Connector
 	get chan getter
 	set chan updater
 }
 
-func databaseHandler(db *Database, elements map[int]Connector) {
+func databaseHandler(db *Database, elements map[int]connector.Connector) {
 	for {
 		select {
 		case con := <-db.add:
-			elements[con.connectorID] = con
+			elements[con.ConnectorID] = con
 		case con := <-db.del:
-			delete(elements, con.connectorID)
+			delete(elements, con.ConnectorID)
 		case getter := <-db.get:
 			client := elements[getter.id]
 			getter.sendBack <- client
@@ -41,30 +34,31 @@ func databaseHandler(db *Database, elements map[int]Connector) {
 	}
 }
 
-func New() (db *Database) {
-	db.add = make(chan Connector)
-	db.del = make(chan Connector)
+func New() *Database {
+	db := new(Database)
+	db.add = make(chan connector.Connector)
+	db.del = make(chan connector.Connector)
 	db.get = make(chan getter)
 	db.set = make(chan updater)
-	go databaseHandler(db, make(map[int]Connector))
-	return
+	go databaseHandler(db, make(map[int]connector.Connector))
+	return db
 }
 
-func (db Database) Add(con Connector) {
+func (db Database) Add(con connector.Connector) {
 	db.add <- con
 }
 
-func (db Database) Delete(con Connector) {
+func (db Database) Delete(con connector.Connector) {
 	db.del <- con
 }
 
-func (db Database) Get(id int) Connector {
-	ch := make(chan Connector)
+func (db Database) Get(id int) connector.Connector {
+	ch := make(chan connector.Connector)
 	getter := getter{id, ch}
 	db.get <- getter
 	return <- ch
 }
 
-func (db Database) Update(id int, newElement Connector) {
+func (db Database) Update(id int, newElement connector.Connector) {
 	db.set <- updater{newElement, id}
 }
