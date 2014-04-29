@@ -2,7 +2,7 @@ package database
 
 import (
 	"testing"
-	"server/connector"
+	"server/connection"
 )
 
 type fakeAddr struct {
@@ -16,10 +16,10 @@ func (a fakeAddr) Network() string {
 }
 
 func TestDatabase(t *testing.T) {
-	var con [4]connector.Connector
+	var con [4]connection.Connector
 	str := []byte{'A'}
 	for i := 0; i < len(con); i++ {
-		con[i] = connector.Connector{ConnectorID: i, LocalAddr: fakeAddr{string(str)}}
+		con[i] = connection.Connector{ConnectorID: i, LocalAddr: fakeAddr{string(str)}}
 		str[0]++
 	}
 

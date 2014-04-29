@@ -1,24 +1,24 @@
 package database
 
-import "server/connector"
+import "server/connection"
 
 type getter struct {
 	id int
-	sendBack chan connector.Connector
+	sendBack chan connection.Connector
 }
 
 type updater struct {
-	newCon connector.Connector
+	newCon connection.Connector
 	id int
 }
 
 type Database struct {
-	add, del chan connector.Connector
+	add, del chan connection.Connector
 	get chan getter
 	set chan updater
 }
 
-func databaseHandler(db *Database, elements map[int]connector.Connector) {
+func databaseHandler(db *Database, elements map[int]connection.Connector) {
 	for {
 		select {
 		case con := <-db.add:
@@ -36,29 +36,29 @@ func databaseHandler(db *Database, elements map[int]connector.Connector) {
 
 func New() *Database {
 	db := new(Database)
-	db.add = make(chan connector.Connector)
-	db.del = make(chan connector.Connector)
+	db.add = make(chan connection.Connector)
+	db.del = make(chan connection.Connector)
 	db.get = make(chan getter)
 	db.set = make(chan updater)
-	go databaseHandler(db, make(map[int]connector.Connector))
+	go databaseHandler(db, make(map[int]connection.Connector))
 	return db
 }
 
-func (db Database) Add(con connector.Connector) {
+func (db Database) Add(con connection.Connector) {
 	db.add <- con
 }
 
-func (db Database) Delete(con connector.Connector) {
+func (db Database) Delete(con connection.Connector) {
 	db.del <- con
 }
 
-func (db Database) Get(id int) connector.Connector {
-	ch := make(chan connector.Connector)
+func (db Database) Get(id int) connection.Connector {
+	ch := make(chan connection.Connector)
 	getter := getter{id, ch}
 	db.get <- getter
 	return <- ch
 }
 
-func (db Database) Update(id int, newElement connector.Connector) {
+func (db Database) Update(id int, newElement connection.Connector) {
 	db.set <- updater{newElement, id}
 }
