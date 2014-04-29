@@ -1,6 +1,8 @@
 package clientCore;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import org.json.JSONException;
 
@@ -60,13 +62,21 @@ public class Monitor {
 				MessageHandler MH = new MessageHandler();
 				mess = net.receiveMessage();
 				Message m = MH.decode(mess);
-				this.lobbyModule.graphInterface.chatPanel.setText(this.lobbyModule.graphInterface.chatPanel.getText() + "\n" + m.message);
+				this.lobbyModule.graphInterface.chatPanel.setText(this.lobbyModule.graphInterface.chatPanel.getText() + "<" + getTime() + "> " + m.user + ": "  + m.message + "\n");
+				this.lobbyModule.graphInterface.chatPanel.setCaretPosition(this.lobbyModule.graphInterface.chatPanel.getDocument().getLength());
 			} catch (IOException | JSONException e) {
+			
 				e.printStackTrace();
 			}
 		}
 	}
 	
-	
+	public String getTime() {
+    	Calendar cal = Calendar.getInstance();
+    	cal.getTime();
+    	SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+    	return sdf.format(cal.getTime());
+    }
+
 	
 }
