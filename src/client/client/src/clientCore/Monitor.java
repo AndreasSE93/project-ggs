@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import javax.swing.JOptionPane;
+
 import org.json.JSONException;
 
 import packageManaging.LobbyServerMessage;
@@ -23,7 +25,24 @@ public class Monitor {
 	LobbyShell lobbyModule;
 	
 	public Monitor() {
+<<<<<<< HEAD
 		this.conn = new Connection("localhost", 8080);
+=======
+		String serverConnectStr = "Enter server: ";
+		while (true) {
+			String hostStr = JOptionPane.showInputDialog(serverConnectStr, Connection.DEFAULT_HOST + ":" + String.valueOf(Connection.DEFAULT_PORT));
+			if (hostStr == null) {
+				return;
+			}
+			try {
+				this.conn = new Connection(hostStr);
+				break;
+			} catch (NumberFormatException e) {
+				serverConnectStr = "Invalid port. Enter server:";
+			}
+		}
+		
+>>>>>>> eaeef93d90fa8e0a26e42171122e861731b88f87
 		this.chatModule = new ChatShell();
 		this.lobbyModule = new LobbyShell();
 		this.net = new NetManager(this.chatModule.handler, this.conn);
