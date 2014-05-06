@@ -1,5 +1,11 @@
 package clientChat;
 
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
+
+import clientNetworking.NetManager;
+
 import packageManaging.MessageHandler;
 import graphicalReference.ChatGUI;
 
@@ -15,8 +21,8 @@ public class ChatShell {
 		this.readFromInterface = new TreatInput();
 	}
 	
-	public void Initiate() {
-		
+	public void Initiate(JPanel chatPanel, NetManager NM, JFrame j) {
+	this.graphInterface.render(chatPanel, NM, j);	
 	}
 	
 	public void ShutDown() {
