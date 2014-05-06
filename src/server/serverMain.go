@@ -161,9 +161,7 @@ func requestWaitingPlace() {
 //Create a connection. Simulates as a client on the server.
 //CREATE A CONNECTOR(Client) PACKAGE FOR THIS?
 func initConnector(netConn net.Conn, lobbyContact chan connection.Connector, idCh chan int, conList *list.List) {
-	localAddr := netConn.LocalAddr()
-	remAddr := netConn.RemoteAddr()
-	conn := &connection.Connector{<-idCh, netConn, localAddr, remAddr}
+	conn := &connection.Connector{<-idCh, netConn}
 	conList.PushBack(conn.Connection)
 
 	lobbyContact <- *conn

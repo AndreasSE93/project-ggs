@@ -2,6 +2,7 @@ package connection
 
 import (
 	"net"
+	"fmt"
 )
 
 type Connector struct {
@@ -27,13 +28,13 @@ func initServerClient(netConn net.Conn, idChan chan int, lobbyContact chan Conne
 func requestListener(idChannel chan int, sendClientChannel chan Connector) {
 	ln, err := net.Listen("tcp", ":8080")
 	if err != nil {
-		fmt.Printf("Error, port listener couldn't be established")
+		fmt.Printf("Error, port listener couldn't be established");
 	}
 	for {
 		conn, err := ln.Accept()
 		if err != nil {
 			continue
 		}
-		go initiateServerClient(conn, idChannel, sendClientChannel)
+		go initServerClient(conn, idChannel, sendClientChannel)
 	}
 }

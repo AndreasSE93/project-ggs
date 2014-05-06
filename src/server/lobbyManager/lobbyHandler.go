@@ -1,24 +1,23 @@
 package lobbyManager
 
 import (
+	"fmt"
+	"bytes"
 	"server/connection"
 	"server/database"
+	"encoding/json"
 )
 
-type WaitingLobby struct {
-	
-}
-
 type HostRoom struct {
-
+	RoomName string `json:"RoomID"`
 }
 
 type JoinRoom struct {
-	
+	RoomID int `json:"RoomID"`
 }
 
 type UpdateRooms struct {
-
+	
 }
 
 type ChatMessage struct {
@@ -26,48 +25,44 @@ type ChatMessage struct {
 }
 
 type ProcessedMessage struct {
-	ID int `json:"ID"`
+	ID int `json:"PacketID"`
 	ChatM ChatMessage
 	Host HostRoom
 	Join JoinRoom
 	Update UpdateRooms
 }
 
-func hostRoom() {
-
-}
-
 func messageInterpreter(messageTransfer chan string, sendToLobby chan ProcessedMessage) {
 	for {
 		pMsg := &ProcessedMessage{}
 		message := <- messageTransfer
-		json.UnMarshal([]byte(message), &pMsg)
+		json.Unmarshal([]byte(message), &pMsg)
 
-		if pMsg.ID == 0 {
+		if pMsg.ID == 100 {
 			chatM := &ChatMessage{}
-			json.UnMarshal([]byte(message), &chatM)
-			pMsg.ChatM = chatM
-			pMsg.Host = nil
-			pMsg.Join = nil
-			pMsg.Update = nil
+			json.Unmarshal([]byte(message), &chatM)
+			pMsg.ChatM = *chatM
 
-		} else if pMsg == 1 {
-			hostM := &HostMessage{}
-			json.UnMarshal([]byte(message), &hostM)
-			pMsg.Host = hostM
-			pMsg.chatM = nil
-			pMsg.Join = nil
-			pMsg.Update = nil
+		} else if pMsg.ID == 101 {
+			hostM := &HostRoom{}
+			json.Unmarshal([]byte(message), &hostM)
+			pMsg.Host = *hostM
 
-		} else if pMsg == 2 {
+		} else if pMsg.ID == 102 {
+			joinM := &JoinRoom{}
+			json.Unmarshal([]byte(message), &joinM)
+			pMsg.Join = *joinM
 
-		} else if pMsg == 3 {
+		} else if pMsg.ID == 103 {
+			updateM := &UpdateRooms{}
+			json.Unmarshal([]byte(message), &updateM)
+			pMsg.Update = *updateM
 
 		} else {
 			fmt.Println("ID is malfunctioning")
 			return;
 		}
-		sendToLobby <- pMsg
+		sendToLobby <- *pMsg
 	}
 }
 
@@ -77,9 +72,9 @@ func messageReceiver(messageProcessing chan ProcessedMessage, client connection.
 
 	for {
 		buf := make([]byte, 1024)
-		_, err := conn.Read(buf)
+		_, err := client.Connection.Read(buf)
 		if err != nil {
-			conn.Close()
+			client.Connection.Close()
 			return;
 		}
 		m := bytes.Index(buf, []byte{0})
@@ -92,6 +87,11 @@ func lobbyClientListener(client connection.Connector) {
 	processedChan := make(chan ProcessedMessage)
 
 	go messageReceiver(processedChan, client)
+
+	for {
+		processed := <- processedChan
+		fmt.Println(processed)
+	}
 }
 
 func newClientHandler(clientFeeder chan connection.Connector, database *database.Database) {
