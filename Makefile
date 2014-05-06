@@ -36,7 +36,16 @@ runoldclient: oldclient
 
 .PHONY:
 clean:
-	rm -R ./bin/*
+	rm -f  ./bin/*
 	rm -fR ./pkg/*
 	rm -fR ./src/client/bin/
+
+.PHONY:
+package: project-ggs.tar.bz2
+
+project-ggs.tar.bz2: clean
+	git archive --prefix=project-ggs/ -o project-ggs.tar.gz master
+
+project-ggs-%.tar.bz2: clean
+	git archive --prefix="project-ggs-$*/" -o "project-ggs-$*.tar.gz" "$*"
 
