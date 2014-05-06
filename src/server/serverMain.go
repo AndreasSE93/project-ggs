@@ -69,16 +69,16 @@ func initGameRoom(conn net.Conn) {
 }
 
 type test struct {
-	UserList [1]string
-	GameHost [1]string
+	UserList [20]string
+	GameHost [20]string
 	Message string
 }
 
 func clientListener(client connection.Connector, conList *list.List) {
 //	connection := client.connection
 	//enc := json.NewEncoder(client.connection)
-	userList := [1]string{"a"}
-	gameHost := [1]string{"b"}
+	userList := [20]string{"1","2","3","4","5","6","7","8", "9", "10", "11","12","13","14","15","16","17","18","19","20"}
+	gameHost := [20]string{"1","2","3","4","5","6","7","8", "9", "10", "11","12","13","14","15","16","17","18","19","20"}
 	message := "Test"
 	b, err := json.Marshal(&test{
 		userList,
