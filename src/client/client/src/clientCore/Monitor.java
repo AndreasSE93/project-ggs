@@ -23,7 +23,7 @@ public class Monitor {
 	LobbyShell lobbyModule;
 	
 	public Monitor() {
-		this.conn = new Connection("130.238.95.70", 8080);
+		this.conn = new Connection("localhost", 8080);
 		this.chatModule = new ChatShell();
 		this.lobbyModule = new LobbyShell();
 		this.net = new NetManager(this.chatModule.handler, this.conn);
@@ -50,20 +50,22 @@ public class Monitor {
 		}
 		if (LM != null) {
 			this.lobbyModule.Initiate(LM.UserList, LM.GameHost, this.net);
+			this.chatModule.Initiate(this.lobbyModule.graphInterface.chatt, this.net, this.lobbyModule.graphInterface.lobby);
 		} else {
 			System.out.println("Connection failed");
 		}
 		
 		String mess;
-		LobbyServerMessage LSM = null;
+		
 		
 		while(true) {
 			try {
+				
 				MessageHandler MH = new MessageHandler();
 				mess = net.receiveMessage();
 				Message m = MH.decode(mess);
-				this.lobbyModule.graphInterface.chatPanel.setText(this.lobbyModule.graphInterface.chatPanel.getText() + "<" + getTime() + "> " + m.user + ": "  + m.message + "\n");
-				this.lobbyModule.graphInterface.chatPanel.setCaretPosition(this.lobbyModule.graphInterface.chatPanel.getDocument().getLength());
+				this.chatModule.graphInterface.chatPanel.setText(this.chatModule.graphInterface.chatPanel.getText() + "<" + getTime() + "> " + m.user + ": "  + m.message + "\n");
+				this.chatModule.graphInterface.chatPanel.setCaretPosition(this.chatModule.graphInterface.chatPanel.getDocument().getLength());
 			} catch (IOException | JSONException e) {
 			
 				e.printStackTrace();
