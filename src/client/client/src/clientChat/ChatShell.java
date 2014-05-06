@@ -1,16 +1,8 @@
 package clientChat;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-
-
-import clientNetworking.NetManager;
-
-import packageManaging.MessageHandler;
-import graphicalReference.ChatGUI;
 
 public class ChatShell {
-	
+/*	
 	public MessageHandler handler;
 	public ChatGUI graphInterface;
 	public TreatInput readFromInterface;
@@ -28,5 +20,5 @@ public class ChatShell {
 	public void ShutDown() {
 		
 	}
-	
+*/	
 }

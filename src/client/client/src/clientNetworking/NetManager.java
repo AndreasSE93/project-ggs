@@ -9,9 +9,8 @@ public class NetManager {
 	public Handler handler; 
 	private Connection conn;
 	
-	public NetManager(Handler interactor, Connection c) {
-		this.handler = interactor;
-		this.conn = c;
+	public NetManager(Connection c) {
+			this.conn = c;
 	}
 	
 	public void connectToServer() throws IOException{

@@ -1,62 +1,58 @@
 package clientCore;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 
-import javax.swing.JOptionPane;
 
-import org.json.JSONException;
 
-import packageManaging.LobbyServerMessage;
-import packageManaging.Message;
-import packageManaging.MessageHandler;
+import clientHandlers.LobbyHandler;
 
-import clientLobby.LobbyShell;
 import clientNetworking.NetManager;
 import clientNetworking.Connection;
-import clientChat.ChatShell;
+
 
 public class Monitor {
 	
-	Connection conn;
-	NetManager net;
-	ChatShell chatModule;
-	LobbyShell lobbyModule;
+	public  Connection conn;
+	public  NetManager net;
+	//public ChatShell chatModule;
+	//public LobbyShell lobbyModule;
 	
 	public Monitor() {
-<<<<<<< HEAD
-		this.conn = new Connection("localhost", 8080);
-=======
-		String serverConnectStr = "Enter server: ";
-		while (true) {
-			String hostStr = JOptionPane.showInputDialog(serverConnectStr, Connection.DEFAULT_HOST + ":" + String.valueOf(Connection.DEFAULT_PORT));
-			if (hostStr == null) {
-				return;
-			}
-			try {
-				this.conn = new Connection(hostStr);
-				break;
-			} catch (NumberFormatException e) {
-				serverConnectStr = "Invalid port. Enter server:";
-			}
-		}
 		
->>>>>>> eaeef93d90fa8e0a26e42171122e861731b88f87
-		this.chatModule = new ChatShell();
-		this.lobbyModule = new LobbyShell();
-		this.net = new NetManager(this.chatModule.handler, this.conn);
-		
-		try {
-			this.net.connectToServer();
-		} catch (IOException e) {
-			System.out.println("Connection to server failed!\n");
-			e.printStackTrace();
-		}
-		this.runner();
 	}
 	
-	private void runner() {
+	public void init(){
+		System.out.println("Blää");
+		this.conn = new Connection("130.243.137.81", 8080);
+		this.net = new NetManager(conn);
+        try {
+			net.connectToServer();
+			setState(1);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
+
+      
+		
+		
+	}
+	
+	public void setState (int state){
+		if(state == 1){
+			System.out.println("Hej");
+			LobbyHandler lh = new LobbyHandler(net);
+			lh.initHandler();
+		}
+		else{
+			System.out.println("hejdå");
+		}
+		
+		
+	}
+	
+/*	private void runner() {
 		String firstcall;
 		LobbyServerMessage LM = null;
 		try {
@@ -91,13 +87,8 @@ public class Monitor {
 			}
 		}
 	}
-	
-	public String getTime() {
-    	Calendar cal = Calendar.getInstance();
-    	cal.getTime();
-    	SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-    	return sdf.format(cal.getTime());
-    }
+	*/
+
 
 	
 }

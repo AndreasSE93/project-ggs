@@ -3,6 +3,9 @@ package clientCore;
 public class Core {
 
 	public static void main(String[] args) {
-		new Monitor();
+		
+		Monitor m = new Monitor();
+		m.init();
+		
 	}
 }

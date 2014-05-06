@@ -11,7 +11,7 @@ public class ChatMessageEncoder extends Handler {
 		JSONObject obj = new JSONObject();
 		
 	    obj.put("message", mess.message);
-	    obj.put("PacketID", mess.PacketID);
+	    obj.put("PacketID", mess.id);
 	    obj.put("user", mess.user);
 
 		String message = obj.toString();

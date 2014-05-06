@@ -1,7 +1,7 @@
 package packageManaging;
 
 public class Message {
-	 public int id;
+	 public final int id = 100;
 	 public String user;
 	 public String message;
 	 
@@ -10,10 +10,10 @@ public class Message {
 		 
 	 }
 
-	public Message(String message, String user, int id){
+	public Message(String message, String user){
 		this.message = message;
 		this.user = user;
-		this.id = id;
+		
 		
 	}
 

@@ -1,15 +1,9 @@
 package clientLobby;
 
-import java.util.ArrayList;
-
-import clientNetworking.NetManager;
-
-import packageManaging.LobbyHandler;
-import graphicalReference.LobbyGUI;
 
 public class LobbyShell {
 	
-	public LobbyHandler handler;
+/*	public LobbyHandler handler;
 	public LobbyGUI graphInterface;
 	
 	public LobbyShell() {
@@ -24,5 +18,5 @@ public class LobbyShell {
 	public void ShutDown() {
 		
 	}
-	
+	*/
 }
