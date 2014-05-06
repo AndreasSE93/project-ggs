@@ -5,27 +5,30 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-import java.text.DateFormat.Field;
 import java.util.ArrayList;
 
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+
 
 import org.json.JSONException;
 
-import packageManaging.LobbyClientMessage;
-import packageManaging.LobbyHandler;
+
 import packageManaging.Message;
 import packageManaging.MessageHandler;
 
+
 import clientNetworking.NetManager;
 
+
+
 public class LobbyGUI extends GUI {
-		JPanel chatt;
+		public JPanel chatt = new JPanel();
 		public JTextField field;
 		public JTextPane chatPanel = new JTextPane();
-		
+	    public JFrame lobby = new JFrame();
 		public NetManager NM;
 		
 		public String userName;
@@ -34,7 +37,7 @@ public class LobbyGUI extends GUI {
 		
 		this.NM = m;
 		
-		JFrame lobby = new JFrame();
+	
 		lobby.setLayout(new BorderLayout());
 		lobby.getContentPane().setBackground(Color.DARK_GRAY);
 		lobby.setSize(800,600);
@@ -57,11 +60,11 @@ public class LobbyGUI extends GUI {
         Dimension preferredSize = new Dimension(400,300);
         topPanel.setPreferredSize(preferredSize);
         lobby.add(topPanel, BorderLayout.NORTH);
-        lobby.add(bottomPanel, BorderLayout.SOUTH);
-        JPanel chatt = new JPanel();
-        chatStart(chatt);
-        lobby.add(chatt);
-        chatt.setBorder(null);
+        lobby.add(chatt, BorderLayout.SOUTH);
+
+      
+        bottomPanel.add(chatt, "Center");
+        
         topPanel.setBorder(null);
         
         lobby.setVisible(true);
@@ -90,10 +93,12 @@ public class LobbyGUI extends GUI {
 	public void makeList(JPanel panel ,ArrayList<String> L, String nameButton){
 		JButton game = new JButton();
 		final JList<String> jList = getJList(L);
-		Dimension preferredSize = new Dimension(200 , 200);
-		jList.setPreferredSize(preferredSize);
+		//Dimension preferredSize = new Dimension(200 , 200);
+		//jList.setPreferredSize(preferredSize);
 		jList.setBackground(Color.DARK_GRAY.darker());
 		jList.setForeground(Color.LIGHT_GRAY);
+		panel.setBorder(new EmptyBorder(10,100,10,100));
+		panel.setBackground(Color.DARK_GRAY);
 		File imageCheck = new File("resources/connectButton.png");
 		  try {
 		    Image img = ImageIO.read(imageCheck);
@@ -102,8 +107,11 @@ public class LobbyGUI extends GUI {
 		  }
 		game.setMargin(new Insets(0, 0, 0, 0));
 		game.setBorder(null);
+		JScrollPane js = new JScrollPane(jList);
+		js.setHorizontalScrollBar(null);
+		js.setBorder(null);
 		panel.add(game, BorderLayout.SOUTH);
-		panel.add(jList, BorderLayout.CENTER);
+		panel.add(js, BorderLayout.CENTER);
 		game.addActionListener(new ActionListener(){
         	public void actionPerformed(ActionEvent ae){
         		String selectedItem = (String) jList.getSelectedValue();
@@ -112,38 +120,6 @@ public class LobbyGUI extends GUI {
 		});
 	}
 	
-	public void chatStart(JPanel j){
-		
-		userName = (String)JOptionPane.showInputDialog("Write username!");
-        System.out.println(userName);
-		j.setLayout(new BorderLayout());
-        this.field = new JTextField(20);
-        field.addActionListener(this);
-        field.setBackground(Color.DARK_GRAY.brighter());
-        JScrollPane js = new JScrollPane(chatPanel);
-        Dimension preferredSize = new Dimension(400, 200);
-        js.setPreferredSize(preferredSize);
-        js.setAutoscrolls(true);
-        chatPanel.setBackground(Color.DARK_GRAY);
-        j.setBorder(null);
-        chatPanel.setBorder(null);
-        field.setBorder(null);
-        JScrollBar sb = js.getVerticalScrollBar();
-        sb.setValue( sb.getMaximum() );
-        chatPanel.setVisible(true);
-        chatPanel.setEditable(false);
-        chatPanel.setForeground(Color.LIGHT_GRAY);
-      
-        
-        j.add(js, "Center");
-        j.add(field, "South");
-        
-        
-		
-        
-		
-
-	}
 	
 	
 
