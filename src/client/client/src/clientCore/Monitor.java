@@ -22,7 +22,7 @@ public class Monitor {
 	}
 	
 	public void init(){
-		System.out.println("Blää");
+		
 		this.conn = new Connection("130.243.137.81", 8080);
 		this.net = new NetManager(conn);
         try {
@@ -41,7 +41,7 @@ public class Monitor {
 	
 	public void setState (int state){
 		if(state == 1){
-			System.out.println("Hej");
+			
 			LobbyHandler lh = new LobbyHandler(net);
 			lh.initHandler();
 		}

@@ -34,12 +34,8 @@ public class LobbyHandler implements HandlerInterface,
 		LobbyServerMessage LM = null;
 		try {
 			firstcall = network.receiveMessage();
-
-			System.out.println(firstcall + "\n");
-
 			LM = lme.decode(firstcall);
-
-			System.out.println(LM + "\n");
+			
 		} catch (IOException | JSONException e) {
 			e.printStackTrace();
 		}
@@ -58,15 +54,11 @@ public class LobbyHandler implements HandlerInterface,
 				String mess = recieveMessage();
 			
 				int id = retrieveId(mess);
-				System.out.println(id);
-
 				decodeAndRender(id, mess);
 				
 			} catch (IOException | JSONException e) {
-
 				e.printStackTrace();
 			}
-
 		}
 
 	}
@@ -125,7 +117,6 @@ public class LobbyHandler implements HandlerInterface,
 	}
 
 	public int retrieveId(String mess) {
-
 		try {
 			JSONObject obj = new JSONObject(mess);
 			return obj.getInt("PacketID");
