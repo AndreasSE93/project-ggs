@@ -20,7 +20,9 @@ public class LobbyGUI {
 	public JButton joinButton;
 	public JButton createButton;
 	public JButton refreshButton;
-
+	public JList<String> createList;
+	public JList<String> joinList;
+	
 	public void render(ArrayList<String> players, ArrayList<String> games) {
 
 		lobby.setLayout(new BorderLayout());
@@ -81,7 +83,7 @@ public class LobbyGUI {
 		js.setBorder(null);
 		panel.add(joinButton, BorderLayout.SOUTH);
 		panel.add(js, BorderLayout.CENTER);
-		
+		joinList = jList;
 	}
 
 	public void makeGameList(JPanel panel, ArrayList<String> L,
@@ -100,7 +102,7 @@ public class LobbyGUI {
 		js.setBorder(null);
 		panel.add(createButton, BorderLayout.SOUTH);
 		panel.add(js, BorderLayout.CENTER);
-		
+		createList = jList;
 	}
 
 	public static JList<String> getJList(ArrayList<String> list) {

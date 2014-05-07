@@ -23,6 +23,15 @@ public class ChatGUI{
 	public JTextField field;
 	public String userName;
 	
+	
+	public  ChatGUI(){
+		userName = (String)JOptionPane.showInputDialog("Write username!");
+	}
+	
+	public ChatGUI(String usr){
+		userName = usr;
+	}
+	
 
 	public void render(JPanel j, JFrame JF){
 		
@@ -60,7 +69,7 @@ public class ChatGUI{
         j.add(field, "South");
         JF.add(j );
         JF.validate();
-        userName = (String)JOptionPane.showInputDialog("Write username!");
+        
         
 		
         

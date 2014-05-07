@@ -7,6 +7,10 @@ import java.io.IOException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import packageManaging.CreateGameMessage;
+import packageManaging.CreateGameMessageEncoder;
+import packageManaging.JoinMessage;
+import packageManaging.JoinMessageEncoder;
 import packageManaging.LobbyMessageEncoder;
 import packageManaging.LobbyServerMessage;
 import packageManaging.Message;
@@ -22,6 +26,8 @@ public class LobbyHandler implements HandlerInterface,
 	ChatGUI cg;
 	LobbyMessageEncoder lme = new LobbyMessageEncoder();
 	ChatMessageEncoder cme = new ChatMessageEncoder();
+	JoinMessageEncoder jme = new JoinMessageEncoder();
+	CreateGameMessageEncoder gme = new CreateGameMessageEncoder();
 	NetManager network;
 	boolean loop = true;
 	
@@ -69,7 +75,7 @@ public class LobbyHandler implements HandlerInterface,
 		
 		 lg.lobby.setVisible(false);
 		 TiarHandler th = new TiarHandler(network);
-		 th.init();
+		 th.init(lg.chatgui.userName);
 
 	}
 
@@ -88,13 +94,23 @@ public class LobbyHandler implements HandlerInterface,
 			break;
 
 		case "joinbutton":
-			 JSONtext = null;  // skicka jag vill joina spelet X till server
+			try {
+				JSONtext = jme.encode(new JoinMessage((String)lg.joinList.getSelectedValue())); // Vad göra sen? skickat till serven att vi vill spela.
+				} catch (JSONException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			 loop=false;
 
 			break;
 			
 		case "createbutton":
-			JSONtext = null;			// skicka jag vill skapa spelet X till server
+			try {
+				JSONtext = gme.encode(new CreateGameMessage((String) lg.createList.getSelectedValue()));
+			} catch (JSONException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			
 			break;
 		case "refreshbutton":			//SKicka jag vill uppdatera spelarlistorna
@@ -117,6 +133,7 @@ public class LobbyHandler implements HandlerInterface,
 			break;
 
 		case 101: // Create session
+			
 			break;
 
 		case 102: // Join session

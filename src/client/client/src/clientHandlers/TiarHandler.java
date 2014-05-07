@@ -11,6 +11,8 @@ import javax.swing.JButton;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import packageManaging.ChatMessageEncoder;
+import packageManaging.Message;
 import packageManaging.TiarUserMessage;
 import packageManaging.TiarUserMessageEncoder;
 
@@ -26,21 +28,24 @@ public class TiarHandler implements HandlerInterface, ActionListener, MouseListe
 
 	NetManager network;
 	TiarGUI tg;
+	ChatMessageEncoder cme = new ChatMessageEncoder();
 	
 	public TiarHandler(NetManager net){
 		this.network = net;
 		
 	}
 
-	public void init(){
+	public void init(String usr){
 		 tg = new TiarGUI();
-		 tg.render();
+		 tg.render(usr);
 		 System.out.println("1");
 		 for (int i = 0 ; i < tg.game.length; i++){
 		 tg.game[i].addMouseListener(this);
+		
 		 
 		 }
 		 System.out.println("2");
+		 tg.chat.field.addActionListener(this);
 		/* Create new Tiar lobby, probably with a graphical three in a row and a chat. 
 		 * Add actionLsiteners to resp.. */
 		
@@ -63,12 +68,16 @@ public class TiarHandler implements HandlerInterface, ActionListener, MouseListe
 	public void decodeAndRender(int id, String message) throws JSONException {
 		switch(id){
 		case 100: //Chat message
+			ChatMessageEncoder mh = new ChatMessageEncoder();
+			Message chatMessage = mh.decode(message);
+			tg.chat.chatUpdate(chatMessage.message, chatMessage.user);
 				break;
 				
 		case 200: //Move message
 				TiarUserMessageEncoder s = new TiarUserMessageEncoder();
 				TiarUserMessage mess = s.decode(message);
 				tg.doMove(mess.Move , tg.getTurn());
+				tg.changeTurn();
 				break;
 				
 		default: //Should not come here
@@ -104,16 +113,33 @@ public class TiarHandler implements HandlerInterface, ActionListener, MouseListe
 	}
 
 	
-	public void actionPerformed(ActionEvent arg0) {
-		// TODO Auto-generated method stub
-		
+	public void actionPerformed(ActionEvent e) {
+		String command = e.getActionCommand();
+		String JSONtext = "";
+		switch (command) {
+		case "chatmessage":  //JTextField
+			try {
+				
+				JSONtext = cme.encode(new Message(tg.chat.field.getText(), tg.chat.userName));
+				tg.chat.field.setText("");
+			} catch (JSONException e1) {
+				e1.printStackTrace();
+			}
+			break;
+			default:
+				
+			break;
+			}
+		sendMessage(JSONtext);
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
 		JButton l =(JButton) arg0.getSource();
 		String Name = l.getName();
-		tg.doMove(Name, 1);
+		tg.doMove(Name, tg.getTurn());
+		tg.changeTurn();
+		
 	}
 
 	@Override
