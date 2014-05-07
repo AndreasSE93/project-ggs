@@ -163,11 +163,6 @@ public class TiarGUI {
 	
 		
 	}
-	
-	public static void main (String args[]){
-		TiarGUI t = new TiarGUI( );
-	t.render(new ArrayList<String>());
-	t.doMove(3, true);
-	t.doMove(4, false);
-	}
 }
+	
+	
