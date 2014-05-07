@@ -1,5 +1,7 @@
 package tiar;
 
+import graphicalReference.ChatGUI;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -29,9 +31,11 @@ public class TiarGUI extends GameLogic{
 	public JButton c3 = new JButton();
 	public JButton[] game = new JButton[9];
 	
+	public 	JFrame window = new JFrame();
+	public JPanel chatPanel = new JPanel();
+	
 	public  void render (){
 		
-		JFrame window = new JFrame();
 		window.setSize(800, 600);
 		window.setLayout(new BorderLayout());
 		window.setLocationRelativeTo(null);
@@ -143,8 +147,8 @@ public class TiarGUI extends GameLogic{
 		gamePane.add(bottomRow);
 		
 		
-		
-		
+		ChatGUI chat = new ChatGUI();
+		chat.render(chatPanel, window);
 		
 		window.add(gamePane, BorderLayout.WEST);
 		window.setVisible(true);
@@ -208,6 +212,14 @@ public class TiarGUI extends GameLogic{
 		jb.setMargin(new Insets(0, 0, 0, 0));
 		jb.setBorder(null);
 	
+		
+	}
+	
+	
+	public static void main (String args[]){
+		
+		TiarGUI g = new TiarGUI();
+		g.render();
 		
 	}
 }
