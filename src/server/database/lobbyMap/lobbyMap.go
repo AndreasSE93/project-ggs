@@ -122,6 +122,10 @@ func mapHandler(lm *LobbyMap, hostCollection map[int]HostRoom) {
 	}
 }
 
+func GetEmptyHostRoom() HostRoom {
+	return *new(HostRoom)
+}
+
 func Init(clientDB *database.Database) *LobbyMap {
 	hostCollection := make(map[int]HostRoom)
 	lm := new(LobbyMap)
