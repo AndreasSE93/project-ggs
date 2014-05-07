@@ -1,6 +1,7 @@
 package lobbyMap
 
 import (
+//	"fmt"
 	"server/connection"
 )
 
@@ -15,7 +16,7 @@ type LobbyMap struct {
 	del chan int
 	join chan joiner
 	getShadow chan chan []HostRoom
-	nextID, groupSize int
+	nextID int
 }
 
 type HostRoom struct {
@@ -29,56 +30,41 @@ type speaker struct {
 	sendBack chan HostRoom
 }
 
-func createRoom(s speaker, lm *LobbyMap, hostCollection map[int]map[int]HostRoom) {
+func createRoom(s speaker, lm *LobbyMap, hostCollection map[int]HostRoom) {
 	s.hr.RoomID = lm.nextID
 	lm.nextID++
 
-	groupID := s.hr.RoomID/lm.groupSize
-	roomIndex := s.hr.RoomID % lm.groupSize
-	if hostCollection[groupID] == nil {
-		hostCollection[groupID] = make(map[int]HostRoom)
-	}
-	hostCollection[groupID][roomIndex] = s.hr
+	hostCollection[s.hr.RoomID] = s.hr
 	s.sendBack <- s.hr
 }
 
-func joinRoom(associate joiner, lm *LobbyMap, hostCollection map[int]map[int]HostRoom) {
-	groupID := associate.RoomID/lm.groupSize
-	roomIndex := associate.RoomID % lm.groupSize
-
-	room := hostCollection[groupID][roomIndex]
-	if room.ClientCount < room.MaxSize {
+func joinRoom(associate joiner, lm *LobbyMap, hostCollection map[int]HostRoom) {
+	room, ok := hostCollection[associate.RoomID]
+	if room.ClientCount < room.MaxSize && ok {
 		room.ClientCount++
-		room.Clients[room.ClientCount] = associate.client
+		room.Clients[room.ClientCount - 1] = associate.client
+		hostCollection[room.RoomID] = room
 		associate.sendBack <- &room
 	} else {
 		associate.sendBack <- nil
 	}
 }
 
-func deleteRoom(RoomID int, lm *LobbyMap, hostCollection map[int]map[int]HostRoom) {
-	groupID := RoomID/lm.groupSize
-	roomIndex := RoomID % lm.groupSize
-
-	delete(hostCollection[groupID], roomIndex)
+func deleteRoom(RoomID int, hostCollection map[int]HostRoom) {
+	delete(hostCollection, RoomID)
 }
 
-func refreshShadow(sendBack chan []HostRoom, lm *LobbyMap, hostCollection map[int]map[int]HostRoom) {
-	giant := make([]HostRoom, len(hostCollection)*lm.groupSize)
+func refreshShadow(sendBack chan []HostRoom, hostCollection map[int]HostRoom) {
+	giant := make([]HostRoom, len(hostCollection))
 	i := 0
 	for m := range hostCollection {
-		for e := range hostCollection[m] {
-			_, ok := hostCollection[m][e]
-			if ok {
-				giant[i] = hostCollection[m][e]
-				i++
-			}
-		}
+		giant[i] = hostCollection[m]
+		i++
 	}
 	sendBack <- giant[0:i]
 }
 
-func mapHandler(lm *LobbyMap, hostCollection map[int]map[int]HostRoom) {
+func mapHandler(lm *LobbyMap, hostCollection map[int]HostRoom) {
 	for {
 		select {
 		case speaker := <-lm.add:
@@ -86,15 +72,15 @@ func mapHandler(lm *LobbyMap, hostCollection map[int]map[int]HostRoom) {
 		case joiner := <-lm.join:
 			joinRoom(joiner, lm, hostCollection)
 		case del := <-lm.del:
-			deleteRoom(del, lm, hostCollection)			
+			deleteRoom(del, hostCollection)			
 		case getShadow := <-lm.getShadow:
-			refreshShadow(getShadow, lm, hostCollection)
+			refreshShadow(getShadow, hostCollection)
 		}
 	}
 }
 
-func Init(roomSize int) *LobbyMap {
-	hostCollection := make(map[int]map[int]HostRoom)
+func Init() *LobbyMap {
+	hostCollection := make(map[int]HostRoom)
 	lm := new(LobbyMap)
 	lm.add = make(chan speaker)
 	lm.del = make(chan int)
@@ -112,11 +98,11 @@ func (lm LobbyMap) Host(hr HostRoom) HostRoom {
 	return <- sendBack
 }
 
-func (lm LobbyMap) Join(id int, client connection.Connector) HostRoom {
+func (lm LobbyMap) Join(id int, client connection.Connector) *HostRoom {
 	sendBack := make(chan *HostRoom)
 	joiner := joiner{id, client, sendBack}
 	lm.join <- joiner
-	return *(<- sendBack)
+	return <- sendBack
 }
 
 func (lm LobbyMap) Delete(RoomID int) {
