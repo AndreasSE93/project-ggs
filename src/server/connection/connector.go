@@ -6,7 +6,7 @@ import (
 )
 
 type Connector struct {
-	ConnectorID int
+	ConnectorID, CurrentRoom int
 	Connection net.Conn
 	//LocalAddr, RemAddr net.Addr
 	//waiter WaitingHandler
@@ -21,7 +21,10 @@ func clientIdGenerator(sender chan int) {
 }
 
 func initServerClient(netConn net.Conn, idChan chan int, lobbyContact chan Connector) {
-	client := &Connector{<-idChan, netConn}
+	client := new(Connector)
+	client.ConnectorID = <- idChan
+	client.Connection = netConn
+	client.CurrentRoom = -1
 	lobbyContact <- *client
 }
 
