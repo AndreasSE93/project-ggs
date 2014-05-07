@@ -61,6 +61,7 @@ public class LobbyGUI {
 		topPanel.setBorder(null);
 		lobby.validate();
 		lobby.setVisible(true);
+		
 
 	}
 

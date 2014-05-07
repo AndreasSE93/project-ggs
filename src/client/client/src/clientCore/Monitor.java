@@ -5,6 +5,7 @@ import java.io.IOException;
 
 
 import clientHandlers.LobbyHandler;
+import clientHandlers.TiarHandler;
 
 import clientNetworking.NetManager;
 import clientNetworking.Connection;
@@ -41,7 +42,6 @@ public class Monitor {
 	
 	public void setState (int state){
 		if(state == 1){
-			
 			LobbyHandler lh = new LobbyHandler(net);
 			lh.initHandler();
 		}

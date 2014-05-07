@@ -27,22 +27,24 @@ public class TiarHandler implements HandlerInterface, ActionListener, MouseListe
 	NetManager network;
 	TiarGUI tg;
 	
-	TiarHandler(NetManager net){
+	public TiarHandler(NetManager net){
 		this.network = net;
 		
 	}
 
 	public void init(){
-		 TiarGUI tg = new TiarGUI();
+		 tg = new TiarGUI();
 		 tg.render();
+		 System.out.println("1");
 		 for (int i = 0 ; i < tg.game.length; i++){
 		 tg.game[i].addMouseListener(this);
 		 
 		 }
+		 System.out.println("2");
 		/* Create new Tiar lobby, probably with a graphical three in a row and a chat. 
 		 * Add actionLsiteners to resp.. */
 		
-		
+		tg.window.setVisible(true);
 		
 		
 		while (true) {

@@ -124,7 +124,7 @@ public class GameLogic{
 		return 0;
 	}
 
-
+/*
 	public static void main(String [] args){
 		GameLogic Game = new GameLogic();
 		Game.toString();
@@ -185,7 +185,7 @@ public class GameLogic{
 
 	}
 
-
+*/
 }
 
 

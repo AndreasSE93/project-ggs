@@ -23,6 +23,7 @@ public class LobbyHandler implements HandlerInterface,
 	LobbyMessageEncoder lme = new LobbyMessageEncoder();
 	ChatMessageEncoder cme = new ChatMessageEncoder();
 	NetManager network;
+	boolean loop = true;
 	
 	public LobbyHandler(NetManager net){
 		this.network = net;
@@ -52,7 +53,7 @@ public class LobbyHandler implements HandlerInterface,
 			System.out.println("Connection failed");
 		}
 
-		while (true) {
+		while (loop) {
 			try {
 				String mess = recieveMessage();
 			
@@ -63,6 +64,12 @@ public class LobbyHandler implements HandlerInterface,
 				e.printStackTrace();
 			}
 		}
+		
+		//Change state!!!
+		
+		 lg.lobby.setVisible(false);
+		 TiarHandler th = new TiarHandler(network);
+		 th.init();
 
 	}
 
@@ -82,7 +89,8 @@ public class LobbyHandler implements HandlerInterface,
 
 		case "joinbutton":
 			 JSONtext = null;  // skicka jag vill joina spelet X till server
-			
+			 loop=false;
+
 			break;
 			
 		case "createbutton":

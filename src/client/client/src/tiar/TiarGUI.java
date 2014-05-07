@@ -152,6 +152,7 @@ public class TiarGUI extends GameLogic{
 		
 		window.add(gamePane, BorderLayout.WEST);
 		window.setVisible(true);
+		window.validate();
 		
 		
 		
@@ -215,6 +216,12 @@ public class TiarGUI extends GameLogic{
 		
 	}
 	
+	
+	public static void main(String[] arg){
+		TiarGUI l= new TiarGUI();
+		l.render();
+		
+	}
 	
 	
 }
