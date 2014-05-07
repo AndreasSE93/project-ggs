@@ -1,3 +1,4 @@
+package tiar;
 /*
  * API:
  * 
@@ -34,14 +35,14 @@
 
 
 
-public class TiarGame{
+public class GameLogic{
 	private int[] gameField = new int[9];
 	private boolean isFull;
 	private int turn;
 
 
 
-	public TiarGame(){
+	public GameLogic(){
 		for (int i=0; i<9; i++){
 			this.gameField[i] = 0;
 		}
@@ -125,7 +126,7 @@ public class TiarGame{
 
 
 	public static void main(String [] args){
-		TiarGame Game = new TiarGame();
+		GameLogic Game = new GameLogic();
 		Game.toString();
 		System.out.println("PLAYING THE GAME FOR YOU");
 		for (int i=0; i<9; i++){
@@ -145,7 +146,7 @@ public class TiarGame{
 
 
 
-		TiarGame Game2 = new TiarGame();
+		GameLogic Game2 = new GameLogic();
 		Game2.toString();
 		System.out.println("PLAYING THE GAME FOR YOU");
 		for (int i=0; i<9; i++){
@@ -161,7 +162,7 @@ public class TiarGame{
 
 
 
-		TiarGame Game3 = new TiarGame();
+		GameLogic Game3 = new GameLogic();
 		Game3.toString();
 		System.out.println("PLAYING THE GAME FOR YOU");
 		Game3.makeMove(0,1);	

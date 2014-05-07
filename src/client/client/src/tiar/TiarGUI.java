@@ -7,7 +7,7 @@ import java.awt.Image;
 import java.awt.Insets;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+
 
 
 import javax.imageio.ImageIO;
@@ -17,7 +17,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-public class TiarGUI {
+public class TiarGUI extends GameLogic{
 	public JButton a1 = new JButton();
 	public JButton a2 = new JButton();
 	public JButton a3 = new JButton();
@@ -29,7 +29,7 @@ public class TiarGUI {
 	public JButton c3 = new JButton();
 	public JButton[] game = new JButton[9];
 	
-	public  void render (ArrayList<String> gameField){
+	public  void render (){
 		
 		JFrame window = new JFrame();
 		window.setSize(800, 600);
@@ -62,7 +62,21 @@ public class TiarGUI {
 		 JPanel cc1 = new JPanel();
 		 JPanel cc2 = new JPanel();
 		 JPanel cc3 = new JPanel();
-		
+		 
+		 
+		 a1.setName("a1");
+		 a2.setName("a2");
+		 a3.setName("a3");
+		 a1.setName("b1");
+		 b2.setName("b2");
+		 b3.setName("b3");
+		 c1.setName("c1");
+		 c2.setName("c2");
+		 c3.setName("c3");
+		 
+		 
+		 
+		 
 		 aa1.add(a1);
 		 aa2.add(a2);
 		 aa3.add(a3);
@@ -142,15 +156,48 @@ public class TiarGUI {
 	
 	
 	
-	public void doMove (int position, boolean player) {
-		JButton update = this.game[position];
+	public void doMove (String position, int player) {
+		
+		
+		int pos = getInt(position);
+		if(super.validMove(pos, player)){ 
+		JButton update = this.game[pos];
 		makeJButton(update, player);
+
+		}
+
+	}
+	
+	private int getInt(String Pos){
+		switch (Pos){
+		case "a1":
+			return 0;
+		case "a2":
+			return 1;
+		case "a3":
+			return 2;
+		case "b1":
+			return 3;
+		case "b2":
+			return 4;
+		case "b3":
+			return 5;
+		case "c1":
+			return 6;
+		case "c2":
+			return 7;
+		case "c3":
+			return 8;
+		default:
+			return 10000;
+		}
+		
 		
 	}
 
-	private void makeJButton (JButton jb,  boolean player){
+	private void makeJButton (JButton jb,  int player){
 		File imageCheck;
-		if (player == true){ imageCheck = new File("resources/cross.png");}
+		if (player == 1){ imageCheck = new File("resources/cross.png");}
 		else { imageCheck = new File("resources/circle.png");
 		}
 		try {

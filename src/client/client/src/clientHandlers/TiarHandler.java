@@ -2,10 +2,19 @@ package clientHandlers;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.IOException;
+
+import javax.swing.JButton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import packageManaging.TiarUserMessage;
+import packageManaging.TiarUserMessageEncoder;
+
+import tiar.TiarGUI;
 
 import clientNetworking.NetManager;
 
@@ -13,9 +22,10 @@ import clientNetworking.NetManager;
 
 /* Handler and initializer for a Tic Tac Toe game */
 
-public class TiarHandler implements HandlerInterface, ActionListener{
+public class TiarHandler implements HandlerInterface, ActionListener, MouseListener{
 
 	NetManager network;
+	TiarGUI tg;
 	
 	TiarHandler(NetManager net){
 		this.network = net;
@@ -23,7 +33,12 @@ public class TiarHandler implements HandlerInterface, ActionListener{
 	}
 
 	public void init(){
-		
+		 TiarGUI tg = new TiarGUI();
+		 tg.render();
+		 for (int i = 0 ; i < tg.game.length; i++){
+		 tg.game[i].addMouseListener(this);
+		 
+		 }
 		/* Create new Tiar lobby, probably with a graphical three in a row and a chat. 
 		 * Add actionLsiteners to resp.. */
 		
@@ -49,6 +64,9 @@ public class TiarHandler implements HandlerInterface, ActionListener{
 				break;
 				
 		case 200: //Move message
+				TiarUserMessageEncoder s = new TiarUserMessageEncoder();
+				TiarUserMessage mess = s.decode(message);
+				tg.doMove(mess.Move , tg.getTurn());
 				break;
 				
 		default: //Should not come here
@@ -85,6 +103,37 @@ public class TiarHandler implements HandlerInterface, ActionListener{
 
 	
 	public void actionPerformed(ActionEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent arg0) {
+		JButton l =(JButton) arg0.getSource();
+		String Name = l.getName();
+		tg.doMove(Name, 1);
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent arg0) {
 		// TODO Auto-generated method stub
 		
 	}
