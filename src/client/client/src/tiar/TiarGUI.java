@@ -216,12 +216,7 @@ public class TiarGUI extends GameLogic{
 	}
 	
 	
-	public static void main (String args[]){
-		
-		TiarGUI g = new TiarGUI();
-		g.render();
-		
-	}
+	
 }
 	
 	
