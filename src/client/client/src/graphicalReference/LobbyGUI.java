@@ -66,7 +66,7 @@ public class LobbyGUI {
 
 	public void makePlayerList(JPanel panel, ArrayList<String> L,
 			String nameButton) {
-		JButton joinButton = new JButton();
+		joinButton = new JButton();
 		final JList<String> jList = getJList(L);
 		// Dimension preferredSize = new Dimension(200 , 200);
 		// jList.setPreferredSize(preferredSize);
@@ -85,7 +85,7 @@ public class LobbyGUI {
 
 	public void makeGameList(JPanel panel, ArrayList<String> L,
 			String nameButton) {
-		JButton createButton = new JButton();
+		createButton = new JButton();
 		final JList<String> jList = getJList(L);
 		// Dimension preferredSize = new Dimension(200 , 200);
 		// jList.setPreferredSize(preferredSize);
@@ -117,6 +117,7 @@ public class LobbyGUI {
 			Image img = ImageIO.read(imageCheck);
 			jb.setIcon(new ImageIcon(img));
 		} catch (IOException ex) {
+			System.out.println("Hej");
 		}
 		jb.setMargin(new Insets(0, 0, 0, 0));
 		jb.setBorder(null);
