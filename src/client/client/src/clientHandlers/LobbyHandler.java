@@ -44,7 +44,10 @@ public class LobbyHandler implements HandlerInterface,
 			lg = new LobbyGUI();
 			lg.render(LM.UserList, LM.GameHost);
 			lg.chatgui.field.addActionListener(this);
-
+			lg.joinButton.addActionListener(this);
+			lg.createButton.addActionListener(this);
+			lg.refreshButton.addActionListener(this);
+			
 		} else {
 			System.out.println("Connection failed");
 		}
@@ -77,6 +80,18 @@ public class LobbyHandler implements HandlerInterface,
 
 			break;
 
+		case "joinbutton":
+			 JSONtext = null;  // skicka jag vill joina spelet X till server
+			
+			break;
+			
+		case "createbutton":
+			JSONtext = null;			// skicka jag vill skapa spelet X till server
+			
+			break;
+		case "refreshbutton":			//SKicka jag vill uppdatera spelarlistorna
+			
+			break;
 		default:
 			JSONtext = "";
 
