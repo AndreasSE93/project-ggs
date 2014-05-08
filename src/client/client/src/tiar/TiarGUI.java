@@ -205,4 +205,13 @@ public class TiarGUI extends GameLogic {
 
 	}
 
+	public void clearBoard(){
+		gl.clearBoard();
+		for(int i=0; i< game.length; i++){
+			game[i].setIcon(null); 
+		}
+		
+		
+	
+	}
 }

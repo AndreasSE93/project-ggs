@@ -62,6 +62,14 @@ public class GameLogic{
 		return;
 
 	}
+	
+
+    public void clearBoard(){
+            int[] field = getGameField();
+            for (int i=0; i<9; i++){field[i] = 0;}
+            this.turn = 1;
+            return;
+    }
 
 
 	public boolean IsFull(){

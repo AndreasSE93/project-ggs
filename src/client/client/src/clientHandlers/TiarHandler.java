@@ -86,9 +86,13 @@ public class TiarHandler implements HandlerInterface, ActionListener, MouseListe
 				switch (tg.gl.hasWon()){
 				case 1:
 					System.out.println("Spelare 1 vann");
+					/* Bör skriva ut ett meddelande */
+					tg.clearBoard();
 					break;
 				case 2:
 					System.out.println("Spelare 2 vann");
+					/* Bör skriva ut ett meddelande */
+					tg.clearBoard();
 					break;
 				default:
 					System.out.println(tg.gl.toString());
