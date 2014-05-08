@@ -3,14 +3,17 @@
 package main
 
 import (
+	"os"
 	"fmt"
 	"net"
+	"bytes"
 	"encoding/gob"
 	"encoding/json"
 	"container/list"
-	"bytes"
 	"server/database"
+	"server/database/lobbyMap"
 	"server/connection"
+	"server/lobbyManager"
 )
 
 //Trivial test structs
@@ -99,7 +102,7 @@ func handleChat (conn net.Conn, connlist *list.List) {
 		_, err := conn.Read(buf)
 		if err != nil {
 			conn.Close()
-			fmt.Println("A connection has been lost :(")
+			fmt.Printf("A connection has been lost :(")
 			return;
 		}
 		n := bytes.Index(buf, []byte{0})
@@ -118,12 +121,13 @@ func handleChat (conn net.Conn, connlist *list.List) {
 //Have a channel to created server clients.
 //Now make them available to waitingLobbyManager to continue.
 //Save in slice, array or map?
-func connectionHandler(connectorChannel chan connection.Connector, database *database.Database, waitingLobby chan connection.Connector, conList *list.List) {
+func connectionHandler(connectorChannel chan connection.Connector, db *database.Database, lm *lobbyMap.LobbyMap, waitingLobby chan connection.Connector, conList *list.List) {
 	for {
 		client := <- connectorChannel
-		fmt.Println(client.ConnectorID)
-		database.Add(client)
-		go clientListener(client, conList)
+		fmt.Printf("Client %d connected: %v\n", client.ConnectorID, client)
+		db.Add(client)
+		//go clientListener(client, conList)
+		go lobbyManager.ClientListener(lm, client)
 		go testConnection(client)
 	}
 }
@@ -131,17 +135,19 @@ func connectionHandler(connectorChannel chan connection.Connector, database *dat
 //Managing which waitinglobby the connectors get to join.
 //Handling spawning of new waitinglobbys.
 func waitingLobbyManager(lobbyContact chan chan connection.Connector, conList *list.List) {
-	database := database.New()
-	handler := &WaitingHandler{*database, 20, 0}
+	db := database.New()
+	//handler := &WaitingHandler{*database, 20, 0}
+
+	lm := lobbyMap.Init(db)
 
 	connectionChannel := make(chan connection.Connector)
 	lobbyContact <- connectionChannel
 
 	wlChannel := make(chan connection.Connector)
-	go connectionHandler(connectionChannel, database, wlChannel, conList)
+	go connectionHandler(connectionChannel, db, lm, wlChannel, conList)
 
 	go initWaitingLobby(wlChannel)
-	handler.InitiatedLobbys += 1;
+	//handler.InitiatedLobbys += 1;
 	
 }
 
@@ -161,7 +167,10 @@ func requestWaitingPlace() {
 //Create a connection. Simulates as a client on the server.
 //CREATE A CONNECTOR(Client) PACKAGE FOR THIS?
 func initConnector(netConn net.Conn, lobbyContact chan connection.Connector, idCh chan int, conList *list.List) {
-	conn := &connection.Connector{<-idCh, netConn}
+	conn := new(connection.Connector)
+	conn.ConnectorID = <- idCh
+	conn.Connection  = netConn
+	conn.CurrentRoom = -1
 	conList.PushBack(conn.Connection)
 
 	lobbyContact <- *conn
@@ -179,7 +188,6 @@ func idGenerator(idCh chan int) {
 //Purpose is to establish all for connection requests, waiting lobbys, etc.
 //Keep now. Redo later..
 func main() {
-	fmt.Println("start");
 	lobbyContact := make(chan chan connection.Connector)
 	idChannel := make(chan int)
 
@@ -190,19 +198,17 @@ func main() {
 
 	//Here to not depend on the channel created in the initiation of the server.
 	clientChannel := <-lobbyContact
-	
-	fmt.Println(lobbyContact)
-	fmt.Println(clientChannel)
 
-	ln, err := net.Listen("tcp", ":8080")
+	listenAddr := ":8080"
+	ln, err := net.Listen("tcp", listenAddr)
 	if err != nil {
-		// handle error
-		fmt.Printf("Error, something went wrong");
+		fmt.Println("Unable to host server on " + listenAddr)
+		os.Exit(1)
 	}
 	for {
 		conn, err := ln.Accept() // this blocks until connection or error
 		if err != nil {
-			// handle error
+			fmt.Printf("Reccived faulty connection: %v\n", err)
 			continue
 		}
 		// a goroutine handles conn so that the loop can accept other connections

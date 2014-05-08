@@ -3,9 +3,10 @@ package lobbyManager
 import (
 	"server/connection"
 	"server/database/lobbyMap"
+	"server/messages"
 )
 
-func ReqHost(hostNew HostNew, clientInfo ClientCore) lobbyMap.HostRoom {
+func ReqHost(hostNew messages.HostNew, clientInfo ClientCore) lobbyMap.HostRoom {
 	hr := lobbyMap.GetEmptyHostRoom()
 	hr.RoomID = -1
 	hr.MaxSize = hostNew.MaxSize
@@ -20,11 +21,11 @@ func ReqHost(hostNew HostNew, clientInfo ClientCore) lobbyMap.HostRoom {
 	
 }
 
-func ReqJoin(join JoinExisting, clientInfo ClientCore) *lobbyMap.HostRoom {
+func ReqJoin(join messages.JoinExisting, clientInfo ClientCore) *lobbyMap.HostRoom {
 	return clientInfo.lm.Join(join.RoomID, clientInfo.client)
 }
 
-func ReqUpdate(refresh UpdateRooms, clientInfo ClientCore) []lobbyMap.HostRoom {
+func ReqUpdate(refresh messages.UpdateRooms, clientInfo ClientCore) []lobbyMap.HostRoom {
 	return clientInfo.lm.GetShadow()
 }
 

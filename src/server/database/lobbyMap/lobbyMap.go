@@ -25,6 +25,7 @@ type HostRoom struct {
 	RoomID, MaxSize, ClientCount int
 	RoomName string
 	Clients []connection.Connector
+	GameName string
 }
 
 type speaker struct {
