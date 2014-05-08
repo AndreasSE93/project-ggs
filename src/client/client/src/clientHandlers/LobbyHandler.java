@@ -15,6 +15,8 @@ import packageManaging.LobbyMessageEncoder;
 import packageManaging.LobbyServerMessage;
 import packageManaging.Message;
 import packageManaging.ChatMessageEncoder;
+import packageManaging.RefeshMessageEncoder;
+import packageManaging.RefreshMessage;
 import graphicalReference.ChatGUI;
 import graphicalReference.LobbyGUI;
 
@@ -28,6 +30,7 @@ public class LobbyHandler implements HandlerInterface,
 	ChatMessageEncoder cme = new ChatMessageEncoder();
 	JoinMessageEncoder jme = new JoinMessageEncoder();
 	CreateGameMessageEncoder gme = new CreateGameMessageEncoder();
+	RefeshMessageEncoder  rme = new RefeshMessageEncoder();
 	NetManager network;
 	boolean loop = true;
 	int state;
@@ -110,7 +113,7 @@ public class LobbyHandler implements HandlerInterface,
 			
 		case "createbutton":
 			try {
-				JSONtext = gme.encode(new CreateGameMessage((String) lg.createList.getSelectedValue(), 2));
+				JSONtext = gme.encode(new CreateGameMessage((String) lg.createList.getSelectedValue(), 2 , this.userName));
 			} catch (JSONException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -118,7 +121,12 @@ public class LobbyHandler implements HandlerInterface,
 			
 			break;
 		case "refreshbutton":			//SKicka jag vill uppdatera spelarlistorna, server skickar ut nya listor
-			
+			try {
+				JSONtext = rme.encode (new RefreshMessage());
+			} catch (JSONException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			break;
 		default:
 			JSONtext = "";
