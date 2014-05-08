@@ -17,6 +17,8 @@ public String encode(CreateGameMessage mess) throws JSONException {
 		JSONObject obj = new JSONObject();
 		
 	    obj.put("gameName", mess.gameName);
+	    obj.put("PacketID", mess.PacketID);
+	    obj.put("maxSize", mess.maxSize);
 	    
 	   
 		String message = obj.toString();

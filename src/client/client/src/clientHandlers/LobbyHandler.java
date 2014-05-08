@@ -97,6 +97,7 @@ public class LobbyHandler implements HandlerInterface,
 		case "joinbutton":
 			try {
 				JSONtext = jme.encode(new JoinMessage((String)lg.joinList.getSelectedValue())); // Vad göra sen? skickat till serven att vi vill spela.
+				
 				} catch (JSONException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -109,7 +110,7 @@ public class LobbyHandler implements HandlerInterface,
 			
 		case "createbutton":
 			try {
-				JSONtext = gme.encode(new CreateGameMessage((String) lg.createList.getSelectedValue()));
+				JSONtext = gme.encode(new CreateGameMessage((String) lg.createList.getSelectedValue(), 2));
 			} catch (JSONException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();

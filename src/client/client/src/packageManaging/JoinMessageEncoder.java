@@ -14,6 +14,7 @@ public String encode(JoinMessage mess) throws JSONException {
 		
 		JSONObject obj = new JSONObject();
 		
+		obj.put("PacketID", mess.PacketID);
 	    obj.put("joinName", mess.joinName);
 	    
 	   

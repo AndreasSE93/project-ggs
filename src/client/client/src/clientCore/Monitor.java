@@ -22,10 +22,11 @@ public class Monitor {
 	public Monitor() {
 		
 	}
+	//130.243.137.18 andreas
 	
 	public void init(){
 		
-		this.conn = new Connection("130.243.137.81", 8080);
+		this.conn = new Connection("130.243.137.18", 8080);
 		this.net = new NetManager(conn);
         try {
 			net.connectToServer();
