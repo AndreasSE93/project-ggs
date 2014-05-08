@@ -34,9 +34,7 @@ public class LobbyGUI {
 	
 	public void render(ArrayList<String> players, ArrayList<String> games) {
 
-	
-		
-		
+			
 		
 		lobby.setLayout(new BorderLayout());
 		lobby.getContentPane().setBackground(Color.DARK_GRAY);
