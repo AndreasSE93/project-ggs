@@ -93,9 +93,9 @@ public class GameLogic{
 		System.out.println(field[3] + " " + field[4] + " " + field[5]);
 		System.out.println(field[6] + " " + field[7] + " " + field[8]);
 
-		String board = field[0] + " " + field[1] + " " + field[2] +"/n" +
-					 	field[3] + " " + field[4] + " " + field[5] +"/n" +
-					 	field[6] + " " + field[7] + " " + field[8] +"/n";
+		String board = field[0] + " " + field[1] + " " + field[2] +"\n" +
+					 	field[3] + " " + field[4] + " " + field[5] +"\n" +
+					 	field[6] + " " + field[7] + " " + field[8] +"\n";
 
 		return(board);
 	}
