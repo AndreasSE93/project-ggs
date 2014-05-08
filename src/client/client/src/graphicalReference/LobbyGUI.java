@@ -1,7 +1,6 @@
 package graphicalReference;
 
 import java.awt.*;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -9,6 +8,8 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+
+import com.apple.eawt.Application;
 
 public class LobbyGUI {
 	public JPanel chatt = new JPanel();
@@ -28,10 +29,15 @@ public class LobbyGUI {
 	
 	public LobbyGUI(String usr){
 		this.userName = usr;
+		
 	}
 	
 	public void render(ArrayList<String> players, ArrayList<String> games) {
 
+		Application application = Application.getApplication();
+		Image image = Toolkit.getDefaultToolkit().getImage("resources/logo.png");
+		application.setDockIconImage(image);
+		
 		lobby.setLayout(new BorderLayout());
 		lobby.getContentPane().setBackground(Color.DARK_GRAY);
 		lobby.setSize(800, 600);
