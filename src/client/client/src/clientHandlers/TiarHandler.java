@@ -95,6 +95,7 @@ public class TiarHandler implements HandlerInterface, ActionListener, MouseListe
 					tg.clearBoard();
 					break;
 				default:
+					if(tg.gl.isDraw() == 1){tg.clearBoard();}
 					System.out.println(tg.gl.toString());
 				}
 				break;
