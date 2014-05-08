@@ -62,14 +62,14 @@ public class GameLogic{
 		return;
 
 	}
-	
 
-    public void clearBoard(){
-            int[] field = getGameField();
-            for (int i=0; i<9; i++){field[i] = 0;}
-            this.turn = 1;
-            return;
-    }
+
+	public void clearBoard(){
+		int[] field = getGameField();
+		for (int i=0; i<9; i++){field[i] = 0;}
+		this.turn = 1;
+		return;
+	}
 
 
 	public boolean IsFull(){
@@ -92,7 +92,12 @@ public class GameLogic{
 		System.out.println(field[0] + " " + field[1] + " " + field[2]);
 		System.out.println(field[3] + " " + field[4] + " " + field[5]);
 		System.out.println(field[6] + " " + field[7] + " " + field[8]);
-		return("TEMP FIELD");
+
+		String board = field[0] + " " + field[1] + " " + field[2] +"/n" +
+					 	field[3] + " " + field[4] + " " + field[5] +"/n" +
+					 	field[6] + " " + field[7] + " " + field[8] +"/n";
+
+		return(board);
 	}
 
 
@@ -132,12 +137,12 @@ public class GameLogic{
 	}
 
 	public int isDraw(){
-        int[] gamefield = this.getGameField();
-        for (int i=0; i<9; i++){
-                if (gamefield[i] == 0){return 0;}
-        }
-        return 1;
-}
+		int[] gamefield = this.getGameField();
+		for (int i=0; i<9; i++){
+			if (gamefield[i] == 0){return 0;}
+		}
+		return 1;
+	}
 
 }
 
