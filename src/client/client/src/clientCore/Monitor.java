@@ -2,6 +2,8 @@ package clientCore;
 
 import java.io.IOException;
 
+import javax.swing.JOptionPane;
+
 
 
 import clientHandlers.LobbyHandler;
@@ -17,6 +19,7 @@ public class Monitor {
 	public  NetManager net;
 	//public ChatShell chatModule;
 	//public LobbyShell lobbyModule;
+	public String userName;
 	
 	public Monitor() {
 		
@@ -28,6 +31,7 @@ public class Monitor {
 		this.net = new NetManager(conn);
         try {
 			net.connectToServer();
+			userName = (String)JOptionPane.showInputDialog("Write username!"); 
 			setState(1);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -41,14 +45,20 @@ public class Monitor {
 	}
 	
 	public void setState (int state){
+		while(true){
 		if(state == 1){
-			LobbyHandler lh = new LobbyHandler(net);
-			lh.initHandler();
+			LobbyHandler lh = new LobbyHandler(net, userName);
+			state = lh.initHandler();
+			continue;
+		}
+		if(state == 2){
+			 TiarHandler th = new TiarHandler(net, userName);
+			 th.init();
 		}
 		else{
 			System.out.println("hejdå");
 		}
-		
+		}
 		
 	}
 	

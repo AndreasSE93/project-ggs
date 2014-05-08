@@ -24,9 +24,7 @@ public class ChatGUI{
 	public String userName;
 	
 	
-	public  ChatGUI(){
-		userName = (String)JOptionPane.showInputDialog("Write username!");
-	}
+	
 	
 	public ChatGUI(String usr){
 		userName = usr;

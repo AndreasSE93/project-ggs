@@ -30,12 +30,14 @@ public class LobbyHandler implements HandlerInterface,
 	CreateGameMessageEncoder gme = new CreateGameMessageEncoder();
 	NetManager network;
 	boolean loop = true;
-	
-	public LobbyHandler(NetManager net){
+	int state;
+	final String userName;
+	public LobbyHandler(NetManager net, String username){
 		this.network = net;
+		this.userName = username;
 	}
 	
-	public void initHandler() {
+	public int initHandler() {
 
 		String firstcall;
 		LobbyServerMessage LM = null;
@@ -48,7 +50,7 @@ public class LobbyHandler implements HandlerInterface,
 		}
 
 		if (LM != null) {
-			lg = new LobbyGUI();
+			lg = new LobbyGUI(this.userName);
 			lg.render(LM.UserList, LM.GameHost);
 			lg.chatgui.field.addActionListener(this);
 			lg.joinButton.addActionListener(this);
@@ -74,8 +76,9 @@ public class LobbyHandler implements HandlerInterface,
 		//Change state!!!
 		
 		 lg.lobby.setVisible(false);
-		 TiarHandler th = new TiarHandler(network);
-		 th.init(lg.chatgui.userName);
+		 return state;
+		 //TiarHandler th = new TiarHandler(network);
+		 //th.init(lg.chatgui.userName);
 
 	}
 
@@ -100,7 +103,9 @@ public class LobbyHandler implements HandlerInterface,
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-			 loop=false;
+			state = 2;
+			loop=false;
+
 
 			break;
 			

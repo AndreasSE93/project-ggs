@@ -31,15 +31,18 @@ public class TiarHandler implements HandlerInterface, ActionListener, MouseListe
 	TiarGUI tg;
 	ChatMessageEncoder cme = new ChatMessageEncoder();
 	TiarUserMessageEncoder tume = new TiarUserMessageEncoder();
+	final String userName;
 	
-	public TiarHandler(NetManager net){
+	public TiarHandler(NetManager net , String username){
 		this.network = net;
+		this.userName = username;
+		
 		
 	}
 
-	public void init(String usr){
+	public void init(){
 		 tg = new TiarGUI();
-		 tg.render(usr);
+		 tg.render(this.userName);
 		
 		 System.out.println("1");
 		 for (int i = 0 ; i < tg.game.length; i++){

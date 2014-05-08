@@ -16,12 +16,17 @@ public class LobbyGUI {
 	public JTextPane chatPanel = new JTextPane();
 	public JFrame lobby = new JFrame();
 	public ChatGUI chatgui;
-	public String userName;
+	public final String userName;
 	public JButton joinButton;
 	public JButton createButton;
 	public JButton refreshButton;
 	public JList<String> createList;
 	public JList<String> joinList;
+	
+	
+	public LobbyGUI(String usr){
+		this.userName = usr;
+	}
 	
 	public void render(ArrayList<String> players, ArrayList<String> games) {
 
@@ -57,7 +62,7 @@ public class LobbyGUI {
 		lobby.add(topPanel, BorderLayout.NORTH);
 		lobby.add(bottomPanel, BorderLayout.SOUTH);
 		bottomPanel.add(chatt, "Center");
-		chatgui = new ChatGUI();
+		chatgui = new ChatGUI(this.userName);
 		chatgui.render(chatt, lobby);
 
 		topPanel.setBorder(null);

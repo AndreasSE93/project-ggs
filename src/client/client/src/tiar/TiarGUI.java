@@ -36,6 +36,8 @@ public class TiarGUI extends GameLogic {
 
 	public GameLogic gl = new GameLogic();
 	
+
+	
 	public void render(String usr) {
 
 		window.setSize(800, 600);
