@@ -99,6 +99,7 @@ public class LobbyHandler implements HandlerInterface,
 
 		case "joinbutton":
 			try {
+				
 				JSONtext = jme.encode(new JoinMessage((String)lg.joinList.getSelectedValue())); // Vad göra sen? skickat till serven att vi vill spela.
 				
 				} catch (JSONException e1) {

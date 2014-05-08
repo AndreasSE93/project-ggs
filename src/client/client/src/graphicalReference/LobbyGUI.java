@@ -1,7 +1,6 @@
 package graphicalReference;
 
 import java.awt.*;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -9,6 +8,8 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+
+
 
 public class LobbyGUI {
 	public JPanel chatt = new JPanel();
@@ -23,13 +24,20 @@ public class LobbyGUI {
 	public JList<String> createList;
 	public JList<String> joinList;
 	
+	public JPanel westTopPanel;
+	public JPanel eastTopPanel;
 	
 	public LobbyGUI(String usr){
 		this.userName = usr;
+		
 	}
 	
 	public void render(ArrayList<String> players, ArrayList<String> games) {
 
+	
+		
+		
+		
 		lobby.setLayout(new BorderLayout());
 		lobby.getContentPane().setBackground(Color.DARK_GRAY);
 		lobby.setSize(800, 600);
@@ -39,8 +47,10 @@ public class LobbyGUI {
 
 		JPanel topPanel = new JPanel();
 		JPanel bottomPanel = new JPanel();
-		JPanel eastTopPanel = new JPanel();
-		JPanel westTopPanel = new JPanel();
+		
+		eastTopPanel = new JPanel();
+		westTopPanel = new JPanel();
+		
 		JPanel centerTopPanel = new JPanel();
 		topPanel.setLayout(new BorderLayout());
 		eastTopPanel.setLayout(new BorderLayout());
@@ -52,8 +62,10 @@ public class LobbyGUI {
 		centerTopPanel.add(refreshButton, BorderLayout.SOUTH);
 		centerTopPanel.setBackground(Color.DARK_GRAY);
 		topPanel.add(centerTopPanel, BorderLayout.CENTER);
+		
 		makePlayerList(eastTopPanel, players, "gogogog");
 		makeGameList(westTopPanel, games, "gogogog");
+		
 		topPanel.add(westTopPanel, BorderLayout.WEST);
 		topPanel.add(eastTopPanel, BorderLayout.EAST);
 		topPanel.setBackground(Color.DARK_GRAY);
@@ -75,40 +87,47 @@ public class LobbyGUI {
 	public void makePlayerList(JPanel panel, ArrayList<String> L,
 			String nameButton) {
 		joinButton = new JButton();
-		final JList<String> jList = getJList(L);
-		// Dimension preferredSize = new Dimension(200 , 200);
-		// jList.setPreferredSize(preferredSize);
-		jList.setBackground(Color.DARK_GRAY.darker());
-		jList.setForeground(Color.LIGHT_GRAY);
-		panel.setBorder(new EmptyBorder(10, 50, 10, 50));
-		panel.setBackground(Color.DARK_GRAY);
 		makeJButton(joinButton, "resources/JoinButton.png", "joinbutton");
-		JScrollPane js = new JScrollPane(jList);
-		js.setHorizontalScrollBar(null);
-		js.setBorder(null);
-		panel.add(joinButton, BorderLayout.SOUTH);
-		panel.add(js, BorderLayout.CENTER);
-		joinList = jList;
-	}
 
+		panel.add(joinButton, BorderLayout.SOUTH);
+		addArrayList(panel,L);
+		
+	}
+	
 	public void makeGameList(JPanel panel, ArrayList<String> L,
 			String nameButton) {
 		createButton = new JButton();
+		makeJButton(createButton,"resources/CreateButton.png", "createbutton");
+		panel.add(createButton, BorderLayout.SOUTH);
+		addArrayList(panel,L);
+		
+	}
+	
+	public void addArrayList(JPanel panel, ArrayList<String> L){
 		final JList<String> jList = getJList(L);
-		// Dimension preferredSize = new Dimension(200 , 200);
-		// jList.setPreferredSize(preferredSize);
+
 		jList.setBackground(Color.DARK_GRAY.darker());
 		jList.setForeground(Color.LIGHT_GRAY);
 		panel.setBorder(new EmptyBorder(10, 50, 10, 50));
 		panel.setBackground(Color.DARK_GRAY);
-		makeJButton(createButton,"resources/CreateButton.png", "createbutton");
+		
 		JScrollPane js = new JScrollPane(jList);
 		js.setHorizontalScrollBar(null);
 		js.setBorder(null);
-		panel.add(createButton, BorderLayout.SOUTH);
 		panel.add(js, BorderLayout.CENTER);
-		createList = jList;
+		if(panel == westTopPanel){
+			createList = jList;
+		}
+		else{
+			joinList = jList;
+		}
+			
+		
+		
+		
 	}
+
+
 
 	public static JList<String> getJList(ArrayList<String> list) {
 		int size = list.size();
