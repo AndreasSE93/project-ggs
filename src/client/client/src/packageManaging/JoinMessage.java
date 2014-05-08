@@ -2,7 +2,7 @@ package packageManaging;
 
 public class JoinMessage {
 	final int PacketID = 102;
-	public String joinName;
+	public int RoomID;
 	
 	
 	/* NOT DONE YET */
@@ -11,9 +11,9 @@ public class JoinMessage {
 		
 	}
 	
-	public JoinMessage(String m){
+	public JoinMessage(HostRoom m){
 		
-		joinName = m;
+		this.RoomID = m.RoomID;
 		
 	}
 	

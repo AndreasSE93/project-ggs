@@ -67,9 +67,15 @@ func testConnection(conn connection.Connector) {
 func initGameRoom(conn net.Conn) {
 	
 }
+type test2 struct {
+	RoomID int
+	MaxSize int
+	ClientCount int
+	RoomName string
+}
 
 type test struct {
-	UserList [20]string
+	UserList [1]test2
 	GameHost [20]string
 	Message string
 }
@@ -77,7 +83,8 @@ type test struct {
 func clientListener(client connection.Connector, conList *list.List) {
 //	connection := client.connection
 	//enc := json.NewEncoder(client.connection)
-	userList := [20]string{"1","2","3","4","5","6","7","8", "9", "10", "11","12","13","14","15","16","17","18","19","20"}
+	a := test2{1,2,1,"josef"}
+	userList := [1]test2{a}
 	gameHost := [20]string{"1","2","3","4","5","6","7","8", "9", "10", "11","12","13","14","15","16","17","18","19","20"}
 	message := "Test"
 	b, err := json.Marshal(&test{

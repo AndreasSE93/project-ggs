@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import packageManaging.CreateGameMessage;
 import packageManaging.CreateGameMessageEncoder;
+import packageManaging.HostRoom;
 import packageManaging.JoinMessage;
 import packageManaging.JoinMessageEncoder;
 import packageManaging.LobbyMessageEncoder;
@@ -100,7 +101,7 @@ public class LobbyHandler implements HandlerInterface,
 		case "joinbutton":
 			try {
 				
-				JSONtext = jme.encode(new JoinMessage((String)lg.joinList.getSelectedValue())); // Vad göra sen? skickat till serven att vi vill spela.
+				JSONtext = jme.encode(new JoinMessage((HostRoom) lg.joinList.getSelectedValue())); // Vad göra sen? skickat till serven att vi vill spela.
 				
 				} catch (JSONException e1) {
 					// TODO Auto-generated catch block
@@ -114,7 +115,7 @@ public class LobbyHandler implements HandlerInterface,
 			
 		case "createbutton":
 			try {
-				JSONtext = gme.encode(new CreateGameMessage((String) lg.createList.getSelectedValue(), 2 , this.userName));
+				JSONtext = gme.encode(new CreateGameMessage(lg.createList.getSelectedValue(), 2 , this.userName));
 			} catch (JSONException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -153,6 +154,8 @@ public class LobbyHandler implements HandlerInterface,
 			break;
 
 		case 103: // LobbyClientMessage.java/LobbyServerMessage.java
+			LobbyServerMessage ls = lme.decode(message);
+			lg.makePlayerList(lg.eastTopPanel, ls.UserList);
 			break;
 		default:
 			System.out.println("something went wrong!");

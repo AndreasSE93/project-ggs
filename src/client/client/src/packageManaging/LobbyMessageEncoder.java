@@ -34,14 +34,16 @@ public class LobbyMessageEncoder{
 		
 		JSONArray JArr = obj.getJSONArray("UserList");
 		for (int i=0; i<JArr.length(); i++) {
-		    lsm.UserList.add( JArr.getString(i));
+		   JSONObject l = JArr.getJSONObject(i);
+		   HostRoom h = new HostRoom (l.getInt("RoomID"), l.getInt("MaxSize"), l.getInt("ClientCount"), l.getString("RoomName"));
+		   lsm.UserList.add(h);
 		}
 		JSONArray JArr2 = obj.getJSONArray("GameHost");
 		for (int i=0; i<JArr2.length(); i++) {
 		    lsm.GameHost.add(JArr2.getString(i));
 		}
 		
-		lsm.s = obj.getString("Message");
+		
 		
 		return lsm;
 	}

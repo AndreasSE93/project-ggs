@@ -35,6 +35,7 @@ public String encode(CreateGameMessage mess) throws JSONException {
 
 		lsm.gameName = obj.getString("gameName");
 		
+		
 		return lsm;
 	}
 }

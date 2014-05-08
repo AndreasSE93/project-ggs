@@ -15,7 +15,7 @@ public String encode(JoinMessage mess) throws JSONException {
 		JSONObject obj = new JSONObject();
 		
 		obj.put("PacketID", mess.PacketID);
-	    obj.put("joinName", mess.joinName);
+	    obj.put("RoomID", mess.RoomID);
 	    
 	   
 		String message = obj.toString();
@@ -30,7 +30,7 @@ public String encode(JoinMessage mess) throws JSONException {
 		
 		JoinMessage lsm = new JoinMessage();
 
-		lsm.joinName = obj.getString("joinName");
+		lsm.RoomID = obj.getInt("RoomID");
 		
 		return lsm;
 	}
