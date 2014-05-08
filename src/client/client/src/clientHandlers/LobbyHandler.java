@@ -155,10 +155,10 @@ public class LobbyHandler implements HandlerInterface,
 
 		case 103: // LobbyClientMessage.java/LobbyServerMessage.java
 			LobbyServerMessage ls = lme.decode(message);
-			lg.makePlayerList(lg.eastTopPanel, ls.UserList);
+			lg.addArrayList(lg.eastTopPanel, ls.UserList);
 			break;
 		default:
-			System.out.println("something went wrong!");
+			System.out.println("something went wrong! Error code: " + id);
 		}
 
 	}

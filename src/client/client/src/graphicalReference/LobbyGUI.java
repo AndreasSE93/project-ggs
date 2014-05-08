@@ -11,8 +11,6 @@ import javax.swing.border.EmptyBorder;
 
 import packageManaging.HostRoom;
 
-
-
 public class LobbyGUI {
 	public JPanel chatt = new JPanel();
 	public JTextField field;
@@ -25,19 +23,17 @@ public class LobbyGUI {
 	public JButton refreshButton;
 	public JList<String> createList;
 	public JList<HostRoom> joinList;
-	
+
 	public JPanel westTopPanel;
 	public JPanel eastTopPanel;
-	
-	public LobbyGUI(String usr){
+
+	public LobbyGUI(String usr) {
 		this.userName = usr;
-		
+
 	}
-	
+
 	public void render(ArrayList<HostRoom> players, ArrayList<String> games) {
 
-			
-		
 		lobby.setLayout(new BorderLayout());
 		lobby.getContentPane().setBackground(Color.DARK_GRAY);
 		lobby.setSize(800, 600);
@@ -47,25 +43,26 @@ public class LobbyGUI {
 
 		JPanel topPanel = new JPanel();
 		JPanel bottomPanel = new JPanel();
-		
+
 		eastTopPanel = new JPanel();
 		westTopPanel = new JPanel();
-		
+
 		JPanel centerTopPanel = new JPanel();
 		topPanel.setLayout(new BorderLayout());
 		eastTopPanel.setLayout(new BorderLayout());
 		westTopPanel.setLayout(new BorderLayout());
 		refreshButton = new JButton();
-		makeJButton(refreshButton, "resources/refreshButton.png", "refreshbutton");
+		makeJButton(refreshButton, "resources/refreshButton.png",
+				"refreshbutton");
 		centerTopPanel.setLayout(new BorderLayout());
 		refreshButton.setBackground(Color.DARK_GRAY);
 		centerTopPanel.add(refreshButton, BorderLayout.SOUTH);
 		centerTopPanel.setBackground(Color.DARK_GRAY);
 		topPanel.add(centerTopPanel, BorderLayout.CENTER);
-		
+
 		makePlayerList(eastTopPanel, players);
 		makeGameList(westTopPanel, games);
-		
+
 		topPanel.add(westTopPanel, BorderLayout.WEST);
 		topPanel.add(eastTopPanel, BorderLayout.EAST);
 		topPanel.setBackground(Color.DARK_GRAY);
@@ -80,7 +77,6 @@ public class LobbyGUI {
 		topPanel.setBorder(null);
 		lobby.validate();
 		lobby.setVisible(true);
-		
 
 	}
 
@@ -89,57 +85,59 @@ public class LobbyGUI {
 		makeJButton(joinButton, "resources/JoinButton.png", "joinbutton");
 
 		panel.add(joinButton, BorderLayout.SOUTH);
-		addArrayList(panel,L);
-		
+		addArrayList(panel, L);
+
 	}
-	
+
 	public void makeGameList(JPanel panel, ArrayList<String> L) {
 		createButton = new JButton();
-		makeJButton(createButton,"resources/CreateButton.png", "createbutton");
+		makeJButton(createButton, "resources/CreateButton.png", "createbutton");
 		panel.add(createButton, BorderLayout.SOUTH);
-		addArrayListString(panel,L);
-		
-	}
-	
-	public void addArrayList(JPanel panel, ArrayList<HostRoom> L){
-		final JList<HostRoom> jList = getJList(L);
+		addArrayListString(panel, L);
 
-		jList.setBackground(Color.DARK_GRAY.darker());
-		jList.setForeground(Color.LIGHT_GRAY);
-		panel.setBorder(new EmptyBorder(10, 50, 10, 50));
-		panel.setBackground(Color.DARK_GRAY);
+	}
+
+	public void addArrayList(JPanel panel, ArrayList<HostRoom> L){
 		
-		JScrollPane js = new JScrollPane(jList);
-		js.setHorizontalScrollBar(null);
-		js.setBorder(null);
-		panel.add(js, BorderLayout.CENTER);
+		String[] title = {"Game", "Players", "Host", "RoomID"};
+		JTable jt = new JTable(makeNewTableArray(L), title);
+		jt.setBackground(Color.DARK_GRAY.darker());
+		jt.setForeground(Color.LIGHT_GRAY);
+		
+		panel.add(jt, BorderLayout.CENTER);
+		panel.validate();
 	
-			joinList = jList;
-		
-			
-		
-		
 		
 	}
-	public void addArrayListString(JPanel panel, ArrayList<String> L){
+
+	public String[][] makeNewTableArray(ArrayList<HostRoom> L){
+		String[][] array = new String[L.size()][4];
+		for (int i = 0; i< array.length; i++){
+			array[i][0] = L.get(i).GameName;
+			array[i][1] = Integer.toString(L.get(i).ClientCount) + "/" + Integer.toString(L.get(i).MaxSize);
+			array[i][2] = L.get(i).RoomName;
+			array[i][3] = Integer.toString(L.get(i).RoomID);
+		}
+		
+		
+		return array;
+	}
+
+	public void addArrayListString(JPanel panel, ArrayList<String> L) {
 		final JList<String> jList = getJListString(L);
 
 		jList.setBackground(Color.DARK_GRAY.darker());
 		jList.setForeground(Color.LIGHT_GRAY);
 		panel.setBorder(new EmptyBorder(10, 50, 10, 50));
 		panel.setBackground(Color.DARK_GRAY);
-		
+
 		JScrollPane js = new JScrollPane(jList);
 		js.setHorizontalScrollBar(null);
 		js.setBorder(null);
 		panel.add(js, BorderLayout.CENTER);
-	
-			createList = jList;
-		
-		
-		
-		
-		
+
+		createList = jList;
+
 	}
 
 	public static JList<String> getJListString(ArrayList<String> list) {
@@ -151,17 +149,18 @@ public class LobbyGUI {
 		return new JList<String>(model);
 	}
 
-
-	public static JList<HostRoom> getJList(ArrayList<HostRoom> list) {
-		int size = list.size();
-		final DefaultListModel<HostRoom> model = new DefaultListModel<HostRoom>();
-		for (int i = 0; i < size; i++) {
-			model.addElement(list.get(i));
-		}
-		return new JList<HostRoom>(model);
-	}
-	
-	public void makeJButton (JButton jb, String src, String actionCommand){
+	/*
+	 * public static JList<HostRoom> getJList(ArrayList<HostRoom> list, int
+	 * type) { int size = list.size(); final DefaultListModel<String> model =
+	 * new DefaultListModel<String>(); for (int i = 0; i < size; i++) { switch
+	 * (type){ case 1: model.addElement(list.get(i).GameName); break; case 2:
+	 * String players = Integer.toString(list.get(i).ClientCount) + "/" +
+	 * Integer.toString(list.get(i).MaxSize);
+	 * model.addElement(list.get(i).GameName ); break; case 3 } }
+	 * 
+	 * return new JList<HostRoom>(model); }
+	 */
+	public void makeJButton(JButton jb, String src, String actionCommand) {
 		File imageCheck = new File(src);
 		try {
 			Image img = ImageIO.read(imageCheck);
@@ -172,8 +171,7 @@ public class LobbyGUI {
 		jb.setMargin(new Insets(0, 0, 0, 0));
 		jb.setBorder(null);
 		jb.setActionCommand(actionCommand);
-		
-	}
 
+	}
 
 }

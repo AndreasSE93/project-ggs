@@ -5,12 +5,14 @@ public class HostRoom {
 	public int MaxSize;
 	public int ClientCount;
 	public String RoomName;
+	public String GameName;
 	
-	public HostRoom (int RID, int MaxSize, int ClientCount, String RoomName) {
+	public HostRoom (int RID, int MaxSize, int ClientCount, String RoomName, String GameName) {
 		this.RoomID = RID;
 		this.MaxSize = MaxSize;
 		this.ClientCount = ClientCount;
 		this.RoomName = RoomName;
+		this.GameName = GameName;
 		
 	}
 	

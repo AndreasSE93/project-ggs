@@ -71,7 +71,8 @@ type test2 struct {
 	RoomID int
 	MaxSize int
 	ClientCount int
-	RoomName string
+	RoomName, GameName string
+	
 }
 
 type test struct {
@@ -83,7 +84,7 @@ type test struct {
 func clientListener(client connection.Connector, conList *list.List) {
 //	connection := client.connection
 	//enc := json.NewEncoder(client.connection)
-	a := test2{1,2,1,"josef"}
+	a := test2{1,2,1,"josef", "hej"}
 	userList := [1]test2{a}
 	gameHost := [20]string{"1","2","3","4","5","6","7","8", "9", "10", "11","12","13","14","15","16","17","18","19","20"}
 	message := "Test"
