@@ -1,21 +1,51 @@
+# Enviroment
+GOINSTALL=go install
+export GOPATH=$(PWD)
+
+
+.DEFAULT:
 .PHONY:
-all: 	client server
+all: server
 
-server:
-	go install server
 
-client:
-	go install client 
+# Executables
 
 .PHONY:
-runserver: server client
-	./bin/server &
+server: ./bin/server
+
+.PHONY:
+oldclient: ./bin/client
+
+
+./bin/%:
+	$(GOINSTALL) $*
+
+
+# Tools
+
+.PHONY:
+runserver: server
+	./bin/server
+
+.PHONY: #Depricated; Use Java client
+runoldclient: oldclient
+	./bin/client
+
+
+# Maintenance
 
 .PHONY:
 clean:
-	rm ./bin/client
-	rm ./bin/server
+	rm -f  ./bin/*
+	rm -fR ./pkg/*
+	rm -fR ./src/client/bin/
 
 .PHONY:
-runclient:
-	./bin/client
+package: project-ggs.tar.bz2
+
+project-ggs.tar.bz2: clean
+	git archive --prefix=project-ggs/ -o project-ggs.tar.gz master
+
+project-ggs-%.tar.bz2: clean
+	git archive --prefix="project-ggs-$*/" -o "project-ggs-$*.tar.gz" "$*"
+
