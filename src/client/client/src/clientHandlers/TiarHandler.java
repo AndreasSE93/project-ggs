@@ -16,6 +16,7 @@ import packageManaging.Message;
 import packageManaging.TiarUserMessage;
 import packageManaging.TiarUserMessageEncoder;
 
+
 import tiar.TiarGUI;
 
 import clientNetworking.NetManager;
@@ -29,6 +30,7 @@ public class TiarHandler implements HandlerInterface, ActionListener, MouseListe
 	NetManager network;
 	TiarGUI tg;
 	ChatMessageEncoder cme = new ChatMessageEncoder();
+	TiarUserMessageEncoder tume = new TiarUserMessageEncoder();
 	
 	public TiarHandler(NetManager net){
 		this.network = net;
@@ -38,6 +40,7 @@ public class TiarHandler implements HandlerInterface, ActionListener, MouseListe
 	public void init(String usr){
 		 tg = new TiarGUI();
 		 tg.render(usr);
+		
 		 System.out.println("1");
 		 for (int i = 0 ; i < tg.game.length; i++){
 		 tg.game[i].addMouseListener(this);
@@ -76,8 +79,17 @@ public class TiarHandler implements HandlerInterface, ActionListener, MouseListe
 		case 200: //Move message
 				TiarUserMessageEncoder s = new TiarUserMessageEncoder();
 				TiarUserMessage mess = s.decode(message);
-				tg.doMove(mess.Move , tg.getTurn());
-				tg.changeTurn();
+				tg.doMove(mess.Move , tg.gl.getTurn());
+				switch (tg.gl.hasWon()){
+				case 1:
+					System.out.println("Spelare 1 vann");
+					break;
+				case 2:
+					System.out.println("Spelare 2 vann");
+					break;
+				default:
+					System.out.println(tg.gl.toString());
+				}
 				break;
 				
 		default: //Should not come here
@@ -136,9 +148,29 @@ public class TiarHandler implements HandlerInterface, ActionListener, MouseListe
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
 		JButton l =(JButton) arg0.getSource();
-		String Name = l.getName();
-		tg.doMove(Name, tg.getTurn());
-		tg.changeTurn();
+		String name = l.getName();
+		tg.doMove(name, tg.gl.getTurn());
+		System.out.println(name);
+		TiarUserMessage tum = new TiarUserMessage(tg.gl.isDraw(), tg.gl.hasWon(), name);
+		try {
+			sendMessage(tume.encode(tum));
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		switch (tg.gl.hasWon()){
+		case 1:
+			
+			break;
+		case 2:
+			
+			
+			break;
+		default:
+			
+			
+			break;
+		}
 		
 	}
 

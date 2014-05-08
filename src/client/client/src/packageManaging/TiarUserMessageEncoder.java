@@ -12,6 +12,7 @@ public class TiarUserMessageEncoder {
 	    obj.put("isDraw", mess.isDraw);
 	    obj.put("isVictorious", mess.isVictorious);
 	    obj.put("PacketID", mess.PacketID);
+	    obj.put("Move", mess.Move);
 	   
 		String message = obj.toString();
 		return message;

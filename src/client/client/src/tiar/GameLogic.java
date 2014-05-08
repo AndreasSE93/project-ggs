@@ -107,23 +107,29 @@ public class GameLogic{
 		int[] field = getGameField();
 		for (int i=1; i<3; i++){
 			// Horizontal
-			if (field[0] == field[1] && field[1] == field[2]){return field[0];}
-			if (field[3] == field[4] && field[4] == field[5]){return field[3];}
-			if (field[6] == field[7] && field[7] == field[8]){return field[6];}
+			if (field[0] == field[1] && field[0] == field[2] && field[0] != 0){return field[0];}
+			if (field[3] == field[4] && field[3] == field[5] && field[3] != 0){return field[3];}
+			if (field[6] == field[7] && field[6] == field[8] && field[6] != 0){return field[6];}
 
 			// Vertical
-			if (field[0] == field[3] && field[3] == field[6]){return field[0];}
-			if (field[1] == field[4] && field[4] == field[7]){return field[4];}
-			if (field[2] == field[5] && field[5] == field[8]){return field[2];}
+			if (field[0] == field[3] && field[0] == field[6] && field[0] != 0){return field[0];}
+			if (field[1] == field[4] && field[1] == field[7] && field[1] != 0){return field[4];}
+			if (field[2] == field[5] && field[2] == field[8] && field[2] != 0){return field[2];}
 
 			// Diagonal
-			if (field[0] == field[4] && field[4] == field[8]){return field[0];}
-			if (field[2] == field[4] && field[4] == field[6]){return field[2];}
-
+			if (field[0] == field[4] && field[0] == field[8] && field[0] != 0){return field[0];}
+			if (field[2] == field[4] && field[2] == field[6] && field[2] != 0){return field[2];}
 		}
 		return 0;
 	}
 
+	public int isDraw(){
+        int[] gamefield = this.getGameField();
+        for (int i=0; i<9; i++){
+                if (gamefield[i] == 0){return 0;}
+        }
+        return 1;
+}
 /*
 	public static void main(String [] args){
 		GameLogic Game = new GameLogic();

@@ -34,6 +34,8 @@ public class TiarGUI extends GameLogic {
 
 	public ChatGUI chat;
 
+	public GameLogic gl = new GameLogic();
+	
 	public void render(String usr) {
 
 		window.setSize(800, 600);
@@ -149,8 +151,9 @@ public class TiarGUI extends GameLogic {
 	public void doMove(String position, int player) {
 
 		int pos = getInt(position);
-		if (super.validMove(pos, player)) {
+		if (gl.validMove(pos, player)) {
 			JButton update = this.game[pos];
+			gl.makeMove(pos, player);
 			makeJButton(update, player);
 
 		}
