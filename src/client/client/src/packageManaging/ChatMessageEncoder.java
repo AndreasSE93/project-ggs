@@ -4,7 +4,7 @@ import org.json.JSONObject;
 import org.json.JSONException;
 
 
-public class ChatMessageEncoder extends Handler {
+public class ChatMessageEncoder {
     
 	public String encode(Message mess) throws JSONException {
 		

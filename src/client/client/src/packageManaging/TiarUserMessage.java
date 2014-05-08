@@ -1,5 +1,8 @@
 package packageManaging;
 
+
+/* Might need more variables */
+
 public class TiarUserMessage {
 
 	final int PacketID = 200;

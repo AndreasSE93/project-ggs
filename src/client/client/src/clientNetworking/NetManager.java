@@ -2,11 +2,10 @@ package clientNetworking;
 
 import java.io.IOException;
 
-import packageManaging.Handler;
+
 
 public class NetManager {
 	
-	public Handler handler; 
 	private Connection conn;
 	
 	public NetManager(Connection c) {

@@ -37,7 +37,7 @@ public class LobbyHandler implements HandlerInterface,
 		this.userName = username;
 	}
 	
-	public int initHandler() {
+	public int init() {
 
 		String firstcall;
 		LobbyServerMessage LM = null;
@@ -77,8 +77,6 @@ public class LobbyHandler implements HandlerInterface,
 		
 		 lg.lobby.setVisible(false);
 		 return state;
-		 //TiarHandler th = new TiarHandler(network);
-		 //th.init(lg.chatgui.userName);
 
 	}
 
@@ -103,8 +101,8 @@ public class LobbyHandler implements HandlerInterface,
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-			state = 2;
-			loop=false;
+			state = 2; //Temporärt för att byta till tic tac toe
+			loop=false; // -||-_________________________________
 
 
 			break;
@@ -118,7 +116,7 @@ public class LobbyHandler implements HandlerInterface,
 			}
 			
 			break;
-		case "refreshbutton":			//SKicka jag vill uppdatera spelarlistorna
+		case "refreshbutton":			//SKicka jag vill uppdatera spelarlistorna, server skickar ut nya listor
 			
 			break;
 		default:

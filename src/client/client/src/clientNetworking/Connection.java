@@ -45,10 +45,4 @@ public class Connection {
 		this.writer = new PrintWriter(socket.getOutputStream(), true);
 	}
 
-//	public static void main(String[] args) throws IOException {
-//		System.out.print("Enter server:  ");
-//		String host = new BufferedReader(new InputStreamReader(System.in)).readLine();
-//		Connection conn = new Connection(host);
-//		System.out.printf("Host=%s%nPort=%d", conn.hostIP, conn.portNumber);
-//	}
 }

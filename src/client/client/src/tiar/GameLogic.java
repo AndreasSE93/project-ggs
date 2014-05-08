@@ -130,68 +130,7 @@ public class GameLogic{
         }
         return 1;
 }
-/*
-	public static void main(String [] args){
-		GameLogic Game = new GameLogic();
-		Game.toString();
-		System.out.println("PLAYING THE GAME FOR YOU");
-		for (int i=0; i<9; i++){
 
-			if (Game.getTurn() == 1){
-				Game.makeMove(i,1);   	
-			}
-			else {Game.makeMove(i,2);}
-		}
-
-		Game.toString();
-		if(Game.hasWon() == 1){System.out.println("Player 1 won");}
-		if(Game.hasWon() == 2){System.out.println("Player 2 won");}
-		if(Game.hasWon() == 0){System.out.println("no1 won :(");}
-
-
-
-
-
-		GameLogic Game2 = new GameLogic();
-		Game2.toString();
-		System.out.println("PLAYING THE GAME FOR YOU");
-		for (int i=0; i<9; i++){
-			Game2.makeMove(i, 2);
-		}
-
-		Game2.toString();
-		if(Game2.hasWon() == 1){System.out.println("Player 1 won");}
-		if(Game2.hasWon() == 2){System.out.println("Player 2 won");}
-		if(Game2.hasWon() == 0){System.out.println("no1 won :(");}
-
-
-
-
-
-		GameLogic Game3 = new GameLogic();
-		Game3.toString();
-		System.out.println("PLAYING THE GAME FOR YOU");
-		Game3.makeMove(0,1);	
-		Game3.makeMove(1,2);
-		Game3.makeMove(2,2);
-		Game3.makeMove(3,2);
-		Game3.makeMove(4,1);
-		Game3.makeMove(5,1);
-		Game3.makeMove(6,1);
-		Game3.makeMove(7,1);
-		Game3.makeMove(8,2);
-		Game3.toString();
-		if(Game3.hasWon() == 1){System.out.println("Player 1 won");}
-		if(Game3.hasWon() == 2){System.out.println("Player 2 won");}
-		if(Game3.hasWon() == 0){System.out.println("no1 won :(");}
-
-
-
-
-
-	}
-
-*/
 }
 
 

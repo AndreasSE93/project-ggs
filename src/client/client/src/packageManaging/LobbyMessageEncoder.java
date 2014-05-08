@@ -5,7 +5,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
-public class LobbyMessageEncoder extends Handler {
+public class LobbyMessageEncoder{
 
 	public LobbyMessageEncoder() {
 		

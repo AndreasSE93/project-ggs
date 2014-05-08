@@ -8,6 +8,7 @@ public class JoinMessageEncoder {
 	public JoinMessageEncoder(){
 		
 	}
+	/* NOT DONE YET */
 	
 public String encode(JoinMessage mess) throws JSONException {
 		

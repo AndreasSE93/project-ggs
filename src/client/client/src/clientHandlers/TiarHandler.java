@@ -32,6 +32,7 @@ public class TiarHandler implements HandlerInterface, ActionListener, MouseListe
 	ChatMessageEncoder cme = new ChatMessageEncoder();
 	TiarUserMessageEncoder tume = new TiarUserMessageEncoder();
 	final String userName;
+	private boolean loop = true;
 	
 	public TiarHandler(NetManager net , String username){
 		this.network = net;
@@ -40,7 +41,7 @@ public class TiarHandler implements HandlerInterface, ActionListener, MouseListe
 		
 	}
 
-	public void init(){
+	public int init(){
 		 tg = new TiarGUI();
 		 tg.render(this.userName);
 		
@@ -52,13 +53,11 @@ public class TiarHandler implements HandlerInterface, ActionListener, MouseListe
 		 }
 		 System.out.println("2");
 		 tg.chat.field.addActionListener(this);
-		/* Create new Tiar lobby, probably with a graphical three in a row and a chat. 
-		 * Add actionLsiteners to resp.. */
 		
 		tg.window.setVisible(true);
 		
 		
-		while (true) {
+		while (loop) {
 			try {
 				String mess = recieveMessage();
 			
@@ -69,6 +68,7 @@ public class TiarHandler implements HandlerInterface, ActionListener, MouseListe
 				e.printStackTrace();
 			}
 		}
+		return 1;
 	}
 	
 	public void decodeAndRender(int id, String message) throws JSONException {

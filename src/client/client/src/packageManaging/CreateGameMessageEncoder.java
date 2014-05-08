@@ -9,6 +9,8 @@ public class CreateGameMessageEncoder {
 	public CreateGameMessageEncoder(){
 		
 	}
+	/* NOT DONE YET */
+	
 	
 public String encode(CreateGameMessage mess) throws JSONException {
 		
