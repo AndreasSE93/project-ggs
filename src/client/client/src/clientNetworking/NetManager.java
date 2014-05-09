@@ -15,6 +15,8 @@ public class NetManager {
 	public void connectToServer() throws IOException{
 		try {
 			this.conn.initConnection();
+			String pingString = this.receiveMessage();
+			this.send(pingString);
 		} catch (IOException e) {
 			throw(e);
 		}

@@ -22,11 +22,11 @@ public class Monitor {
 	public Monitor() {
 		
 	}
-	//130.243.137.18 andreas
+	//130.243.137.247 andreas
 	
 	public void init(){
 		
-		this.conn = new Connection("localhost", 8080);
+		this.conn = new Connection("130.243.137.247", 8080);
 		this.net = new NetManager(conn);
         try {
 			net.connectToServer();
