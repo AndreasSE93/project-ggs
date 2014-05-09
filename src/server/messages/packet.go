@@ -1,15 +1,23 @@
 package messages
 
 import (
+	"time"
 	"server/database/lobbyMap"
 )
 
 const (
+	PING_ID    = 0
 	CHAT_ID    = 100
 	HOST_ID    = 101
 	JOIN_ID    = 102
 	REFRESH_ID = 103
 )
+
+type Ping struct {
+	PacketID int `json:"PacketID"`
+	TimeStamp time.Time `json:"TimeStamp"`
+	Payload interface{} `json:"Payload"`
+}
 
 type HostNew struct {
 	PacketID int `json:"PacketID"`

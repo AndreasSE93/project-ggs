@@ -1,7 +1,6 @@
 package lobbyMap
 
 import (
-//	"fmt"
 	"server/connection"
 	"server/database"
 )
@@ -38,11 +37,16 @@ func createRoom(s speaker, lm *LobbyMap, hostCollection map[int]HostRoom) {
 	lm.nextID++
 
 	if lm.clientDB.GetRoom(s.hr.Clients[0]) > 0 {
-		lm.Kick(s.hr.Clients[0])
+		kicker := joiner{}
+		kicker.sendBack = make(chan *HostRoom)
+		kicker.RoomID = s.hr.Clients[0].CurrentRoom
+		kicker.client = s.hr.Clients[0]
+		go kickClient(kicker, lm, hostCollection)
 	}
 
 	s.hr.Clients[0] = lm.clientDB.SetRoom(s.hr.Clients[0], s.hr.RoomID)
 	hostCollection[s.hr.RoomID] = s.hr
+	
 	s.sendBack <- s.hr
 }
 
@@ -50,6 +54,7 @@ func joinRoom(associate joiner, lm *LobbyMap, hostCollection map[int]HostRoom) {
 	room, ok := hostCollection[associate.RoomID]
 	if room.ClientCount < room.MaxSize && ok {
 		if lm.clientDB.GetRoom(associate.client) > 0 {
+			panic("TODO: joinRoom must not call Kick (will send to mapHandler which is already busy with joinRoom) - must call kickClient instead")
 			lm.Kick(associate.client)
 		}
 		room.ClientCount++

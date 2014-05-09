@@ -85,14 +85,6 @@ func ActivateSender(serverTerminal chan string, client connection.Connector) {
 	}
 }
 
-/*
-type test struct {
-	UserList [1]string
-	GameHost [1]string
-	Message string
-}
-*/
-
 func ClientListener(lm *lobbyMap.LobbyMap, client connection.Connector) {
 	core := new(ClientCore)
 	core.client = client
