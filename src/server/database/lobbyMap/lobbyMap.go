@@ -36,12 +36,13 @@ func createRoom(s speaker, lm *LobbyMap, hostCollection map[int]HostRoom) {
 	s.hr.RoomID = lm.nextID
 	lm.nextID++
 
-	if lm.clientDB.GetRoom(s.hr.Clients[0]) > 0 {
+	if roomID := lm.clientDB.GetRoom(s.hr.Clients[0]); roomID > 0 {
 		kicker := joiner{}
 		kicker.sendBack = make(chan *HostRoom)
-		kicker.RoomID = s.hr.Clients[0].CurrentRoom
+		kicker.RoomID = roomID
 		kicker.client = s.hr.Clients[0]
 		go kickClient(kicker, lm, hostCollection)
+		<- kicker.sendBack
 	}
 
 	s.hr.Clients[0] = lm.clientDB.SetRoom(s.hr.Clients[0], s.hr.RoomID)
@@ -53,9 +54,13 @@ func createRoom(s speaker, lm *LobbyMap, hostCollection map[int]HostRoom) {
 func joinRoom(associate joiner, lm *LobbyMap, hostCollection map[int]HostRoom) {
 	room, ok := hostCollection[associate.RoomID]
 	if room.ClientCount < room.MaxSize && ok {
-		if lm.clientDB.GetRoom(associate.client) > 0 {
-			panic("TODO: joinRoom must not call Kick (will send to mapHandler which is already busy with joinRoom) - must call kickClient instead")
-			lm.Kick(associate.client)
+		if roomID := lm.clientDB.GetRoom(associate.client); roomID > 0 {
+			kicker := joiner{}
+			kicker.sendBack = make(chan *HostRoom)
+			kicker.RoomID = roomID
+			kicker.client = associate.client
+			go kickClient(kicker, lm, hostCollection)
+			<- kicker.sendBack
 		}
 		room.ClientCount++
 		room.Clients[room.ClientCount - 1] = lm.clientDB.SetRoom(associate.client, room.RoomID)
@@ -81,12 +86,11 @@ func refreshShadow(sendBack chan []HostRoom, hostCollection map[int]HostRoom) {
 }
 
 func kickClient(toKick joiner, lm *LobbyMap, hostCollection map[int]HostRoom) {
-	room, ok := hostCollection[toKick.client.CurrentRoom]
+	room, ok := hostCollection[lm.clientDB.GetRoom(toKick.client)]
 	if ok {
 		found := false
 		for key := range room.Clients {
 			if room.Clients[key].ConnectorID == toKick.client.ConnectorID || found {
-		
 				found = true
 				if key < len(room.Clients)-1 {
 					room.Clients[key] = room.Clients[key+1]
