@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableModel;
 
 import packageManaging.HostRoom;
 
@@ -23,6 +25,7 @@ public class LobbyGUI {
 	public JButton refreshButton;
 	public JList<String> createList;
 	public JList<HostRoom> joinList;
+	public JTable jt;
 
 	public JPanel westTopPanel;
 	public JPanel eastTopPanel;
@@ -36,8 +39,9 @@ public class LobbyGUI {
 
 		lobby.setLayout(new BorderLayout());
 		lobby.getContentPane().setBackground(Color.DARK_GRAY);
-		lobby.setSize(800, 600);
-		lobby.setLocationRelativeTo(null);
+		Dimension d = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+		lobby.setSize(d);
+		
 		lobby.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		lobby.setBackground(Color.DARK_GRAY);
 
@@ -66,7 +70,8 @@ public class LobbyGUI {
 		topPanel.add(westTopPanel, BorderLayout.WEST);
 		topPanel.add(eastTopPanel, BorderLayout.EAST);
 		topPanel.setBackground(Color.DARK_GRAY);
-		Dimension preferredSize = new Dimension(400, 300);
+		System.out.println(d.getHeight());
+		Dimension preferredSize = new Dimension((int)d.getWidth(), (int)(d.getHeight()/3 + d.getHeight()/3 ));
 		topPanel.setPreferredSize(preferredSize);
 		lobby.add(topPanel, BorderLayout.NORTH);
 		lobby.add(bottomPanel, BorderLayout.SOUTH);
@@ -83,7 +88,7 @@ public class LobbyGUI {
 	public void makePlayerList(JPanel panel, ArrayList<HostRoom> L) {
 		joinButton = new JButton();
 		makeJButton(joinButton, "resources/JoinButton.png", "joinbutton");
-
+		joinButton.setBackground(Color.DARK_GRAY);
 		panel.add(joinButton, BorderLayout.SOUTH);
 		addArrayList(panel, L);
 
@@ -91,35 +96,52 @@ public class LobbyGUI {
 
 	public void makeGameList(JPanel panel, ArrayList<String> L) {
 		createButton = new JButton();
+		
 		makeJButton(createButton, "resources/CreateButton.png", "createbutton");
 		panel.add(createButton, BorderLayout.SOUTH);
 		addArrayListString(panel, L);
 
 	}
 
-	public void addArrayList(JPanel panel, ArrayList<HostRoom> L){
+	public void addArrayList(JPanel panel, ArrayList<HostRoom> L) {
+
+		String[] title = { "Game", "Players", "Host", "RoomID" };
 		
-		String[] title = {"Game", "Players", "Host", "RoomID"};
-		JTable jt = new JTable(makeNewTableArray(L), title);
+		
+		jt = new JTable(new TableModel(makeNewTableArray(L), title));
 		jt.setBackground(Color.DARK_GRAY.darker());
 		jt.setForeground(Color.LIGHT_GRAY);
-		
-		panel.add(jt, BorderLayout.CENTER);
-		panel.validate();
+		jt.setAutoResizeMode(0);
+		jt.getColumnModel().getColumn(0).setPreferredWidth(150);
+		jt.getColumnModel().getColumn(1).setPreferredWidth(25);
+		jt.getColumnModel().getColumn(2).setPreferredWidth(100);
+		jt.getColumnModel().getColumn(3).setPreferredWidth(25);
+		JScrollPane jp = new JScrollPane(jt);
+		//asdasjp.getViewport().setBackground(Color.DARK_GRAY.darker());
+		jp.getViewport().setBackground(Color.DARK_GRAY.darker());
+		//jt.getTableHeader().setBackground(Color.DARK_GRAY.darker());
+		//jt.getTableHeader().setForeground(Color.LIGHT_GRAY);
 	
+		jt.setRowSelectionAllowed(true);
+		//jt.setModel(tableModel);
+		panel.add(jp, BorderLayout.CENTER);
 		
+		panel.validate();
+
 	}
 
-	public String[][] makeNewTableArray(ArrayList<HostRoom> L){
+	
+
+	public String[][] makeNewTableArray(ArrayList<HostRoom> L) {
 		String[][] array = new String[L.size()][4];
-		for (int i = 0; i< array.length; i++){
+		for (int i = 0; i < array.length; i++) {
 			array[i][0] = L.get(i).GameName;
-			array[i][1] = Integer.toString(L.get(i).ClientCount) + "/" + Integer.toString(L.get(i).MaxSize);
+			array[i][1] = Integer.toString(L.get(i).ClientCount) + "/"
+					+ Integer.toString(L.get(i).MaxSize);
 			array[i][2] = L.get(i).RoomName;
 			array[i][3] = Integer.toString(L.get(i).RoomID);
 		}
-		
-		
+
 		return array;
 	}
 
@@ -149,17 +171,8 @@ public class LobbyGUI {
 		return new JList<String>(model);
 	}
 
-	/*
-	 * public static JList<HostRoom> getJList(ArrayList<HostRoom> list, int
-	 * type) { int size = list.size(); final DefaultListModel<String> model =
-	 * new DefaultListModel<String>(); for (int i = 0; i < size; i++) { switch
-	 * (type){ case 1: model.addElement(list.get(i).GameName); break; case 2:
-	 * String players = Integer.toString(list.get(i).ClientCount) + "/" +
-	 * Integer.toString(list.get(i).MaxSize);
-	 * model.addElement(list.get(i).GameName ); break; case 3 } }
-	 * 
-	 * return new JList<HostRoom>(model); }
-	 */
+	
+
 	public void makeJButton(JButton jb, String src, String actionCommand) {
 		File imageCheck = new File(src);
 		try {

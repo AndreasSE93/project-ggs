@@ -86,7 +86,7 @@ func clientListener(client connection.Connector, conList *list.List) {
 	//enc := json.NewEncoder(client.connection)
 	a := test2{1,2,1,"josef", "hej"}
 	userList := [1]test2{a}
-	gameHost := [20]string{"1","2","3","4","5","6","7","8", "9", "10", "11","12","13","14","15","16","17","18","19","20"}
+	gameHost := [20]string{"1aaaaaaaaaaaaaa\t","2\thehe","3","4","5","6","7","8", "9", "10", "11","12","13","14","15","16","17","18","19","20"}
 	message := "Test"
 	b, err := json.Marshal(&test{
 		userList,

@@ -99,14 +99,17 @@ public class LobbyHandler implements HandlerInterface,
 			break;
 
 		case "joinbutton":
-			try {
-				
-				JSONtext = jme.encode(new JoinMessage((HostRoom) lg.joinList.getSelectedValue())); // Vad göra sen? skickat till serven att vi vill spela.
+			//try {
+			//lg.jt.setCellSelectionEnabled(true);
+			lg.jt.setRowSelectionAllowed(true);
+			System.out.println(lg.jt.getModel().getValueAt(1, 3));
+				System.out.println(lg.jt.getSelectedRow() + " hej");
+				/*JSONtext = jme.encode(new JoinMessage((HostRoom) ); 
 				
 				} catch (JSONException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
-				}
+				}*/
 			state = 2; //Temporärt för att byta till tic tac toe
 			loop=false; // -||-_________________________________
 
@@ -115,6 +118,7 @@ public class LobbyHandler implements HandlerInterface,
 			
 		case "createbutton":
 			try {
+				
 				JSONtext = gme.encode(new CreateGameMessage(lg.createList.getSelectedValue(), 2 , this.userName));
 			} catch (JSONException e1) {
 				// TODO Auto-generated catch block
