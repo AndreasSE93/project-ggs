@@ -8,8 +8,7 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableModel;
+
 
 import packageManaging.HostRoom;
 
@@ -109,9 +108,11 @@ public class LobbyGUI {
 		
 		
 		jt = new JTable(new TableModel(makeNewTableArray(L), title));
+		TableModel tm = (TableModel) jt.getModel();
+		tm.fireTableStructureChanged();
 		jt.setBackground(Color.DARK_GRAY.darker());
 		jt.setForeground(Color.LIGHT_GRAY);
-		jt.setAutoResizeMode(0);
+		//jt.setAutoResizeMode(0);
 		jt.getColumnModel().getColumn(0).setPreferredWidth(150);
 		jt.getColumnModel().getColumn(1).setPreferredWidth(25);
 		jt.getColumnModel().getColumn(2).setPreferredWidth(100);
@@ -127,6 +128,7 @@ public class LobbyGUI {
 		panel.add(jp, BorderLayout.CENTER);
 		
 		panel.validate();
+		lobby.validate();
 
 	}
 
@@ -145,6 +147,17 @@ public class LobbyGUI {
 		return array;
 	}
 
+	public void updateJTable (ArrayList<HostRoom> L){
+		TableModel tm = (TableModel) jt.getModel();
+		tm.removeAll();
+		String[][] array = makeNewTableArray(L);
+		tm.addAll(array);
+		tm.fireTableDataChanged();
+		jt.validate();
+		eastTopPanel.validate();
+		
+	}
+	
 	public void addArrayListString(JPanel panel, ArrayList<String> L) {
 		final JList<String> jList = getJListString(L);
 

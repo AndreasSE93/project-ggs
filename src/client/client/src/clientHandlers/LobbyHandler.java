@@ -9,7 +9,6 @@ import org.json.JSONObject;
 
 import packageManaging.CreateGameMessage;
 import packageManaging.CreateGameMessageEncoder;
-import packageManaging.HostRoom;
 import packageManaging.JoinMessage;
 import packageManaging.JoinMessageEncoder;
 import packageManaging.LobbyMessageEncoder;
@@ -99,17 +98,17 @@ public class LobbyHandler implements HandlerInterface,
 			break;
 
 		case "joinbutton":
-			//try {
-			//lg.jt.setCellSelectionEnabled(true);
+			try {
+			lg.jt.setCellSelectionEnabled(true);
 			lg.jt.setRowSelectionAllowed(true);
-			System.out.println(lg.jt.getModel().getValueAt(1, 3));
-				System.out.println(lg.jt.getSelectedRow() + " hej");
-				/*JSONtext = jme.encode(new JoinMessage((HostRoom) ); 
+	
+				
+				JSONtext = jme.encode(new JoinMessage((String)lg.jt.getModel().getValueAt(lg.jt.getSelectedRow(),3))); 
 				
 				} catch (JSONException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
-				}*/
+				}
 			state = 2; //Temporärt för att byta till tic tac toe
 			loop=false; // -||-_________________________________
 
@@ -159,7 +158,7 @@ public class LobbyHandler implements HandlerInterface,
 
 		case 103: // LobbyClientMessage.java/LobbyServerMessage.java
 			LobbyServerMessage ls = lme.decode(message);
-			lg.addArrayList(lg.eastTopPanel, ls.UserList);
+			lg.updateJTable(ls.UserList);
 			break;
 		default:
 			System.out.println("something went wrong! Error code: " + id);

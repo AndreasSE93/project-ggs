@@ -11,9 +11,9 @@ public class JoinMessage {
 		
 	}
 	
-	public JoinMessage(HostRoom m){
+	public JoinMessage(String m){
 		
-		this.RoomID = m.RoomID;
+		this.RoomID = Integer.parseInt(m);
 		
 	}
 	
