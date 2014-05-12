@@ -22,9 +22,8 @@ type LobbyMap struct {
 
 type HostRoom struct {
 	RoomID, MaxSize, ClientCount int
-	RoomName string
+	RoomName, GameName string
 	Clients []connection.Connector
-	GameName string
 }
 
 type speaker struct {

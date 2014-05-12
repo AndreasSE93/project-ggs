@@ -26,6 +26,11 @@ type HostNew struct {
 	GameName string `json:"GameName"`
 }
 
+type HostRoom struct {
+	PacketID int `json:"PacketID"`
+	HostRoom lobbyMap.HostRoom `json:"PacketID"`
+}
+
 type JoinExisting struct {
 	PacketID int `json:"PacketID"`
 	RoomID int `json:"RoomID"`

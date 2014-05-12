@@ -12,6 +12,7 @@ func ReqHost(hostNew messages.HostNew, clientInfo ClientCore) lobbyMap.HostRoom 
 	hr.MaxSize = hostNew.MaxSize
 	hr.ClientCount = 1
 	hr.RoomName = hostNew.RoomName
+	hr.GameName = hostNew.GameName
 	c := make([]connection.Connector, hr.MaxSize)
 	c[0] = clientInfo.client
 	hr.Clients = c

@@ -7,9 +7,8 @@ import (
 
 type Connector struct {
 	ConnectorID, CurrentRoom int
+	UserName string
 	Connection net.Conn
-	//LocalAddr, RemAddr net.Addr
-	//waiter WaitingHandler
 }
 
 func clientIdGenerator(sender chan int) {

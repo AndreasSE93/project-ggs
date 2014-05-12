@@ -16,17 +16,6 @@ import (
 	"server/encoders"
 )
 
-/*
-func trimNulls(array []byte) []byte {
-	for i := 0; i < len(array); i++ {
-		if array[i] == 0 {
-			return array[0:i]
-		}
-	}
-	return array
-}
-*/
-
 //Use it as a check that all is completed for a client to know it have a connection to the server
 //Otherwise, try tell the client to reconnect to the server
 func testConnection(conn connection.Connector) {
@@ -44,7 +33,7 @@ func testConnection(conn connection.Connector) {
 	in := make([]byte, 1024)
 	response := new(messages.Ping)
 	conn.Connection.Read(in)
-	in = bytes.Trim(in, "\x00")
+	in = bytes.TrimRight(in, "\x00")
 	json.Unmarshal(in, response)
 	if response.Payload != "Connection test" {
 		panic(fmt.Errorf("Received wrong ping Payload!=\"Connection test\": %s -> %+v", in, *response))
