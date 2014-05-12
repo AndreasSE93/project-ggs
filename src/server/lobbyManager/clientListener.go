@@ -8,24 +8,18 @@ import (
 	"server/encoders"
 	"server/messages"
 	"encoding/json"
+	"server/game"
 )
-
-type ProcessedMessage struct {
-	ID int `json:"PacketID"`
-	ChatM messages.ChatMessage
-	Host messages.HostNew
-	Join messages.JoinExisting
-	Update messages.UpdateRooms
-}
 
 type ClientCore struct {
 	client connection.Connector
 	lm *lobbyMap.LobbyMap
+//	Room HostRoom
 }
 
-func messageInterpreter(messageTransfer chan string, sendToLobby chan ProcessedMessage) {
+func messageInterpreter(messageTransfer chan string, sendToLobby chan messages.ProcessedMessage) {
 	for {
-		pMsg := new(ProcessedMessage)
+		pMsg := new(messages.ProcessedMessage)
 		message := <- messageTransfer
 		json.Unmarshal([]byte(message), pMsg)
 
@@ -58,7 +52,7 @@ func messageInterpreter(messageTransfer chan string, sendToLobby chan ProcessedM
 	}
 }
 
-func ActivateReceiver(messageProcessing chan ProcessedMessage, client connection.Connector) {
+func ActivateReceiver(messageProcessing chan messages.ProcessedMessage, client connection.Connector) {
 	messageTransfer := make(chan string)
 	go messageInterpreter(messageTransfer, messageProcessing)
 
@@ -89,7 +83,7 @@ func ClientListener(lm *lobbyMap.LobbyMap, client connection.Connector) {
 	core := new(ClientCore)
 	core.client = client
 	core.lm = lm
-	processedChan := make(chan ProcessedMessage)
+	processedChan := make(chan messages.ProcessedMessage)
 
 	finJSON := make(chan string)
 
@@ -99,27 +93,32 @@ func ClientListener(lm *lobbyMap.LobbyMap, client connection.Connector) {
 	refreshList := ReqUpdate(messages.UpdateRooms{}, *core)
 	finJSON <- encoders.EncodeRefreshList(messages.REFRESH_ID, refreshList)
 
+	gameChan := make(chan messages.ProcessedMessage)
+
 	for {
 		processed := <- processedChan
 		fmt.Printf("Received decoded message: %v\n", processed)
 
 		if processed.ID == messages.CHAT_ID {
-			finJSON <- encoders.EncodeChatMessage(messages.CHAT_ID, processed.ChatM.Message)
-			
+			gameChan <- processed
+	
 		} else if processed.ID == messages.HOST_ID {
 			hostedRoom := ReqHost(processed.Host, *core)
 			//Some function call to an encoder for when a room is hosted
 			//NOT FILLED IN. Look in package encoders
-			finJSON <- encoders.EncodeHostedRoom(messages.HOST_ID, hostedRoom)
+			gameChan = hostedRoom.GameChan
+			go game.CreateGameRoom(hostedRoom, core.lm)
 
 		} else if processed.ID == messages.JOIN_ID {
 			joinedRoom := ReqJoin(processed.Join, *core)
 			//Some function call to an encoder for when a room is joined
 			//NOT FILLED IN. Look in package encoders
-			finJSON <- encoders.EncodeJoinedRoom(messages.JOIN_ID, joinedRoom)
+			gameChan = joinedRoom.GameChan
+			gameChan <- processed
 
 		} else if processed.ID == messages.REFRESH_ID {
 			refreshList := ReqUpdate(processed.Update, *core)
+			fmt.Println(refreshList,"SHADOOOOOOOOOOOOOW")
 			//Some function call to an encoder for when a update is requested
 			//NOT FILLED IN. Look in package encoders
 			finJSON <- encoders.EncodeRefreshList(messages.REFRESH_ID, refreshList)
@@ -127,6 +126,6 @@ func ClientListener(lm *lobbyMap.LobbyMap, client connection.Connector) {
 		} else {
 			fmt.Println("Something went wrong!")
 		}
-		fmt.Printf("lm=%+v", lm.GetShadow())
+		fmt.Printf("lm=%+v\n", lm.GetShadow())
 	}
 }

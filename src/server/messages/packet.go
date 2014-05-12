@@ -2,7 +2,7 @@ package messages
 
 import (
 	"time"
-	"server/database/lobbyMap"
+	"server/connection"
 )
 
 const (
@@ -19,6 +19,14 @@ type Ping struct {
 	Payload interface{} `json:"Payload"`
 }
 
+type ProcessedMessage struct {
+	ID int `json:"PacketID"`
+	ChatM ChatMessage
+	Host HostNew
+	Join JoinExisting
+	Update UpdateRooms
+}
+
 type HostNew struct {
 	PacketID int `json:"PacketID"`
 	RoomName string `json:"roomName"`
@@ -26,9 +34,21 @@ type HostNew struct {
 	GameName string `json:"GameName"`
 }
 
-type HostRoom struct {
+type HostRoomPacket struct {
 	PacketID int `json:"PacketID"`
-	HostRoom lobbyMap.HostRoom `json:"PacketID"`
+	HostRoom HostRoom `json:"hostRoom"`
+}
+
+type RoomInfo struct {
+	RoomID, MaxSize, ClientCount int
+	RoomName, GameName string
+}
+
+type HostRoom struct {
+	RoomID, MaxSize, ClientCount int
+	RoomName, GameName string
+	Clients []connection.Connector
+	GameChan chan ProcessedMessage
 }
 
 type JoinExisting struct {
@@ -42,7 +62,7 @@ type UpdateRooms struct {
 
 type RoomList struct {
 	PacketID int `json:"PacketID"`
-	Rooms []lobbyMap.HostRoom `json:"UserList"`
+	Rooms []RoomInfo `json:"UserList"`
 	Games []string `json:"GameHost"`
 }
 

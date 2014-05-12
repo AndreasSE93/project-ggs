@@ -5,10 +5,7 @@ import (
 	"server/messages"
 )
 
-func EncodeChatMessage(packageID int, msg string) string {
-	obj, _ := json.Marshal(messages.ChatMessage{
-		PacketID: packageID,
-		Message: msg,
-	})
+func EncodeChatMessage(packageID int, msg messages.ChatMessage) string {
+	obj, _ := json.Marshal(msg)
 	return string(obj)
 }

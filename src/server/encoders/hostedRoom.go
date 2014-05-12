@@ -2,12 +2,11 @@ package encoders
 
 import (
 	"encoding/json"
-	"server/database/lobbyMap"
 	"server/messages"
 )
 
-func EncodeHostedRoom(packageID int, room lobbyMap.HostRoom) string {
-	obj := messages.HostRoom{
+func EncodeHostedRoom(packageID int, room messages.HostRoom) string {
+	obj := messages.HostRoomPacket{
 		PacketID: packageID,
 		HostRoom: room,
 	}
