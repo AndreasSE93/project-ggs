@@ -5,8 +5,11 @@ import graphicalReference.ChatGUI;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
@@ -15,7 +18,9 @@ import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
 
 public class TiarGUI extends GameLogic {
 	public JButton a1 = new JButton();
@@ -48,29 +53,34 @@ public class TiarGUI extends GameLogic {
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setBackground(Color.DARK_GRAY);
 
-		JPanel gamePane = new JPanel();
-		gamePane.setPreferredSize(new Dimension(500, 600));
+		JPanel gamePane = new JPanel(new BorderLayout());
+		gamePane.setPreferredSize(new Dimension(1035, 550));
 		gamePane.setBackground(Color.BLACK);
 
-		JPanel topRow = new JPanel();
-		JPanel middleRow = new JPanel();
-		JPanel bottomRow = new JPanel();
+		JPanel gameInfo = new JPanel();
+		gameInfo.setPreferredSize(new Dimension(150,550));
+		gameInfo.setBackground(Color.RED);
+		gamePane.add(gameInfo, BorderLayout.EAST);
+		
+		JPanel gameCointainer = new JPanel();
+		
+		ImagePanel gameBoard = new ImagePanel();
+		gameBoard.setLayout(new GridLayout(3,3));
+		//gameBoard.setVisible(true);
 
-		gamePane.setLayout(new BoxLayout(gamePane, BoxLayout.Y_AXIS));
-		topRow.setLayout(new BoxLayout(topRow, BoxLayout.X_AXIS));
-		middleRow.setLayout(new BoxLayout(middleRow, BoxLayout.X_AXIS));
-		bottomRow.setLayout(new BoxLayout(bottomRow, BoxLayout.X_AXIS));
 
-		JPanel aa1 = new JPanel();
-		JPanel aa2 = new JPanel();
-		JPanel aa3 = new JPanel();
-		JPanel bb1 = new JPanel();
-		JPanel bb2 = new JPanel();
-		JPanel bb3 = new JPanel();
-		JPanel cc1 = new JPanel();
-		JPanel cc2 = new JPanel();
-		JPanel cc3 = new JPanel();
-
+		gameBoard.setBorder(new EmptyBorder(10,10,10,10));
+		
+		gameBoard.add(a1);
+		gameBoard.add(a2);
+		gameBoard.add(a3);
+		gameBoard.add(b1);
+		gameBoard.add(b2);
+		gameBoard.add(b3);
+		gameBoard.add(c1);
+		gameBoard.add(c2);
+		gameBoard.add(c3);
+		
 		a1.setName("a1");
 		a2.setName("a2");
 		a3.setName("a3");
@@ -81,31 +91,6 @@ public class TiarGUI extends GameLogic {
 		c2.setName("c2");
 		c3.setName("c3");
 
-		aa1.add(a1);
-		aa2.add(a2);
-		aa3.add(a3);
-		bb1.add(b1);
-		bb2.add(b2);
-		bb3.add(b3);
-		cc1.add(c1);
-		cc2.add(c2);
-		cc3.add(c3);
-
-		topRow.add(aa1);
-		topRow.add(aa2);
-		topRow.add(aa3);
-
-		middleRow.add(bb1);
-		middleRow.add(bb2);
-		middleRow.add(bb3);
-
-		bottomRow.add(cc1);
-		bottomRow.add(cc2);
-		bottomRow.add(cc3);
-
-		topRow.setPreferredSize(new Dimension(300, 100));
-		bottomRow.setPreferredSize(new Dimension(300, 100));
-		middleRow.setPreferredSize(new Dimension(300, 100));
 
 		a1.setPreferredSize(new Dimension(100, 100));
 		a2.setPreferredSize(new Dimension(100, 100));
@@ -127,7 +112,11 @@ public class TiarGUI extends GameLogic {
 		game[7] = c2;
 		game[8] = c3;
 
-		this.c1.setBackground(Color.BLUE);
+		for(int i =0; i<game.length; i++){
+			invisibleButton(game[i]);
+			
+		}
+		/*this.c1.setBackground(Color.BLUE);
 		this.c2.setBackground(Color.RED);
 		this.c3.setBackground(Color.GREEN);
 
@@ -138,15 +127,15 @@ public class TiarGUI extends GameLogic {
 		this.b3.setBackground(Color.BLUE);
 		this.b1.setBackground(Color.RED);
 		this.b2.setBackground(Color.GREEN);
+*/
+		gameCointainer.add(gameBoard);
+		gamePane.add(gameCointainer);
 
-		gamePane.add(topRow);
-		gamePane.add(middleRow);
-		gamePane.add(bottomRow);
-
+		window.add(gamePane, BorderLayout.NORTH);
 		chat = new ChatGUI(usr);
 		chat.render(chatPanel, window);
 
-		window.add(gamePane, BorderLayout.WEST);
+
 		window.setVisible(true);
 		window.validate();
 
@@ -163,7 +152,13 @@ public class TiarGUI extends GameLogic {
 		}
 
 	}
-
+	
+	public void invisibleButton(JButton a){
+		a.setOpaque(false);
+		a.setContentAreaFilled(false);
+		a.setBorderPainted(false);
+	}
+	
 	private int getInt(String Pos) {
 		switch (Pos) {
 		case "a1":
@@ -217,3 +212,24 @@ public class TiarGUI extends GameLogic {
 	
 	}
 }
+
+	class ImagePanel extends JPanel{
+
+	    private BufferedImage image;
+
+	    public ImagePanel() {
+	       try {                
+	          image = ImageIO.read(new File("resources/tttBoard.png"));
+	          } catch (IOException ex) {
+	            // handle exception...
+	       }
+	    }
+
+	    @Override
+	    protected void paintComponent(Graphics g) {
+	        super.paintComponent(g);
+	        g.drawImage(image, 0, 0, null); // see javadoc for more info on the parameters            
+	    }
+
+}
+

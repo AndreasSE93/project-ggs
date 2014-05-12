@@ -27,7 +27,7 @@ public class Monitor {
 	public Monitor() {
 		
 	}
-	//130.243.137.247 andreas
+
 	
 	public void init(){
 		
@@ -43,8 +43,7 @@ public class Monitor {
 				mess = icme.encode(icm);
 				net.send(mess);
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, "Can't connect to server!", "Warning", JOptionPane.ERROR_MESSAGE);
 			}
 			
 			setState(1);

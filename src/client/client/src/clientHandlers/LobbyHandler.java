@@ -37,6 +37,7 @@ public class LobbyHandler implements HandlerInterface,
 	boolean loop = true;
 	int state;
 	final String userName;
+	
 	public LobbyHandler(NetManager net, String username){
 		this.network = net;
 		this.userName = username;
@@ -78,7 +79,6 @@ public class LobbyHandler implements HandlerInterface,
 			}
 		}
 		
-		//Change state!!!
 		
 		 lg.lobby.setVisible(false);
 		 return state;
@@ -115,23 +115,22 @@ public class LobbyHandler implements HandlerInterface,
 					e1.printStackTrace();
 				}
 
-
-
 			break;
 			
 		case "createbutton":
 			try {
 				
 				JSONtext = gme.encode(new CreateGameMessage(lg.createList.getSelectedValue(), 2 , this.userName));
+				sendMessage(JSONtext);
+				JSONtext = rme.encode (new RefreshMessage());
 			} catch (JSONException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			
 			break;
-		case "refreshbutton":			//SKicka jag vill uppdatera spelarlistorna, server skickar ut nya listor
+		case "refreshbutton":		
 			try {
-				System.out.println(lg.lobby.getSize());
 				JSONtext = rme.encode (new RefreshMessage());
 			} catch (JSONException e1) {
 				// TODO Auto-generated catch block

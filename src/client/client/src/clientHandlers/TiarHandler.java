@@ -35,7 +35,7 @@ public class TiarHandler implements HandlerInterface, ActionListener, MouseListe
 	ChatMessageEncoder cme = new ChatMessageEncoder();
 	TiarUserMessageEncoder tume = new TiarUserMessageEncoder();
 	TiarStartMessageEncoder tsme = new TiarStartMessageEncoder();
-	int Player;
+	int Player = 1;
 	final String userName;
 	private boolean loop = true;
 
@@ -156,7 +156,6 @@ public class TiarHandler implements HandlerInterface, ActionListener, MouseListe
 		JButton l =(JButton) arg0.getSource();
 		String name = l.getName();
 		tg.doMove(name, tg.gl.getTurn());
-		System.out.println(name);
 		TiarUserMessage tum = new TiarUserMessage(tg.gl.isDraw(), tg.gl.hasWon(), name);
 		try {
 			sendMessage(tume.encode(tum));

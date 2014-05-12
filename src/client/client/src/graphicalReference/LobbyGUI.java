@@ -63,7 +63,7 @@ public class LobbyGUI {
 		
 		centerTopPanel.setLayout(new BorderLayout());
 		refreshButton.setBackground(Color.DARK_GRAY);
-		//centerTopPanel.add(refreshButton, BorderLayout.SOUTH);
+
 		
 		centerTopPanel.setBackground(Color.DARK_GRAY);
 		topPanel.add(centerTopPanel, BorderLayout.CENTER);
@@ -74,11 +74,7 @@ public class LobbyGUI {
 		topPanel.add(westTopPanel, BorderLayout.WEST);
 		topPanel.add(eastTopPanel, BorderLayout.EAST);
 		topPanel.setBackground(Color.DARK_GRAY);
-		
-	
-		
-		//Dimension preferredSize = new Dimension((int)d.getWidth(), (int)(d.getHeight()/3 + d.getHeight()/3 ));
-		//topPanel.setPreferredSize(preferredSize);
+
 		
 		lobby.add(topPanel, BorderLayout.NORTH);
 		lobby.add(bottomPanel, BorderLayout.SOUTH);
@@ -103,10 +99,12 @@ public class LobbyGUI {
 		makeJButton(joinButton, "resources/JoinButton.png", "joinbutton");
 		
 		joinButton.setBackground(Color.DARK_GRAY);
+		
 		buttons.add(joinButton);
+		
 		buttons.add(refreshButton);
+		buttons.setBackground(Color.DARK_GRAY);
 		panel.add(buttons,BorderLayout.SOUTH);
-		//panel.add(joinButton, BorderLayout.SOUTH);
 		addArrayList(panel, L);
 
 	}
@@ -128,25 +126,19 @@ public class LobbyGUI {
 		jt = new JTable(new TableModel(makeNewTableArray(L), title));
 		TableModel tm = (TableModel) jt.getModel();
 		tm.fireTableStructureChanged();
+		jt.setAutoCreateRowSorter(true);
 		
 		jt.setBackground(Color.DARK_GRAY.darker());
 		jt.setForeground(Color.LIGHT_GRAY);
-		//jt.setAutoResizeMode(0);
 		jt.getColumnModel().getColumn(0).setPreferredWidth(150);
 		jt.getColumnModel().getColumn(1).setPreferredWidth(25);
 		jt.getColumnModel().getColumn(2).setPreferredWidth(100);
 		jt.getColumnModel().getColumn(3).setPreferredWidth(25);
 		JScrollPane jp = new JScrollPane(jt);
-		//asdasjp.getViewport().setBackground(Color.DARK_GRAY.darker());
-		jp.getViewport().setBackground(Color.DARK_GRAY.darker());
-		//jt.getTableHeader().setBackground(Color.DARK_GRAY.darker());
-		//jt.getTableHeader().setForeground(Color.LIGHT_GRAY);
-	
-		jt.setRowSelectionAllowed(true);
-		//jt.setModel(tableModel);
-		panel.add(jp, BorderLayout.CENTER);
 		
-		panel.validate();
+		jp.getViewport().setBackground(Color.DARK_GRAY.darker());
+		jt.setRowSelectionAllowed(true);
+		panel.add(jp, BorderLayout.CENTER);
 		lobby.validate();
 
 	}

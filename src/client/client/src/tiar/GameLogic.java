@@ -89,9 +89,6 @@ public class GameLogic{
 
 	public String toString(){
 		int[] field = getGameField();
-		System.out.println(field[0] + " " + field[1] + " " + field[2]);
-		System.out.println(field[3] + " " + field[4] + " " + field[5]);
-		System.out.println(field[6] + " " + field[7] + " " + field[8]);
 
 		String board = field[0] + " " + field[1] + " " + field[2] +"\n" +
 					 	field[3] + " " + field[4] + " " + field[5] +"\n" +
