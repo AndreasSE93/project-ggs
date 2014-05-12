@@ -4,6 +4,11 @@ import java.io.IOException;
 
 import javax.swing.JOptionPane;
 
+import org.json.JSONException;
+
+import packageManaging.InitializeClientMessage;
+import packageManaging.InitializeClientMessageEncoder;
+
 
 
 import clientHandlers.LobbyHandler;
@@ -26,11 +31,22 @@ public class Monitor {
 	
 	public void init(){
 		
-		this.conn = new Connection("130.243.137.247", 8080);
+		this.conn = new Connection("130.243.137.162", 8080);
 		this.net = new NetManager(conn);
         try {
 			net.connectToServer();
-			userName = (String)JOptionPane.showInputDialog("Write username!"); 
+			userName = (String)JOptionPane.showInputDialog("Write username!");
+			InitializeClientMessage icm = new InitializeClientMessage(userName);
+			InitializeClientMessageEncoder icme = new InitializeClientMessageEncoder();
+			String mess;
+			try {
+				mess = icme.encode(icm);
+				net.send(mess);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 			setState(1);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

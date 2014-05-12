@@ -7,12 +7,15 @@ import java.awt.event.MouseListener;
 import java.io.IOException;
 
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import packageManaging.ChatMessageEncoder;
 import packageManaging.Message;
+import packageManaging.TiarStartMessage;
+import packageManaging.TiarStartMessageEncoder;
 import packageManaging.TiarUserMessage;
 import packageManaging.TiarUserMessageEncoder;
 
@@ -31,8 +34,11 @@ public class TiarHandler implements HandlerInterface, ActionListener, MouseListe
 	TiarGUI tg;
 	ChatMessageEncoder cme = new ChatMessageEncoder();
 	TiarUserMessageEncoder tume = new TiarUserMessageEncoder();
+	TiarStartMessageEncoder tsme = new TiarStartMessageEncoder();
+	int Player;
 	final String userName;
 	private boolean loop = true;
+
 	
 	public TiarHandler(NetManager net , String username){
 		this.network = net;
@@ -44,14 +50,14 @@ public class TiarHandler implements HandlerInterface, ActionListener, MouseListe
 	public int init(){
 		 tg = new TiarGUI();
 		 tg.render(this.userName);
-		
-		 System.out.println("1");
+
+			 
 		 for (int i = 0 ; i < tg.game.length; i++){
 		 tg.game[i].addMouseListener(this);
 		
 		 
 		 }
-		 System.out.println("2");
+
 		 tg.chat.field.addActionListener(this);
 		
 		tg.window.setVisible(true);
@@ -74,32 +80,23 @@ public class TiarHandler implements HandlerInterface, ActionListener, MouseListe
 	public void decodeAndRender(int id, String message) throws JSONException {
 		switch(id){
 		case 100: //Chat message
-			ChatMessageEncoder mh = new ChatMessageEncoder();
-			Message chatMessage = mh.decode(message);
+			Message chatMessage = cme.decode(message);
 			tg.chat.chatUpdate(chatMessage.message, chatMessage.user);
 				break;
 				
 		case 200: //Move message
-				TiarUserMessageEncoder s = new TiarUserMessageEncoder();
-				TiarUserMessage mess = s.decode(message);
-				tg.doMove(mess.Move , tg.gl.getTurn());
-				switch (tg.gl.hasWon()){
-				case 1:
-					System.out.println("Spelare 1 vann");
-					/* Bör skriva ut ett meddelande */
-					tg.clearBoard();
-					break;
-				case 2:
-					System.out.println("Spelare 2 vann");
-					/* Bör skriva ut ett meddelande */
-					tg.clearBoard();
-					break;
-				default:
-					if(tg.gl.isDraw() == 1){tg.clearBoard();}
-					System.out.println(tg.gl.toString());
-				}
-				break;
 				
+				TiarUserMessage mess = tume.decode(message);
+				tg.doMove(mess.Move , tg.gl.getTurn());
+				checkWinner();
+
+		case 201:
+			
+				TiarStartMessage tsm = tsme.decode(message);
+				Player = tsm.turn;
+				
+			
+			
 		default: //Should not come here
 				break;
 		
@@ -155,6 +152,7 @@ public class TiarHandler implements HandlerInterface, ActionListener, MouseListe
 
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
+		if(Player == tg.gl.getTurn()){
 		JButton l =(JButton) arg0.getSource();
 		String name = l.getName();
 		tg.doMove(name, tg.gl.getTurn());
@@ -166,19 +164,34 @@ public class TiarHandler implements HandlerInterface, ActionListener, MouseListe
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		checkWinner();
+		}
+		else{
+			JOptionPane.showMessageDialog(null, "Not your turn!", "Warning", JOptionPane.ERROR_MESSAGE);
+		}
+
+		
+	}
+	
+	public void checkWinner(){
+		
 		switch (tg.gl.hasWon()){
 		case 1:
-			
+			System.out.println("Spelare 1 vann");
+			/* Bör skriva ut ett meddelande */
+			tg.clearBoard();
 			break;
 		case 2:
-			
-			
+			System.out.println("Spelare 2 vann");
+			/* Bör skriva ut ett meddelande */
+			tg.clearBoard();
 			break;
 		default:
-			
-			
-			break;
+			if(tg.gl.isDraw() == 1){tg.clearBoard();}
+			System.out.println(tg.gl.toString());
 		}
+		
+	
 		
 	}
 

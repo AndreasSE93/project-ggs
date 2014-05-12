@@ -40,9 +40,11 @@ public class TiarGUI extends GameLogic {
 	
 	public void render(String usr) {
 
-		window.setSize(800, 600);
+		window.setSize(1035,790);
 		window.setLayout(new BorderLayout());
+		
 		window.setLocationRelativeTo(null);
+		window.setResizable(false);
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setBackground(Color.DARK_GRAY);
 

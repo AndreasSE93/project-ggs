@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
 
@@ -38,9 +39,11 @@ public class LobbyGUI {
 
 		lobby.setLayout(new BorderLayout());
 		lobby.getContentPane().setBackground(Color.DARK_GRAY);
-		Dimension d = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
-		lobby.setSize(d);
+
 		
+		lobby.setSize(1035,790);
+		lobby.setLocationRelativeTo(null);
+		lobby.setResizable(false);
 		lobby.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		lobby.setBackground(Color.DARK_GRAY);
 
@@ -57,9 +60,11 @@ public class LobbyGUI {
 		refreshButton = new JButton();
 		makeJButton(refreshButton, "resources/refreshButton.png",
 				"refreshbutton");
+		
 		centerTopPanel.setLayout(new BorderLayout());
 		refreshButton.setBackground(Color.DARK_GRAY);
-		centerTopPanel.add(refreshButton, BorderLayout.SOUTH);
+		//centerTopPanel.add(refreshButton, BorderLayout.SOUTH);
+		
 		centerTopPanel.setBackground(Color.DARK_GRAY);
 		topPanel.add(centerTopPanel, BorderLayout.CENTER);
 
@@ -69,9 +74,12 @@ public class LobbyGUI {
 		topPanel.add(westTopPanel, BorderLayout.WEST);
 		topPanel.add(eastTopPanel, BorderLayout.EAST);
 		topPanel.setBackground(Color.DARK_GRAY);
-		System.out.println(d.getHeight());
-		Dimension preferredSize = new Dimension((int)d.getWidth(), (int)(d.getHeight()/3 + d.getHeight()/3 ));
-		topPanel.setPreferredSize(preferredSize);
+		
+	
+		
+		//Dimension preferredSize = new Dimension((int)d.getWidth(), (int)(d.getHeight()/3 + d.getHeight()/3 ));
+		//topPanel.setPreferredSize(preferredSize);
+		
 		lobby.add(topPanel, BorderLayout.NORTH);
 		lobby.add(bottomPanel, BorderLayout.SOUTH);
 		bottomPanel.add(chatt, "Center");
@@ -85,10 +93,20 @@ public class LobbyGUI {
 	}
 
 	public void makePlayerList(JPanel panel, ArrayList<HostRoom> L) {
+		JPanel buttons = new JPanel(new GridLayout(1,2));
+		
+		refreshButton.setBorder(null);
+		
 		joinButton = new JButton();
+		panel.setBorder((new EmptyBorder(10, 30, 10, 30)));
+		panel.setBackground(Color.DARK_GRAY);
 		makeJButton(joinButton, "resources/JoinButton.png", "joinbutton");
+		
 		joinButton.setBackground(Color.DARK_GRAY);
-		panel.add(joinButton, BorderLayout.SOUTH);
+		buttons.add(joinButton);
+		buttons.add(refreshButton);
+		panel.add(buttons,BorderLayout.SOUTH);
+		//panel.add(joinButton, BorderLayout.SOUTH);
 		addArrayList(panel, L);
 
 	}
@@ -110,6 +128,7 @@ public class LobbyGUI {
 		jt = new JTable(new TableModel(makeNewTableArray(L), title));
 		TableModel tm = (TableModel) jt.getModel();
 		tm.fireTableStructureChanged();
+		
 		jt.setBackground(Color.DARK_GRAY.darker());
 		jt.setForeground(Color.LIGHT_GRAY);
 		//jt.setAutoResizeMode(0);

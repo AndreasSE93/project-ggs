@@ -4,6 +4,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 
+import javax.swing.JOptionPane;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -99,18 +101,20 @@ public class LobbyHandler implements HandlerInterface,
 
 		case "joinbutton":
 			try {
-			lg.jt.setCellSelectionEnabled(true);
-			lg.jt.setRowSelectionAllowed(true);
-	
-				
-				JSONtext = jme.encode(new JoinMessage((String)lg.jt.getModel().getValueAt(lg.jt.getSelectedRow(),3))); 
-				
+				String players = (String) lg.jt.getModel().getValueAt(lg.jt.getSelectedRow(),1);
+				if(!(players.charAt(0) == players.charAt(2))){
+				JSONtext = jme.encode(new JoinMessage((String)lg.jt.getModel().getValueAt(lg.jt.getSelectedRow(),3)));
+				state = 2; //Temporärt för att byta till tic tac toe
+				loop=false; // -||-_____
+				}
+				else{
+					JOptionPane.showMessageDialog(null, "Room is full!", "Warning", JOptionPane.ERROR_MESSAGE);
+				}
 				} catch (JSONException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-			state = 2; //Temporärt för att byta till tic tac toe
-			loop=false; // -||-_________________________________
+
 
 
 			break;
@@ -127,6 +131,7 @@ public class LobbyHandler implements HandlerInterface,
 			break;
 		case "refreshbutton":			//SKicka jag vill uppdatera spelarlistorna, server skickar ut nya listor
 			try {
+				System.out.println(lg.lobby.getSize());
 				JSONtext = rme.encode (new RefreshMessage());
 			} catch (JSONException e1) {
 				// TODO Auto-generated catch block
