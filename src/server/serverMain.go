@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net"
 	"time"
-	"bytes"
+	"bufio"
 	"encoding/json"
 	"container/list"
 	"server/database"
@@ -30,10 +30,9 @@ func testConnection(conn connection.Connector) {
 	fmt.Printf("Sending ping to client %d: %s", conn.ConnectorID, ping)
 	conn.Connection.Write([]byte(ping))
 
-	in := make([]byte, 1024)
 	response := new(messages.Ping)
-	conn.Connection.Read(in)
-	in = bytes.TrimRight(in, "\x00")
+	conn.Scanner.Scan()
+	in := conn.Scanner.Bytes()
 	json.Unmarshal(in, response)
 	if response.Payload != "Connection test" {
 		panic(fmt.Errorf("Received wrong ping Payload!=\"Connection test\": %s -> %+v", in, *response))
@@ -75,6 +74,7 @@ func initConnector(netConn net.Conn, lobbyContact chan connection.Connector, idC
 	conn.ConnectorID = <- idCh
 	conn.Connection  = netConn
 	conn.CurrentRoom = -1
+	conn.Scanner = bufio.NewScanner(netConn)
 	conList.PushBack(conn.Connection)
 
 	lobbyContact <- *conn

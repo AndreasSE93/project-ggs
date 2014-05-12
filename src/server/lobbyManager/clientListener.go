@@ -2,7 +2,6 @@ package lobbyManager
 
 import (
 	"fmt"
-	"bytes"
 	"server/connection"
 	"server/database/lobbyMap"
 	"server/encoders"
@@ -53,21 +52,19 @@ func messageInterpreter(messageTransfer chan string, sendToLobby chan messages.P
 }
 
 func ActivateReceiver(messageProcessing chan messages.ProcessedMessage, client connection.Connector) {
+	defer client.Connection.Close()
+
 	messageTransfer := make(chan string)
 	go messageInterpreter(messageTransfer, messageProcessing)
 
-	for {
-		buf := make([]byte, 1024)
-		_, err := client.Connection.Read(buf)
-		if err != nil {
-			client.Connection.Close()
-			fmt.Printf("Client %d disconnected\n", client.ConnectorID)
-			return;
-		}
-		m := bytes.Index(buf, []byte{0})
-		message := string(buf[:m])
-		fmt.Printf("Reccived message from client %d: %+v\n", client.ConnectorID, message)
-		messageTransfer <- message
+	for client.Scanner.Scan() {
+		fmt.Printf("Reccived message from client %d: %+v\n", client.ConnectorID, client.Scanner.Text())
+		messageTransfer <- client.Scanner.Text()
+	}
+	if err := client.Scanner.Err(); err != nil {
+		fmt.Printf("Error reading from client %d: %s\n", client.ConnectorID, err)
+	} else {
+		fmt.Printf("Client %d disconnected\n", client.ConnectorID)
 	}
 }
 

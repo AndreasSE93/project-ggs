@@ -2,6 +2,7 @@ package connection
 
 import (
 	"net"
+	"bufio"
 	"fmt"
 )
 
@@ -9,6 +10,7 @@ type Connector struct {
 	ConnectorID, CurrentRoom int
 	UserName string
 	Connection net.Conn
+	Scanner *bufio.Scanner
 }
 
 func clientIdGenerator(sender chan int) {
