@@ -73,7 +73,8 @@ public class TiarHandler implements HandlerInterface, ActionListener,
 
 	public void decodeAndRender(int id, String message) throws JSONException {
 		switch (id) {
-		case 200: // Chat message
+		case 100: // Chat message
+			System.out.println(message);
 			Message chatMessage = cme.decode(message);
 			tg.chat.chatUpdate(chatMessage.message, chatMessage.user);
 			break;
@@ -97,6 +98,7 @@ public class TiarHandler implements HandlerInterface, ActionListener,
 			break;
 
 		default: // Should not come here
+				System.out.println( id + "\nstring: " + message);
 			break;
 
 		}
@@ -130,7 +132,7 @@ public class TiarHandler implements HandlerInterface, ActionListener,
 		case "chatmessage": // JTextField
 			try {
 
-				JSONtext = cme.encode(new TTTMessage(tg.chat.field.getText(),
+				JSONtext = cme.encode(new Message(tg.chat.field.getText(),
 						tg.chat.userName));
 				tg.chat.field.setText("");
 			} catch (JSONException e1) {
