@@ -141,6 +141,35 @@ public class TiarGUI extends GameLogic {
 
 	}
 
+	public void updateGameBoard(int[] gameBoard){
+		
+			gl.gameField = gameBoard;
+			File imageCross = new File("resources/cross_150_150.png");
+		
+			File imageCircle = new File("resources/circle_150_150.png");
+			Image img1 = null;
+			Image img2 = null;
+			try {
+				img1 = ImageIO.read(imageCross);
+				img2 = ImageIO.read(imageCircle);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
+		for (int i = 0; i<9; i++){
+			if (gameBoard[i] == 1){
+				
+				this.game[i].setIcon(new ImageIcon(img1));
+			}
+			else if(gameBoard[i] == 2){
+				this.game[i].setIcon(new ImageIcon(img2));
+			}
+			else this.game[i].setIcon(null);
+		}
+		
+	}
+	
 	public void doMove(String position, int player) {
 
 		int pos = getInt(position);
@@ -160,7 +189,7 @@ public class TiarGUI extends GameLogic {
 		a.setBorder(new EmptyBorder(5,5,5,5));
 	}
 	
-	private int getInt(String Pos) {
+	public int getInt(String Pos) {
 		switch (Pos) {
 		case "a1":
 			return 0;
@@ -209,7 +238,7 @@ public class TiarGUI extends GameLogic {
 			game[i].setIcon(null); 
 		}
 		
-		
+	
 	
 	}
 }
