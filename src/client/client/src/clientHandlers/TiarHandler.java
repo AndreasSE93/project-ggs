@@ -14,6 +14,7 @@ import org.json.JSONObject;
 
 import packageManaging.ChatMessageEncoder;
 import packageManaging.Message;
+import packageManaging.TTTMessage;
 import packageManaging.TiarStartMessage;
 import packageManaging.TiarStartMessageEncoder;
 import packageManaging.TiarUserMessage;
@@ -35,7 +36,7 @@ public class TiarHandler implements HandlerInterface, ActionListener, MouseListe
 	ChatMessageEncoder cme = new ChatMessageEncoder();
 	TiarUserMessageEncoder tume = new TiarUserMessageEncoder();
 	TiarStartMessageEncoder tsme = new TiarStartMessageEncoder();
-	int Player = 1;
+	int Player = 2;
 	final String userName;
 	private boolean loop = true;
 
@@ -79,23 +80,24 @@ public class TiarHandler implements HandlerInterface, ActionListener, MouseListe
 	
 	public void decodeAndRender(int id, String message) throws JSONException {
 		switch(id){
-		case 100: //Chat message
+		case 200: //Chat message
 			Message chatMessage = cme.decode(message);
 			tg.chat.chatUpdate(chatMessage.message, chatMessage.user);
 				break;
 				
-		case 200: //Move message
+		case 201: //Move message
 				
 				TiarUserMessage mess = tume.decode(message);
 				tg.doMove(mess.Move , tg.gl.getTurn());
 				checkWinner();
+				break;
 
-		case 201:
+		case 202:
 			
 				TiarStartMessage tsm = tsme.decode(message);
 				Player = tsm.turn;
 				
-			
+				break;
 			
 		default: //Should not come here
 				break;
@@ -137,7 +139,7 @@ public class TiarHandler implements HandlerInterface, ActionListener, MouseListe
 		case "chatmessage":  //JTextField
 			try {
 				
-				JSONtext = cme.encode(new Message(tg.chat.field.getText(), tg.chat.userName));
+				JSONtext = cme.encode(new TTTMessage(tg.chat.field.getText(), tg.chat.userName));
 				tg.chat.field.setText("");
 			} catch (JSONException e1) {
 				e1.printStackTrace();
@@ -156,7 +158,7 @@ public class TiarHandler implements HandlerInterface, ActionListener, MouseListe
 		JButton l =(JButton) arg0.getSource();
 		String name = l.getName();
 		tg.doMove(name, tg.gl.getTurn());
-		TiarUserMessage tum = new TiarUserMessage(tg.gl.isDraw(), tg.gl.hasWon(), name);
+		TiarUserMessage tum = new TiarUserMessage(name);
 		try {
 			sendMessage(tume.encode(tum));
 		} catch (JSONException e) {
@@ -187,7 +189,7 @@ public class TiarHandler implements HandlerInterface, ActionListener, MouseListe
 			break;
 		default:
 			if(tg.gl.isDraw() == 1){tg.clearBoard();}
-			System.out.println(tg.gl.toString());
+			//System.out.println(tg.gl.toString());
 		}
 		
 	

@@ -157,6 +157,7 @@ public class TiarGUI extends GameLogic {
 		a.setOpaque(false);
 		a.setContentAreaFilled(false);
 		a.setBorderPainted(false);
+		a.setBorder(new EmptyBorder(5,5,5,5));
 	}
 	
 	private int getInt(String Pos) {

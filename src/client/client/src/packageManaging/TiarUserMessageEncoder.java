@@ -9,8 +9,7 @@ public class TiarUserMessageEncoder {
 		
 		JSONObject obj = new JSONObject();
 		
-	    obj.put("isDraw", mess.isDraw);
-	    obj.put("isVictorious", mess.isVictorious);
+
 	    obj.put("PacketID", mess.PacketID);
 	    obj.put("Move", mess.Move);
 	   
@@ -23,7 +22,7 @@ public class TiarUserMessageEncoder {
 		
 		JSONObject obj = new JSONObject(enc);
 		
-		TiarUserMessage TiarMessage = new TiarUserMessage(obj.getInt("isDraw"), obj.getInt("isVictorious"), obj.getString("Move"));
+		TiarUserMessage TiarMessage = new TiarUserMessage(obj.getString("Move"));
 	
 		return TiarMessage;
 		

@@ -5,14 +5,11 @@ package packageManaging;
 
 public class TiarUserMessage {
 
-	final int PacketID = 200;
-	int isDraw;
-	int isVictorious;
+	final int PacketID = 201;
 	public String Move;
 	
-	public TiarUserMessage(int d, int v, String m){
-		isDraw = d;
-		isVictorious = v;
+	public TiarUserMessage( String m){
+		
 		Move = m;
 		
 	}
