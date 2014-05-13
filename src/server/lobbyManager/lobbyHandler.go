@@ -1,5 +1,6 @@
 package lobbyManager
 
+/*
 import (
 	"server/database"
 	"server/database/lobbyMap"
@@ -34,3 +35,4 @@ func InitiateLobby(mainChan chan chan connection.Connector) {
 
 	go lobbyLoader(incomingClientChan, *dbHandlers)
 }
+*/

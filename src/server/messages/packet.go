@@ -8,6 +8,7 @@ import (
 //            ID FOR PACKAGES
 const (
 	PING_ID    = 0
+	INIT_ID    = 99
 	CHAT_ID    = 100
 	HOST_ID    = 101
 	JOIN_ID    = 102
@@ -28,12 +29,18 @@ type Ping struct {
 
 type ProcessedMessage struct {
 	ID int `json:"PacketID"`
+	Origin connection.Connector
+	InitM InitMessage
 	ChatM ChatMessage
 	Host HostNew
 	Join JoinExisting
 	Update UpdateRooms
 }
 
+type InitMessage struct {
+	PacketID int
+	UserName string
+}
 
 type ChatMessage struct {
 	PacketID int `json:"PacketID"`

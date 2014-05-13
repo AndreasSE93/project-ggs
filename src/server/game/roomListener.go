@@ -25,7 +25,7 @@ func gameRoomListener(gameRoom *GameRoom) {
 		processed := <- gameRoom.roomData.SS.GameChan
 		
 		if processed.ID == messages.CHAT_ID {
-			go sendImmediateMessage(encoders.EncodeChatMessage(messages.CHAT_ID, processed.ChatM), gameRoom.roomData.CS.Clients)
+			go sendImmediateMessage(encoders.EncodeChatMessage(messages.CHAT_ID, processed.ChatM, processed.Origin), gameRoom.roomData.CS.Clients)
 		} else if processed.ID == messages.JOIN_ID {
 			gameRoom.roomData = gameRoom.lm.GetRoom(gameRoom.roomData.CS.RoomID)
 			go sendImmediateMessage(encoders.EncodeJoinedRoom(messages.JOIN_ID, &gameRoom.roomData), gameRoom.roomData.CS.Clients)

@@ -49,7 +49,7 @@ func connectionHandler(connectorChannel chan connection.Connector, db *database.
 		fmt.Printf("Client %d connected: %+v\n", client.ConnectorID, client)
 		testConnection(client)
 		db.Add(client)
-		go lobbyManager.ClientListener(lm, client)
+		go lobbyManager.ClientListener(lm, db, client)
 	}
 }
 
