@@ -4,14 +4,14 @@ import org.json.JSONObject;
 import org.json.JSONException;
 
 
-public class MessageHandler extends Handler {
+public class ChatMessageEncoder {
     
 	public String encode(Message mess) throws JSONException {
 		
 		JSONObject obj = new JSONObject();
 		
 	    obj.put("message", mess.message);
-	    obj.put("id", mess.id);
+	    obj.put("PacketID", mess.id);
 	    obj.put("user", mess.user);
 
 		String message = obj.toString();
@@ -25,7 +25,6 @@ public class MessageHandler extends Handler {
 		
 		Message chatMessage = new Message();
 		chatMessage.message = obj.getString("message");
-		chatMessage.id =  obj.getInt("id");
 		chatMessage.user = obj.getString("user");
 		
 		return chatMessage;
