@@ -6,6 +6,7 @@ Project
 
 * GOLANG BLOG
   * [Slices](http://blog.golang.org/slices)
+  * [GO profiling routines](http://blog.golang.org/profiling-go-programs)
 
 * GO PACKAGES LIBRARY
   * [Packages Root](http://golang.org/pkg/)
