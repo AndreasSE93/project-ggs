@@ -1,8 +1,6 @@
 package game
 
 import(
-//	"fmt"
-//	"encoding/json"
 	"server/database/lobbyMap"
 	"server/messages"
 	"server/encoders"
