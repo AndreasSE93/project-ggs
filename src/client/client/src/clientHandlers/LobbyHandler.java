@@ -91,7 +91,7 @@ public class LobbyHandler implements HandlerInterface,
 		switch (command) {
 		case "chatmessage":  //JTextField
 			try {
-				JSONtext = cme.encode(new Message(lg.chatgui.field.getText(), lg.chatgui.userName));
+				JSONtext = cme.encode(new Message(lg.chatgui.field.getText(), ""));
 				lg.chatgui.field.setText("");
 			} catch (JSONException e1) {
 				e1.printStackTrace();

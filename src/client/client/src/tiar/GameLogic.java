@@ -36,7 +36,7 @@ package tiar;
 
 
 public class GameLogic{
-	private int[] gameField = new int[9];
+	public int[] gameField = new int[9];
 	private boolean isFull;
 	private int turn;
 

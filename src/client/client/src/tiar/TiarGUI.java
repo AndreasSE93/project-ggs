@@ -5,6 +5,7 @@ import graphicalReference.ChatGUI;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Image;
@@ -18,6 +19,7 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JTextArea;
 
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -59,10 +61,22 @@ public class TiarGUI extends GameLogic {
 
 		JPanel gameInfo = new JPanel();
 		gameInfo.setPreferredSize(new Dimension(150,550));
-		gameInfo.setBackground(Color.RED);
+		gameInfo.setBackground(Color.gray.darker());
 		gamePane.add(gameInfo, BorderLayout.EAST);
 		
+		
+		JTextArea gameName = new JTextArea("Tic Tac Toe");
+		Font font = new Font("Helvetica", Font.BOLD, 12);
+		gameName.setFont(font);
+		gameName.setEditable(false);
+		gameName.setBackground(Color.gray.darker());
+		gameName.setForeground(Color.WHITE);
+		gameInfo.add(gameName, BorderLayout.NORTH);
+		
+		
 		JPanel gameCointainer = new JPanel();
+		gameCointainer.setBackground(Color.DARK_GRAY.darker());
+		gameCointainer.setBorder(new EmptyBorder(30,30,0,0));
 		
 		ImagePanel gameBoard = new ImagePanel();
 		gameBoard.setLayout(new GridLayout(3,3));
@@ -116,18 +130,7 @@ public class TiarGUI extends GameLogic {
 			invisibleButton(game[i]);
 			
 		}
-		/*this.c1.setBackground(Color.BLUE);
-		this.c2.setBackground(Color.RED);
-		this.c3.setBackground(Color.GREEN);
 
-		this.a1.setBackground(Color.BLUE);
-		this.a2.setBackground(Color.RED);
-		this.a3.setBackground(Color.GREEN);
-
-		this.b3.setBackground(Color.BLUE);
-		this.b1.setBackground(Color.RED);
-		this.b2.setBackground(Color.GREEN);
-*/
 		gameCointainer.add(gameBoard);
 		gamePane.add(gameCointainer);
 
@@ -141,6 +144,35 @@ public class TiarGUI extends GameLogic {
 
 	}
 
+	public void updateGameBoard(int[] gameBoard){
+		
+			gl.gameField = gameBoard;
+			File imageCross = new File("resources/cross_150_150.png");
+		
+			File imageCircle = new File("resources/circle_150_150.png");
+			Image img1 = null;
+			Image img2 = null;
+			try {
+				img1 = ImageIO.read(imageCross);
+				img2 = ImageIO.read(imageCircle);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
+		for (int i = 0; i<9; i++){
+			if (gameBoard[i] == 1){
+				
+				this.game[i].setIcon(new ImageIcon(img1));
+			}
+			else if(gameBoard[i] == 2){
+				this.game[i].setIcon(new ImageIcon(img2));
+			}
+			else this.game[i].setIcon(null);
+		}
+		
+	}
+	
 	public void doMove(String position, int player) {
 
 		int pos = getInt(position);
@@ -157,9 +189,10 @@ public class TiarGUI extends GameLogic {
 		a.setOpaque(false);
 		a.setContentAreaFilled(false);
 		a.setBorderPainted(false);
+		a.setBorder(new EmptyBorder(5,5,5,5));
 	}
 	
-	private int getInt(String Pos) {
+	public int getInt(String Pos) {
 		switch (Pos) {
 		case "a1":
 			return 0;
@@ -208,7 +241,7 @@ public class TiarGUI extends GameLogic {
 			game[i].setIcon(null); 
 		}
 		
-		
+	
 	
 	}
 }
