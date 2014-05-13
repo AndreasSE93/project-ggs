@@ -123,6 +123,8 @@ public class LobbyHandler implements HandlerInterface,
 				JSONtext = gme.encode(new CreateGameMessage(lg.createList.getSelectedValue(), 2 , this.userName));
 				sendMessage(JSONtext);
 				JSONtext = rme.encode (new RefreshMessage());
+				state = 2; //Temporärt för att byta till tic tac toe
+				loop=false; // -||-_____
 			} catch (JSONException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();

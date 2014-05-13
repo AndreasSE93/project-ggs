@@ -48,9 +48,7 @@ runclient: client
 
 .PHONY:
 clean:
-	-mv -t ./src/client/client/ ./src/client/client/bin/resources
-	-rm -fR ./bin/* ./pkg/* ./src/client/client/bin/*
-	-mv -t ./src/client/client/bin/ ./src/client/client/resources
+	rm -fR ./bin/* ./pkg/* ./src/client/client/bin/*
 
 
 .PHONY:
