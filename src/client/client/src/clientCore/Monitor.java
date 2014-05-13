@@ -36,6 +36,12 @@ public class Monitor {
         try {
 			net.connectToServer();
 			userName = (String)JOptionPane.showInputDialog("Write username!");
+			if (userName == null) {
+				return;
+			} else if (userName.length() == 0) {
+				JOptionPane.showMessageDialog(null, "Empty user name not allowed.", "Error", JOptionPane.ERROR_MESSAGE);
+				return;
+			}
 			InitializeClientMessage icm = new InitializeClientMessage(userName);
 			InitializeClientMessageEncoder icme = new InitializeClientMessageEncoder();
 			String mess;
