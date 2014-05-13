@@ -1,10 +1,13 @@
 package connection
 
-import "net"
+import (
+	"net"
+	"bufio"
+)
 
 type Connector struct {
-	ConnectorID int
+	ConnectorID, CurrentRoom int
+	UserName string
 	Connection net.Conn
-	LocalAddr, RemAddr net.Addr
-	//waiter WaitingHandler
+	Scanner *bufio.Scanner
 }
