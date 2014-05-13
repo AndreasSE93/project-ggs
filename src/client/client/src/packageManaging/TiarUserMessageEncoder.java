@@ -25,7 +25,7 @@ public class TiarUserMessageEncoder {
 		JSONObject obj = new JSONObject(enc);
 		
 		TiarUserMessage TiarMessage = new TiarUserMessage();
-		JSONArray JArray = new JSONArray(obj.getJSONObject("GameBoard"));
+		JSONArray JArray = obj.getJSONArray(("GameBoard"));
 		int[] array = new int[9];
 			for (int i = 0; i < array.length; i++){
 			array[i] = JArray.getInt(i); 
