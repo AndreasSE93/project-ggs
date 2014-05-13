@@ -2,71 +2,79 @@ package clientCore;
 
 import java.io.IOException;
 
+import javax.swing.JOptionPane;
+
 import org.json.JSONException;
 
-import packageManaging.LobbyServerMessage;
-import packageManaging.Message;
-import packageManaging.MessageHandler;
+import packageManaging.InitializeClientMessage;
+import packageManaging.InitializeClientMessageEncoder;
 
-import clientLobby.LobbyShell;
+
+
+import clientHandlers.LobbyHandler;
+import clientHandlers.TiarHandler;
+
 import clientNetworking.NetManager;
 import clientNetworking.Connection;
-import clientChat.ChatShell;
+
 
 public class Monitor {
 	
-	Connection conn;
-	NetManager net;
-	ChatShell chatModule;
-	LobbyShell lobbyModule;
+	public  Connection conn;
+	public  NetManager net;
+	public String userName;
 	
 	public Monitor() {
-		this.conn = new Connection("130.238.95.70", 8080);
-		this.chatModule = new ChatShell();
-		this.lobbyModule = new LobbyShell();
-		this.net = new NetManager(this.chatModule.handler, this.conn);
 		
-		try {
-			this.net.connectToServer();
-		} catch (IOException e) {
-			System.out.println("Connection to server failed!\n");
-			e.printStackTrace();
-		}
-		this.runner();
 	}
+
 	
-	private void runner() {
-		String firstcall;
-		LobbyServerMessage LM = null;
-		try {
-			firstcall = net.receiveMessage();
-			System.out.println(firstcall + "\n");
-			LM = this.lobbyModule.handler.decode(firstcall);
-			System.out.println(LM + "\n");
-		} catch (IOException | JSONException e) {
-			e.printStackTrace();
-		}
-		if (LM != null) {
-			this.lobbyModule.Initiate(LM.UserList, LM.GameHost, this.net);
-		} else {
-			System.out.println("Connection failed");
-		}
+	public void init(){
 		
-		String mess;
-		LobbyServerMessage LSM = null;
-		
-		while(true) {
+		this.conn = new Connection("localhost", 8080);
+		this.net = new NetManager(conn);
+        try {
+			net.connectToServer();
+			userName = (String)JOptionPane.showInputDialog("Write username!");
+			InitializeClientMessage icm = new InitializeClientMessage(userName);
+			InitializeClientMessageEncoder icme = new InitializeClientMessageEncoder();
+			String mess;
 			try {
-				MessageHandler MH = new MessageHandler();
-				mess = net.receiveMessage();
-				Message m = MH.decode(mess);
-				this.lobbyModule.graphInterface.chatPanel.setText(this.lobbyModule.graphInterface.chatPanel.getText() + "\n" + m.message);
-			} catch (IOException | JSONException e) {
-				e.printStackTrace();
+				mess = icme.encode(icm);
+				net.send(mess);
+			} catch (JSONException e) {
+				JOptionPane.showMessageDialog(null, "Can't connect to server!", "Warning", JOptionPane.ERROR_MESSAGE);
 			}
+			
+			setState(1);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+        
+
+      
+		
+		
 	}
 	
+	public void setState (int state){
+		while(true){
+		if(state == 1){
+			LobbyHandler lh = new LobbyHandler(net, userName);
+			state = lh.init();
+			continue;
+		}
+		if(state == 2){
+			 TiarHandler th = new TiarHandler(net, userName);
+			 state = th.init();
+		}
+		else{
+			System.out.println("hejdå");
+		}
+		}
+		
+	}
 	
 	
 }

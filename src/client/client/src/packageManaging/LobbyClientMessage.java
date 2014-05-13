@@ -1,5 +1,7 @@
 package packageManaging;
 
+/* NOT DONE YET */
+
 public class LobbyClientMessage {
 
 	public static final int HOST = 0;

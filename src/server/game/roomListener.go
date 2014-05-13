@@ -4,7 +4,7 @@ import(
 	"server/database/lobbyMap"
 	"server/messages"
 	"server/encoders"
-	"server/connection"
+//	"server/connection"
 )
 
 type GameRoom struct {
@@ -12,9 +12,9 @@ type GameRoom struct {
 	lm *lobbyMap.LobbyMap
 }
 
-func sendImmediateMessage(message string, clients []connection.Connector) {
-	for c := range clients {
-		clients[c].Connection.Write([]byte(message + "\n"))
+func sendImmediateMessage(message string, cs messages.ClientSection) {
+	for i := 0; i < cs.ClientCount; i++ {
+		cs.Clients[i].Connection.Write([]byte(message + "\n"))
 	}
 }
 
@@ -23,10 +23,10 @@ func gameRoomListener(gameRoom *GameRoom) {
 		processed := <- gameRoom.roomData.SS.GameChan
 		
 		if processed.ID == messages.CHAT_ID {
-			go sendImmediateMessage(encoders.EncodeChatMessage(messages.CHAT_ID, processed.ChatM), gameRoom.roomData.CS.Clients)
+			go sendImmediateMessage(encoders.EncodeChatMessage(messages.CHAT_ID, processed.ChatM, processed.Origin), gameRoom.roomData.CS)
 		} else if processed.ID == messages.JOIN_ID {
 			gameRoom.roomData = gameRoom.lm.GetRoom(gameRoom.roomData.CS.RoomID)
-			go sendImmediateMessage(encoders.EncodeJoinedRoom(messages.JOIN_ID, &gameRoom.roomData), gameRoom.roomData.CS.Clients)
+			go sendImmediateMessage(encoders.EncodeJoinedRoom(messages.JOIN_ID, &gameRoom.roomData), gameRoom.roomData.CS)
 		}
 	}
 }

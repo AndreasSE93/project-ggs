@@ -6,6 +6,7 @@ import (
 	"net"
 	"time"
 	"bufio"
+	"flag"
 	"encoding/json"
 	"container/list"
 	"server/database"
@@ -49,7 +50,7 @@ func connectionHandler(connectorChannel chan connection.Connector, db *database.
 		fmt.Printf("Client %d connected: %+v\n", client.ConnectorID, client)
 		testConnection(client)
 		db.Add(client)
-		go lobbyManager.ClientListener(lm, client)
+		go lobbyManager.ClientListener(lm, db, client)
 	}
 }
 
@@ -92,6 +93,9 @@ func idGenerator(idCh chan int) {
 //Purpose is to establish all for connection requests, waiting lobbys, etc.
 //Keep now. Redo later..
 func main() {
+	listenAddr := flag.String("host", "localhost:8080", "address to host server on")
+	flag.Parse()
+
 	lobbyContact := make(chan chan connection.Connector)
 	idChannel := make(chan int)
 
@@ -103,10 +107,11 @@ func main() {
 	//Here to not depend on the channel created in the initiation of the server.
 	clientChannel := <-lobbyContact
 
-	listenAddr := ":8080"
-	ln, err := net.Listen("tcp", listenAddr)
-	if err != nil {
-		fmt.Println("Unable to host server on " + listenAddr)
+	ln, err := net.Listen("tcp", *listenAddr)
+	if err == nil {
+		fmt.Println("Hosted server on " + *listenAddr)
+	} else {
+		fmt.Println("Unable to host server on " + *listenAddr)
 		os.Exit(1)
 	}
 	for {
