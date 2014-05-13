@@ -1,4 +1,4 @@
-package main
+package games
 
 import (
 	"fmt"
@@ -75,12 +75,12 @@ func correct(name string){
 }
 
 
-
+/*
 func main() {
 	init_GuessNumber(1,10);
 }
 
-
+*/
 
 
 

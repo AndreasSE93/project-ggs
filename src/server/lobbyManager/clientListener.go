@@ -41,6 +41,15 @@ func messageInterpreter(messageTransfer chan string, sendToLobby chan messages.P
 			json.Unmarshal([]byte(message), updateM)
 			pMsg.Update = *updateM
 
+		} else if pMsg.ID == messages.TTT_CHAT_ID {
+			chatM := new(messages.ChatMessage)
+			json.Unmarshal([]byte(message), chatM)
+			pMsg.ChatM = *chatM
+			
+		} else if pMsg.ID == messages.TTT_MOVE_ID {
+			moveM := new(messages.MoveMessage)
+			json.Unmarshal([]byte(message), moveM)
+			pMsg.MoveM = *moveM
 		} else {
 			fmt.Printf("Unknown packet received: %+v\n", *pMsg)
 			continue
@@ -112,6 +121,12 @@ func ClientListener(lm *lobbyMap.LobbyMap, client connection.Connector) {
 			refreshList := ReqUpdate(processed.Update, *core)
 			finJSON <- encoders.EncodeRefreshList(messages.REFRESH_ID, refreshList)
 
+		} else if processed.ID == messages.TTT_CHAT_ID {
+			gameChan <- processed
+		} else if processed.ID == messages.TTT_MOVE_ID {
+			gameChan <- processed
+
+		
 		} else {
 			fmt.Println("Something went wrong!")
 		}

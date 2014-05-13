@@ -11,6 +11,8 @@ const (
 	HOST_ID    = 101
 	JOIN_ID    = 102
 	REFRESH_ID = 103
+	TTT_CHAT_ID= 200
+	TTT_MOVE_ID= 201
 )
 
 type Ping struct {
@@ -25,6 +27,7 @@ type ProcessedMessage struct {
 	Host HostNew
 	Join JoinExisting
 	Update UpdateRooms
+	MoveM MoveMessage
 }
 
 type HostNew struct {
@@ -70,4 +73,15 @@ type ChatMessage struct {
 	PacketID int `json:"PacketID"`
 	Message string `json:"message"`
 	User string `json:"user"`
+}
+
+type MoveMessage struct {
+	PacketID int `json:"PacketID"`
+	GameBoard []int  `json:"GameBoard"`
+	Move int `json:"Move"`
+	IsDraw int `json:"IsDraw"`
+	HasWon int `json:"HasWon"`
+	Player int `json:"Player"`
+	IsValid int `json:"IsValid"`
+	
 }
