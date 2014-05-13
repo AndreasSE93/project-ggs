@@ -1,13 +1,10 @@
 package game
 
 import(
-//	"fmt"
-//	"encoding/json"
+	"fmt"
 	"server/database/lobbyMap"
 	"server/messages"
 	"server/encoders"
-
-//	"server/connection"
 	"server/games"
 )
 
@@ -17,6 +14,7 @@ type GameRoom struct {
 }
 
 func sendImmediateMessage(message string, cs messages.ClientSection) {
+	fmt.Printf("Sending to %d clients: %s\n", cs.ClientCount, message)
 	for i := 0; i < cs.ClientCount; i++ {
 		cs.Clients[i].Connection.Write([]byte(message + "\n"))
 	}
@@ -35,8 +33,6 @@ func gameRoomListener(gameRoom *GameRoom) {
 		
 	}
 }
-
-
 
 func ticTacToeListener (gameRoom *GameRoom) {
 	gameBoard := games.InitBoard()

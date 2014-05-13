@@ -118,6 +118,7 @@ func ClientListener(lm *lobbyMap.LobbyMap, db *database.Database, client connect
 	updateClient <-client
 
 	gameChan := make(chan messages.ProcessedMessage)
+	go dummyRecciveLobbyChat(gameChan)
 
 	for {
 		processed := <- processedChan
@@ -150,5 +151,12 @@ func ClientListener(lm *lobbyMap.LobbyMap, db *database.Database, client connect
 			fmt.Println("Something went wrong!")
 		}
 		fmt.Printf("lm=%+v\n", lm.GetShadow())
+	}
+}
+
+func dummyRecciveLobbyChat(ch chan messages.ProcessedMessage) {
+	for {
+		msg := <-ch
+		fmt.Println("Ate lobby chat message:", msg)
 	}
 }
