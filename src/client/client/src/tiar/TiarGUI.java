@@ -14,11 +14,11 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javax.swing.BoxLayout;
+
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
+
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
@@ -92,15 +92,15 @@ public class TiarGUI extends GameLogic {
 		c3.setName("c3");
 
 
-		a1.setPreferredSize(new Dimension(100, 100));
-		a2.setPreferredSize(new Dimension(100, 100));
-		a3.setPreferredSize(new Dimension(100, 100));
-		b1.setPreferredSize(new Dimension(100, 100));
-		b2.setPreferredSize(new Dimension(100, 100));
-		b3.setPreferredSize(new Dimension(100, 100));
-		c1.setPreferredSize(new Dimension(100, 100));
-		c2.setPreferredSize(new Dimension(100, 100));
-		c3.setPreferredSize(new Dimension(100, 100));
+		a1.setPreferredSize(new Dimension(150, 150));
+		a2.setPreferredSize(new Dimension(150, 150));
+		a3.setPreferredSize(new Dimension(150, 150));
+		b1.setPreferredSize(new Dimension(150, 150));
+		b2.setPreferredSize(new Dimension(150, 150));
+		b3.setPreferredSize(new Dimension(150, 150));
+		c1.setPreferredSize(new Dimension(150, 150));
+		c2.setPreferredSize(new Dimension(150, 150));
+		c3.setPreferredSize(new Dimension(150, 150));
 
 		game[0] = a1;
 		game[1] = a2;
@@ -188,9 +188,9 @@ public class TiarGUI extends GameLogic {
 	private void makeJButton(JButton jb, int player) {
 		File imageCheck;
 		if (player == 1) {
-			imageCheck = new File("resources/cross.png");
+			imageCheck = new File("resources/cross_150_150.png");
 		} else {
-			imageCheck = new File("resources/circle.png");
+			imageCheck = new File("resources/circle_150_150.png");
 		}
 		try {
 			Image img = ImageIO.read(imageCheck);
@@ -215,11 +215,15 @@ public class TiarGUI extends GameLogic {
 
 	class ImagePanel extends JPanel{
 
-	    private BufferedImage image;
+	    /**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+		private BufferedImage image;
 
 	    public ImagePanel() {
 	       try {                
-	          image = ImageIO.read(new File("resources/tttBoard.png"));
+	          image = ImageIO.read(new File("resources/tttBoard_150_150.png"));
 	          } catch (IOException ex) {
 	            // handle exception...
 	       }

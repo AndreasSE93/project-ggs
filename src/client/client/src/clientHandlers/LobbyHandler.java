@@ -165,7 +165,7 @@ public class LobbyHandler implements HandlerInterface,
 			lg.updateJTable(ls.UserList);
 			break;
 		default:
-			System.out.println("something went wrong! Error code: " + id);
+			System.out.println("something went wrong! Error code: " + id + "\nMessage: " + message);
 		}
 
 	}
