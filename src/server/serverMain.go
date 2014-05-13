@@ -93,7 +93,7 @@ func idGenerator(idCh chan int) {
 //Purpose is to establish all for connection requests, waiting lobbys, etc.
 //Keep now. Redo later..
 func main() {
-	listenAddr := flag.String("host", "localhost:8080", "address to host server on")
+	listenAddr := flag.String("host", ":8080", "address to host server on")
 	flag.Parse()
 
 	lobbyContact := make(chan chan connection.Connector)
