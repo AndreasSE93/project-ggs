@@ -13,7 +13,6 @@ import (
 type ClientCore struct {
 	client connection.Connector
 	lm *lobbyMap.LobbyMap
-//	Room HostRoom
 }
 
 func messageInterpreter(messageTransfer chan string, sendToLobby chan messages.ProcessedMessage) {
@@ -58,7 +57,7 @@ func ActivateReceiver(messageProcessing chan messages.ProcessedMessage, client c
 	go messageInterpreter(messageTransfer, messageProcessing)
 
 	for client.Scanner.Scan() {
-		fmt.Printf("Reccived message from client %d: %+v\n", client.ConnectorID, client.Scanner.Text())
+		fmt.Printf("Received message from client %d: %+v\n", client.ConnectorID, client.Scanner.Text())
 		messageTransfer <- client.Scanner.Text()
 	}
 	if err := client.Scanner.Err(); err != nil {
@@ -101,23 +100,16 @@ func ClientListener(lm *lobbyMap.LobbyMap, client connection.Connector) {
 	
 		} else if processed.ID == messages.HOST_ID {
 			hostedRoom := ReqHost(processed.Host, *core)
-			//Some function call to an encoder for when a room is hosted
-			//NOT FILLED IN. Look in package encoders
 			gameChan = hostedRoom.GameChan
 			go game.CreateGameRoom(hostedRoom, core.lm)
 
 		} else if processed.ID == messages.JOIN_ID {
 			joinedRoom := ReqJoin(processed.Join, *core)
-			//Some function call to an encoder for when a room is joined
-			//NOT FILLED IN. Look in package encoders
 			gameChan = joinedRoom.GameChan
 			gameChan <- processed
 
 		} else if processed.ID == messages.REFRESH_ID {
 			refreshList := ReqUpdate(processed.Update, *core)
-			fmt.Println(refreshList,"SHADOOOOOOOOOOOOOW")
-			//Some function call to an encoder for when a update is requested
-			//NOT FILLED IN. Look in package encoders
 			finJSON <- encoders.EncodeRefreshList(messages.REFRESH_ID, refreshList)
 
 		} else {

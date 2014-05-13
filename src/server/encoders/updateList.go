@@ -9,10 +9,7 @@ import (
 func EncodeRefreshList(packageID int, updateList []messages.HostRoom) string {
 
 	a := make([]messages.RoomInfo, len(updateList))
-	fmt.Println(updateList)
 	for room := range updateList {
-//		fmt.Println("ROOOOOOOOM",room)
-		fmt.Println("NOW", a[room].RoomID)
 		a[room] = messages.RoomInfo{
 			RoomID: updateList[room].RoomID,
 			MaxSize: updateList[room].MaxSize,
@@ -20,7 +17,6 @@ func EncodeRefreshList(packageID int, updateList []messages.HostRoom) string {
 			RoomName: updateList[room].RoomName,
 			GameName: updateList[room].GameName,
 		}
-//		fmt.Println(a[room], "YOOOOOOOOOOOOOOOoo")
 	}
 
 	obj := messages.RoomList{
@@ -29,6 +25,8 @@ func EncodeRefreshList(packageID int, updateList []messages.HostRoom) string {
 		Games: []string{"Dummy"},
 	}
 	objStr, err := json.Marshal(obj)
-	fmt.Println(err,"REFRESH")
+	if err != nil {
+		fmt.Println(err,"Error in EncodeRefreshList")
+	}
 	return string(objStr)
 }
