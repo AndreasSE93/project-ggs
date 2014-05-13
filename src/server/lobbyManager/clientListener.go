@@ -3,6 +3,7 @@ package lobbyManager
 import (
 	"fmt"
 	"server/connection"
+	"server/database"
 	"server/database/lobbyMap"
 	"server/encoders"
 	"server/messages"
@@ -15,13 +16,23 @@ type ClientCore struct {
 	lm *lobbyMap.LobbyMap
 }
 
-func messageInterpreter(messageTransfer chan string, sendToLobby chan messages.ProcessedMessage) {
+func messageInterpreter(messageTransfer chan string, sendToLobby chan messages.ProcessedMessage, client connection.Connector, updateClient chan connection.Connector) {
 	for {
 		pMsg := new(messages.ProcessedMessage)
 		message := <- messageTransfer
 		json.Unmarshal([]byte(message), pMsg)
+		pMsg.Origin = client
 
-		if pMsg.ID == messages.CHAT_ID {
+		select {
+		case client = <-updateClient:
+		default:
+		}
+
+		if pMsg.ID == messages.INIT_ID {
+			initM := new(messages.InitMessage)
+			json.Unmarshal([]byte(message), initM)
+			pMsg.InitM = *initM
+		} else if pMsg.ID == messages.CHAT_ID {
 			chatM := new(messages.ChatMessage)
 			json.Unmarshal([]byte(message), chatM)
 			pMsg.ChatM = *chatM
@@ -59,11 +70,11 @@ func messageInterpreter(messageTransfer chan string, sendToLobby chan messages.P
 	}
 }
 
-func ActivateReceiver(messageProcessing chan messages.ProcessedMessage, client connection.Connector) {
+func ActivateReceiver(messageProcessing chan messages.ProcessedMessage, client connection.Connector, updateClient chan connection.Connector) {
 	defer client.Connection.Close()
 
 	messageTransfer := make(chan string)
-	go messageInterpreter(messageTransfer, messageProcessing)
+	go messageInterpreter(messageTransfer, messageProcessing, client, updateClient)
 
 	for client.Scanner.Scan() {
 		fmt.Printf("Received message from client %d: %+v\n", client.ConnectorID, client.Scanner.Text())
@@ -84,7 +95,7 @@ func ActivateSender(serverTerminal chan string, client connection.Connector) {
 	}
 }
 
-func ClientListener(lm *lobbyMap.LobbyMap, client connection.Connector) {
+func ClientListener(lm *lobbyMap.LobbyMap, db *database.Database, client connection.Connector) {
 	core := new(ClientCore)
 	core.client = client
 	core.lm = lm
@@ -92,11 +103,19 @@ func ClientListener(lm *lobbyMap.LobbyMap, client connection.Connector) {
 
 	finJSON := make(chan string)
 
-	go ActivateReceiver(processedChan, core.client)
+	updateClient := make(chan connection.Connector)
+	
+	go ActivateReceiver(processedChan, core.client, updateClient)
 	go ActivateSender(finJSON, core.client)
 
 	refreshList := ReqUpdate(messages.UpdateRooms{}, *core)
 	finJSON <- encoders.EncodeRefreshList(messages.REFRESH_ID, refreshList)
+
+	processed := <-processedChan
+	client = db.Get(client.ConnectorID) //Shouldn't have changed, but just in case
+	client.UserName = processed.InitM.UserName
+	db.Update(client.ConnectorID, client) //Shouldn't have changed from Get
+	updateClient <-client
 
 	gameChan := make(chan messages.ProcessedMessage)
 
@@ -109,12 +128,12 @@ func ClientListener(lm *lobbyMap.LobbyMap, client connection.Connector) {
 	
 		} else if processed.ID == messages.HOST_ID {
 			hostedRoom := ReqHost(processed.Host, *core)
-			gameChan = hostedRoom.GameChan
+			gameChan = hostedRoom.SS.GameChan
 			go game.CreateGameRoom(hostedRoom, core.lm)
 
 		} else if processed.ID == messages.JOIN_ID {
 			joinedRoom := ReqJoin(processed.Join, *core)
-			gameChan = joinedRoom.GameChan
+			gameChan = joinedRoom.SS.GameChan
 			gameChan <- processed
 
 		} else if processed.ID == messages.REFRESH_ID {

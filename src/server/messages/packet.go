@@ -4,9 +4,11 @@ import (
 	"time"
 	"server/connection"
 )
-
+//-------------------------------------------------
+//            ID FOR PACKAGES
 const (
 	PING_ID    = 0
+	INIT_ID    = 99
 	CHAT_ID    = 100
 	HOST_ID    = 101
 	JOIN_ID    = 102
@@ -15,14 +17,22 @@ const (
 	TTT_MOVE_ID= 201
 )
 
+//-------------------------------------------------
+//            PING
+
 type Ping struct {
 	PacketID int `json:"PacketID"`
 	TimeStamp time.Time `json:"TimeStamp"`
 	Payload interface{} `json:"Payload"`
 }
 
+//--------------------------------------------------
+//           INCOMING FROM CLIENT
+
 type ProcessedMessage struct {
 	ID int `json:"PacketID"`
+	Origin connection.Connector
+	InitM InitMessage
 	ChatM ChatMessage
 	Host HostNew
 	Join JoinExisting
@@ -30,28 +40,22 @@ type ProcessedMessage struct {
 	MoveM MoveMessage
 }
 
+type InitMessage struct {
+	PacketID int
+	UserName string
+}
+
+type ChatMessage struct {
+	PacketID int `json:"PacketID"`
+	Message string `json:"message"`
+	User string `json:"user"`
+}
+
 type HostNew struct {
 	PacketID int `json:"PacketID"`
 	RoomName string `json:"roomName"`
 	MaxSize int `json:"maxSize"`
 	GameName string `json:"GameName"`
-}
-
-type HostRoomPacket struct {
-	PacketID int `json:"PacketID"`
-	HostRoom HostRoom `json:"hostRoom"`
-}
-
-type RoomInfo struct {
-	RoomID, MaxSize, ClientCount int
-	RoomName, GameName string
-}
-
-type HostRoom struct {
-	RoomID, MaxSize, ClientCount int
-	RoomName, GameName string
-	Clients []connection.Connector
-	GameChan chan ProcessedMessage
 }
 
 type JoinExisting struct {
@@ -63,17 +67,39 @@ type UpdateRooms struct {
 	PacketID int `json:"PacketID"`
 }
 
+//------------------------------------------------
+//             OUTGOING TO CLIENT
+
+type HostRoomPacket struct {
+	PacketID int `json:"PacketID"`
+	HostRoom ClientSection `json:"hostRoom"`
+}
+
+
 type RoomList struct {
 	PacketID int `json:"PacketID"`
-	Rooms []RoomInfo `json:"UserList"`
+	Rooms []ClientSection `json:"UserList"`
 	Games []string `json:"GameHost"`
 }
 
-type ChatMessage struct {
-	PacketID int `json:"PacketID"`
-	Message string `json:"message"`
-	User string `json:"user"`
+//----------------------------------------------------
+//              INSIDE OF LOBBYMAP
+
+type RoomData struct {
+	CS ClientSection
+	SS ServerSection
 }
+
+type ClientSection struct {
+	RoomID, MaxSize, ClientCount int
+	RoomName, GameName string
+	Clients []connection.Connector
+}
+
+type ServerSection struct {
+	GameChan chan ProcessedMessage
+}
+
 
 type MoveMessage struct {
 	PacketID int `json:"PacketID"`
@@ -85,3 +111,6 @@ type MoveMessage struct {
 	IsValid int `json:"IsValid"`
 	
 }
+
+//----------------------------------------------------
+
