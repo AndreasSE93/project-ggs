@@ -47,6 +47,11 @@ runclient: client
 # Maintenance
 
 .PHONY:
+fmt:
+	find ./src/server -name '*.go' -exec go fmt \{\} \;
+
+
+.PHONY:
 clean:
 	-mv -t ./src/client/client/ ./src/client/client/bin/resources
 	-rm -fR ./bin/* ./pkg/* ./src/client/client/bin/*
