@@ -6,28 +6,28 @@ import (
 	"server/messages"
 )
 
-func ReqHost(hostNew messages.HostNew, clientInfo ClientCore) messages.HostRoom {
-	hr := lobbyMap.GetEmptyHostRoom()
-	hr.RoomID = -1
-	hr.MaxSize = hostNew.MaxSize
-	hr.ClientCount = 1
-	hr.RoomName = hostNew.RoomName
-	hr.GameName = hostNew.GameName
-	hr.GameChan = make(chan messages.ProcessedMessage)
-	c := make([]connection.Connector, hr.MaxSize)
+func ReqHost(hostNew messages.HostNew, clientInfo ClientCore) messages.RoomData {
+	rd := lobbyMap.GetEmptyRoomData()
+	rd.CS.RoomID = -1
+	rd.CS.MaxSize = hostNew.MaxSize
+	rd.CS.ClientCount = 1
+	rd.CS.RoomName = hostNew.RoomName
+	rd.CS.GameName = hostNew.GameName
+	rd.SS.GameChan = make(chan messages.ProcessedMessage)
+	c := make([]connection.Connector, rd.CS.MaxSize)
 	c[0] = clientInfo.client
-	hr.Clients = c
+	rd.CS.Clients = c
 
-	hostedRoom := clientInfo.lm.Host(hr)
+	hostedRoom := clientInfo.lm.Host(rd)
 	return hostedRoom
 	
 }
 
-func ReqJoin(join messages.JoinExisting, clientInfo ClientCore) *messages.HostRoom {
+func ReqJoin(join messages.JoinExisting, clientInfo ClientCore) *messages.RoomData {
 	return clientInfo.lm.Join(join.RoomID, clientInfo.client)
 }
 
-func ReqUpdate(refresh messages.UpdateRooms, clientInfo ClientCore) []messages.HostRoom {
+func ReqUpdate(refresh messages.UpdateRooms, clientInfo ClientCore) []messages.RoomData {
 	return clientInfo.lm.GetShadow()
 }
 

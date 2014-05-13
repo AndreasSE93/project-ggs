@@ -9,74 +9,74 @@ import (
 type joiner struct {
 	RoomID int
 	client connection.Connector
-	sendBack chan *messages.HostRoom
+	sendBack chan *messages.RoomData
 }
 
 type LobbyMap struct {
 	add chan speaker
 	del chan int
 	join, kick chan joiner
-	getShadow chan chan []messages.HostRoom
+	getShadow chan chan []messages.RoomData
 	getRoom chan getter
 	nextID int
 	clientDB *database.Database
 }
 
 type speaker struct {
-	hr messages.HostRoom
-	sendBack chan messages.HostRoom
+	rd messages.RoomData
+	sendBack chan messages.RoomData
 }
 
 type getter struct {
 	id int
-	sendBack chan messages.HostRoom
+	sendBack chan messages.RoomData
 }
 
-func createRoom(s speaker, lm *LobbyMap, hostCollection map[int]messages.HostRoom) {
-	s.hr.RoomID = lm.nextID
+func createRoom(s speaker, lm *LobbyMap, hostCollection map[int]messages.RoomData) {
+	s.rd.CS.RoomID = lm.nextID
 	lm.nextID++
 
-	if roomID := lm.clientDB.GetRoom(s.hr.Clients[0]); roomID > 0 {
+	if roomID := lm.clientDB.GetRoom(s.rd.CS.Clients[0]); roomID > 0 {
 		kicker := joiner{}
-		kicker.sendBack = make(chan *messages.HostRoom)
+		kicker.sendBack = make(chan *messages.RoomData)
 		kicker.RoomID = roomID
-		kicker.client = s.hr.Clients[0]
+		kicker.client = s.rd.CS.Clients[0]
 		go kickClient(kicker, lm, hostCollection)
 		<- kicker.sendBack
 	}
 
-	s.hr.Clients[0] = lm.clientDB.SetRoom(s.hr.Clients[0], s.hr.RoomID)
-	hostCollection[s.hr.RoomID] = s.hr
+	s.rd.CS.Clients[0] = lm.clientDB.SetRoom(s.rd.CS.Clients[0], s.rd.CS.RoomID)
+	hostCollection[s.rd.CS.RoomID] = s.rd
 	
-	s.sendBack <- s.hr
+	s.sendBack <- s.rd
 }
 
-func joinRoom(associate joiner, lm *LobbyMap, hostCollection map[int]messages.HostRoom) {
+func joinRoom(associate joiner, lm *LobbyMap, hostCollection map[int]messages.RoomData) {
 	room, ok := hostCollection[associate.RoomID]
-	if room.ClientCount < room.MaxSize && ok {
+	if room.CS.ClientCount < room.CS.MaxSize && ok {
 		if roomID := lm.clientDB.GetRoom(associate.client); roomID > 0 {
 			kicker := joiner{}
-			kicker.sendBack = make(chan *messages.HostRoom)
+			kicker.sendBack = make(chan *messages.RoomData)
 			kicker.RoomID = roomID
 			kicker.client = associate.client
 			go kickClient(kicker, lm, hostCollection)
 			<- kicker.sendBack
 		}
-		room.ClientCount++
-		room.Clients[room.ClientCount - 1] = lm.clientDB.SetRoom(associate.client, room.RoomID)
-		hostCollection[room.RoomID] = room
+		room.CS.ClientCount++
+		room.CS.Clients[room.CS.ClientCount - 1] = lm.clientDB.SetRoom(associate.client, room.CS.RoomID)
+		hostCollection[room.CS.RoomID] = room
 		associate.sendBack <- &room
 	} else {
 		associate.sendBack <- nil
 	}
 }
 
-func deleteRoom(RoomID int, hostCollection map[int]messages.HostRoom) {
+func deleteRoom(RoomID int, hostCollection map[int]messages.RoomData) {
 	delete(hostCollection, RoomID)
 }
 
-func refreshShadow(sendBack chan []messages.HostRoom, hostCollection map[int]messages.HostRoom) {
-	giant := make([]messages.HostRoom, len(hostCollection))
+func refreshShadow(sendBack chan []messages.RoomData, hostCollection map[int]messages.RoomData) {
+	giant := make([]messages.RoomData, len(hostCollection))
 	i := 0
 	for m := range hostCollection {
 		giant[i] = hostCollection[m]
@@ -85,27 +85,27 @@ func refreshShadow(sendBack chan []messages.HostRoom, hostCollection map[int]mes
 	sendBack <- giant[0:i]
 }
 
-func kickClient(toKick joiner, lm *LobbyMap, hostCollection map[int]messages.HostRoom) {
+func kickClient(toKick joiner, lm *LobbyMap, hostCollection map[int]messages.RoomData) {
 	room, ok := hostCollection[lm.clientDB.GetRoom(toKick.client)]
 	if ok {
 		found := false
-		for key := range room.Clients {
-			if room.Clients[key].ConnectorID == toKick.client.ConnectorID || found {
+		for key := range room.CS.Clients {
+			if room.CS.Clients[key].ConnectorID == toKick.client.ConnectorID || found {
 				found = true
-				if key < len(room.Clients)-1 {
-					room.Clients[key] = room.Clients[key+1]
+				if key < len(room.CS.Clients)-1 {
+					room.CS.Clients[key] = room.CS.Clients[key+1]
 				} else {
-					room.Clients[key] = *new(connection.Connector)
+					room.CS.Clients[key] = *new(connection.Connector)
 				}				
 			}
 		}
 		if found {
-			room.ClientCount--
-			hostCollection[room.RoomID] = room
+			room.CS.ClientCount--
+			hostCollection[room.CS.RoomID] = room
 			lm.clientDB.SetRoom(toKick.client, -1)
 		}
-		if room.ClientCount <= 0 {
-			deleteRoom(room.RoomID, hostCollection)
+		if room.CS.ClientCount <= 0 {
+			deleteRoom(room.CS.RoomID, hostCollection)
 			toKick.sendBack <- nil
 		} else {
 			toKick.sendBack <- &room
@@ -115,11 +115,11 @@ func kickClient(toKick joiner, lm *LobbyMap, hostCollection map[int]messages.Hos
 	}
 }
 
-func getRoom(get getter, hostCollection map[int]messages.HostRoom) {
+func getRoom(get getter, hostCollection map[int]messages.RoomData) {
 	get.sendBack <- hostCollection[get.id]
 }
 
-func mapHandler(lm *LobbyMap, hostCollection map[int]messages.HostRoom) {
+func mapHandler(lm *LobbyMap, hostCollection map[int]messages.RoomData) {
 	for {
 		select {
 		case speaker := <-lm.add:
@@ -138,17 +138,17 @@ func mapHandler(lm *LobbyMap, hostCollection map[int]messages.HostRoom) {
 	}
 }
 
-func GetEmptyHostRoom() messages.HostRoom {
-	return *new(messages.HostRoom)
+func GetEmptyRoomData() messages.RoomData {
+	return *new(messages.RoomData)
 }
 
 func Init(clientDB *database.Database) *LobbyMap {
-	hostCollection := make(map[int]messages.HostRoom)
+	hostCollection := make(map[int]messages.RoomData)
 	lm := new(LobbyMap)
 	lm.add = make(chan speaker)
 	lm.del = make(chan int)
 	lm.join = make(chan joiner)
-	lm.getShadow = make(chan chan []messages.HostRoom)
+	lm.getShadow = make(chan chan []messages.RoomData)
 	lm.kick = make(chan joiner)
 	lm.getRoom = make(chan getter)
 	lm.clientDB = clientDB
@@ -157,15 +157,15 @@ func Init(clientDB *database.Database) *LobbyMap {
 	return lm
 }
 
-func (lm LobbyMap) Host(hr messages.HostRoom) messages.HostRoom {
-	sendBack := make(chan messages.HostRoom)
-	speaker := speaker{hr, sendBack}
+func (lm LobbyMap) Host(rd messages.RoomData) messages.RoomData {
+	sendBack := make(chan messages.RoomData)
+	speaker := speaker{rd, sendBack}
 	lm.add <- speaker
 	return <- sendBack
 }
 
-func (lm LobbyMap) Join(id int, client connection.Connector) *messages.HostRoom {
-	sendBack := make(chan *messages.HostRoom)
+func (lm LobbyMap) Join(id int, client connection.Connector) *messages.RoomData {
+	sendBack := make(chan *messages.RoomData)
 	joiner := joiner{id, client, sendBack}
 	lm.join <- joiner
 	return <- sendBack
@@ -175,25 +175,25 @@ func (lm LobbyMap) Delete(RoomID int) {
 	lm.del <- RoomID
 }
 
-func (lm LobbyMap) GetShadow() []messages.HostRoom {
-	sendBack := make(chan []messages.HostRoom)
+func (lm LobbyMap) GetShadow() []messages.RoomData {
+	sendBack := make(chan []messages.RoomData)
 	lm.getShadow <- sendBack
 	return <-sendBack
 }
 
-func (lm LobbyMap) Kick(conn connection.Connector) *messages.HostRoom {
+func (lm LobbyMap) Kick(conn connection.Connector) *messages.RoomData {
 	kicker := new(joiner)
-	kicker.sendBack = make(chan *messages.HostRoom)
+	kicker.sendBack = make(chan *messages.RoomData)
 	kicker.RoomID = conn.CurrentRoom
 	kicker.client = conn
 	lm.kick <- *kicker
 	return <- kicker.sendBack
 }
 
-func (lm LobbyMap) GetRoom(roomID int) messages.HostRoom {
+func (lm LobbyMap) GetRoom(roomID int) messages.RoomData {
 	get := new(getter)
 	get.id = roomID
-	get.sendBack = make(chan messages.HostRoom)
+	get.sendBack = make(chan messages.RoomData)
 	lm.getRoom <- *get
 	return <- get.sendBack
 }

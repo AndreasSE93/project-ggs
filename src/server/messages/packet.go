@@ -36,18 +36,21 @@ type HostNew struct {
 
 type HostRoomPacket struct {
 	PacketID int `json:"PacketID"`
-	HostRoom HostRoom `json:"hostRoom"`
+	HostRoom ClientSection `json:"hostRoom"`
 }
 
-type RoomInfo struct {
-	RoomID, MaxSize, ClientCount int
-	RoomName, GameName string
+type RoomData struct {
+	CS ClientSection
+	SS ServerSection
 }
 
-type HostRoom struct {
+type ClientSection struct {
 	RoomID, MaxSize, ClientCount int
 	RoomName, GameName string
 	Clients []connection.Connector
+}
+
+type ServerSection struct {
 	GameChan chan ProcessedMessage
 }
 
@@ -62,7 +65,7 @@ type UpdateRooms struct {
 
 type RoomList struct {
 	PacketID int `json:"PacketID"`
-	Rooms []RoomInfo `json:"UserList"`
+	Rooms []ClientSection `json:"UserList"`
 	Games []string `json:"GameHost"`
 }
 

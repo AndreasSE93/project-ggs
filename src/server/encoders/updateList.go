@@ -6,18 +6,12 @@ import (
 	"server/messages"
 )
 
-func EncodeRefreshList(packageID int, updateList []messages.HostRoom) string {
+func EncodeRefreshList(packageID int, updateList []messages.RoomData) string {
 
-	a := make([]messages.RoomInfo, len(updateList))
+	a := make([]messages.ClientSection, len(updateList))
 	for room := range updateList {
-		a[room] = messages.RoomInfo{
-			RoomID: updateList[room].RoomID,
-			MaxSize: updateList[room].MaxSize,
-			ClientCount: updateList[room].ClientCount,
-			RoomName: updateList[room].RoomName,
-			GameName: updateList[room].GameName,
-		}
-	}
+		a[room] = updateList[room].CS
+	}	
 
 	obj := messages.RoomList{
 		PacketID: messages.REFRESH_ID,

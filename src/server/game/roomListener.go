@@ -10,7 +10,7 @@ import(
 )
 
 type GameRoom struct {
-	hostRoom messages.HostRoom
+	roomData messages.RoomData
 	lm *lobbyMap.LobbyMap
 }
 
@@ -22,20 +22,20 @@ func sendImmediateMessage(message string, clients []connection.Connector) {
 
 func gameRoomListener(gameRoom *GameRoom) {
 	for {
-		processed := <- gameRoom.hostRoom.GameChan
+		processed := <- gameRoom.roomData.SS.GameChan
 		
 		if processed.ID == messages.CHAT_ID {
-			go sendImmediateMessage(encoders.EncodeChatMessage(messages.CHAT_ID, processed.ChatM), gameRoom.hostRoom.Clients)
+			go sendImmediateMessage(encoders.EncodeChatMessage(messages.CHAT_ID, processed.ChatM), gameRoom.roomData.CS.Clients)
 		} else if processed.ID == messages.JOIN_ID {
-			gameRoom.hostRoom = gameRoom.lm.GetRoom(gameRoom.hostRoom.RoomID)
-			go sendImmediateMessage(encoders.EncodeJoinedRoom(messages.JOIN_ID, &gameRoom.hostRoom), gameRoom.hostRoom.Clients)
+			gameRoom.roomData = gameRoom.lm.GetRoom(gameRoom.roomData.CS.RoomID)
+			go sendImmediateMessage(encoders.EncodeJoinedRoom(messages.JOIN_ID, &gameRoom.roomData), gameRoom.roomData.CS.Clients)
 		}
 	}
 }
 
-func CreateGameRoom(hr messages.HostRoom, lm *lobbyMap.LobbyMap) {
+func CreateGameRoom(rd messages.RoomData, lm *lobbyMap.LobbyMap) {
 	game := new(GameRoom)
-	game.hostRoom = hr
+	game.roomData = rd
 	game.lm = lm
 
 	go gameRoomListener(game)

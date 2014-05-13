@@ -100,12 +100,12 @@ func ClientListener(lm *lobbyMap.LobbyMap, client connection.Connector) {
 	
 		} else if processed.ID == messages.HOST_ID {
 			hostedRoom := ReqHost(processed.Host, *core)
-			gameChan = hostedRoom.GameChan
+			gameChan = hostedRoom.SS.GameChan
 			go game.CreateGameRoom(hostedRoom, core.lm)
 
 		} else if processed.ID == messages.JOIN_ID {
 			joinedRoom := ReqJoin(processed.Join, *core)
-			gameChan = joinedRoom.GameChan
+			gameChan = joinedRoom.SS.GameChan
 			gameChan <- processed
 
 		} else if processed.ID == messages.REFRESH_ID {
