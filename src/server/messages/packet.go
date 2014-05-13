@@ -4,7 +4,8 @@ import (
 	"time"
 	"server/connection"
 )
-
+//-------------------------------------------------
+//            ID FOR PACKAGES
 const (
 	PING_ID    = 0
 	CHAT_ID    = 100
@@ -13,11 +14,17 @@ const (
 	REFRESH_ID = 103
 )
 
+//-------------------------------------------------
+//            PING
+
 type Ping struct {
 	PacketID int `json:"PacketID"`
 	TimeStamp time.Time `json:"TimeStamp"`
 	Payload interface{} `json:"Payload"`
 }
+
+//--------------------------------------------------
+//           INCOMING FROM CLIENT
 
 type ProcessedMessage struct {
 	ID int `json:"PacketID"`
@@ -27,6 +34,13 @@ type ProcessedMessage struct {
 	Update UpdateRooms
 }
 
+
+type ChatMessage struct {
+	PacketID int `json:"PacketID"`
+	Message string `json:"message"`
+	User string `json:"user"`
+}
+
 type HostNew struct {
 	PacketID int `json:"PacketID"`
 	RoomName string `json:"roomName"`
@@ -34,10 +48,32 @@ type HostNew struct {
 	GameName string `json:"GameName"`
 }
 
+type JoinExisting struct {
+	PacketID int `json:"PacketID"`
+	RoomID int `json:"RoomID"`
+}
+
+type UpdateRooms struct {
+	PacketID int `json:"PacketID"`
+}
+
+//------------------------------------------------
+//             OUTGOING TO CLIENT
+
 type HostRoomPacket struct {
 	PacketID int `json:"PacketID"`
 	HostRoom ClientSection `json:"hostRoom"`
 }
+
+
+type RoomList struct {
+	PacketID int `json:"PacketID"`
+	Rooms []ClientSection `json:"UserList"`
+	Games []string `json:"GameHost"`
+}
+
+//----------------------------------------------------
+//              INSIDE OF LOBBYMAP
 
 type RoomData struct {
 	CS ClientSection
@@ -53,24 +89,4 @@ type ClientSection struct {
 type ServerSection struct {
 	GameChan chan ProcessedMessage
 }
-
-type JoinExisting struct {
-	PacketID int `json:"PacketID"`
-	RoomID int `json:"RoomID"`
-}
-
-type UpdateRooms struct {
-	PacketID int `json:"PacketID"`
-}
-
-type RoomList struct {
-	PacketID int `json:"PacketID"`
-	Rooms []ClientSection `json:"UserList"`
-	Games []string `json:"GameHost"`
-}
-
-type ChatMessage struct {
-	PacketID int `json:"PacketID"`
-	Message string `json:"message"`
-	User string `json:"user"`
-}
+//----------------------------------------------------
