@@ -1,13 +1,13 @@
 # Go packages can consist of multiple files and both Go and Java source files may contain futher dependencies, so compilation targets have the whole folder as a dependency in this Makefile.
+# Using folders as dependencies don't work very well so it is recommended to use `make -B $TARGET` when recompiling instead
 
 # Enviroment
 GOINSTALL=go install
 export GOPATH=$(PWD)
 
-CLIENT_PATH=./src/client/client
-CLIENT_BIN_PATH=$(CLIENT_PATH)/bin
-CLIENT_SRC_PATH=$(CLIENT_PATH)/src
-export CLASSPATH=$(CLIENT_PATH)/bin:$(CLIENT_PATH)/lib/org.json-20120521.jar
+CLIENT_BIN_PATH=./bin
+CLIENT_SRC_PATH=./src/client
+export CLASSPATH=$(CLIENT_BIN_PATH):$(CLIENT_SRC_PATH)/org.json-20120521.jar
 JAVAC=javac -d $(CLIENT_BIN_PATH) -sourcepath $(CLIENT_SRC_PATH)
 
 
@@ -21,8 +21,8 @@ all: server
 .PHONY:
 server: ./bin/server
 
-./bin/%: ./src/server
-	$(GOINSTALL) $*
+./bin/server: ./src/server
+	$(GOINSTALL) server
 
 
 .PHONY:
@@ -53,7 +53,7 @@ fmt:
 
 .PHONY:
 clean:
-	rm -fR ./bin/* ./pkg/* ./src/client/client/bin/*
+	rm -fR ./bin/* ./pkg/*
 
 
 .PHONY:
