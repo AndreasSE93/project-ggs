@@ -1,6 +1,9 @@
 Project
 =======
 
+* PROJEKTRAPPORT
+  * [GGS - Projektrapport](https://docs.google.com/document/d/1clv9LbCW6YayOg4xgWUs6oC_xNNHXCtl217eAMl3NLw/edit?usp=sharing) 
+
 * GOLANG DOCUMENTATION 
   * [Documentation Root](http://golang.org/doc/)
 
