@@ -20,7 +20,7 @@ func InitTicTac(gameRoom *GameRoom) {
 			processed.MoveM.IsDraw = games.IsDraw(gameBoard)
 
 			if processed.MoveM.IsDraw == 1 || processed.MoveM.HasWon != 0 {
-				games.ClearBoard(gameBoard)
+				gameBoard = games.ClearBoard(gameBoard)
 			}
 			processed.MoveM.IsValid = 1
 		} else {

@@ -23,6 +23,7 @@ func sendImmediateMessage(message string, cs messages.ClientSection) {
 
 func gameRoomListener(gameRoom *GameRoom) {
 	go sendImmediateMessage(encoders.EncodeHostedRoom(messages.HOST_ID, gameRoom.roomData),gameRoom.roomData.CS)
+	go sendImmediateMessage(encoders.EncodeHostedRoom(messages.HOST_ID, gameRoom.roomData),gameRoom.roomData.CS)
 	for {
 		processed := <- gameRoom.roomData.SS.GameChan
 		
@@ -30,6 +31,7 @@ func gameRoomListener(gameRoom *GameRoom) {
 			go sendImmediateMessage(encoders.EncodeChatMessage(messages.CHAT_ID, processed.ChatM, processed.Origin), gameRoom.roomData.CS)
 		} else if processed.ID == messages.JOIN_ID {
 			gameRoom.roomData = gameRoom.lm.GetRoom(gameRoom.roomData.CS.RoomID)
+			go sendImmediateMessage(encoders.EncodeJoinedRoom(messages.JOIN_ID, &gameRoom.roomData), gameRoom.roomData.CS)
 			go sendImmediateMessage(encoders.EncodeJoinedRoom(messages.JOIN_ID, &gameRoom.roomData), gameRoom.roomData.CS)
 		} else if processed.ID == messages.TTT_MOVE_ID {
 			gameRoom.RuleChan <- processed

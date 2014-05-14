@@ -16,7 +16,7 @@ func EncodeRefreshList(packageID int, updateList []messages.RoomData) string {
 	obj := messages.RoomList{
 		PacketID: messages.REFRESH_ID,
 		Rooms: a,
-		Games: []string{"Dummy"},
+		Games: []string{"TicTacToe"},
 	}
 	objStr, err := json.Marshal(obj)
 	if err != nil {
