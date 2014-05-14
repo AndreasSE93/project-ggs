@@ -73,6 +73,7 @@ type UpdateRooms struct {
 type HostRoomPacket struct {
 	PacketID int `json:"PacketID"`
 	HostRoom ClientSection `json:"hostRoom"`
+	Player int `json:"Player"`
 }
 
 
@@ -80,6 +81,17 @@ type RoomList struct {
 	PacketID int `json:"PacketID"`
 	Rooms []ClientSection `json:"UserList"`
 	Games []string `json:"GameHost"`
+}
+
+type MoveMessage struct {
+	PacketID int `json:"PacketID"`
+	GameBoard []int  `json:"GameBoard"`
+	Move int `json:"Move"`
+	IsDraw int `json:"IsDraw"`
+	HasWon int `json:"HasWon"`
+	Player int `json:"Player"`
+	IsValid int `json:"IsValid"`
+	
 }
 
 //----------------------------------------------------
@@ -92,24 +104,12 @@ type RoomData struct {
 
 type ClientSection struct {
 	RoomID, MaxSize, ClientCount int
-	RoomName, GameName string
+	RoomName, GameName, GameType string
 	Clients []connection.Connector
 }
 
 type ServerSection struct {
 	GameChan chan ProcessedMessage
-}
-
-
-type MoveMessage struct {
-	PacketID int `json:"PacketID"`
-	GameBoard []int  `json:"GameBoard"`
-	Move int `json:"Move"`
-	IsDraw int `json:"IsDraw"`
-	HasWon int `json:"HasWon"`
-	Player int `json:"Player"`
-	IsValid int `json:"IsValid"`
-	
 }
 
 //----------------------------------------------------

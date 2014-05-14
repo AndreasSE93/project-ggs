@@ -1,5 +1,25 @@
 package games
 
+import(
+	"server/connection"
+)
+
+type Player struct {
+	Conn connection.Connector
+	Number int
+}
+
+type TicTacToe struct {
+	POne, PTwo Player
+}
+
+func GenPlayer(game *TicTacToe, conn []connection.Connector) {
+	game.POne.Conn = conn[0]
+	game.POne.Number = 1
+	game.PTwo.Conn = conn[1]
+	game.PTwo.Number = 2
+}
+
 func InitBoard() []int {
 	gameBoard := []int{0, 0, 0, 0, 0, 0, 0, 0, 0}
 	return gameBoard
