@@ -33,7 +33,7 @@ public class TiarHandler implements HandlerInterface, ActionListener,
 	ChatMessageEncoder cme = new ChatMessageEncoder();
 	TiarUserMessageEncoder tume = new TiarUserMessageEncoder();
 	TiarStartMessageEncoder tsme = new TiarStartMessageEncoder();
-	int Player = 2;
+	int Player = 1;
 	final String userName;
 	private boolean loop = true;
 
@@ -91,7 +91,7 @@ public class TiarHandler implements HandlerInterface, ActionListener,
 				JOptionPane.showMessageDialog(null, "Player: " + Integer.toString(mess.HasWon) + " has won!", "Winner!", JOptionPane.ERROR_MESSAGE);
 				tg.clearBoard();
 			}
-			if (mess.IsDraw ==1 ){
+			if (mess.IsDraw == 1 ){
 				tg.clearBoard();
 			}
 			
