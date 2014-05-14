@@ -14,7 +14,6 @@ import org.json.JSONObject;
 
 import packageManaging.ChatMessageEncoder;
 import packageManaging.Message;
-import packageManaging.TTTMessage;
 import packageManaging.TiarStartMessage;
 import packageManaging.TiarStartMessageEncoder;
 import packageManaging.TiarUserMessage;
@@ -87,7 +86,15 @@ public class TiarHandler implements HandlerInterface, ActionListener,
 				tg.gl.changeTurn();
 			} else
 				tg.updateGameBoard(mess.Gameboard);
-
+			
+			if(mess.HasWon != 0){
+				JOptionPane.showMessageDialog(null, "Player: " + Integer.toString(mess.HasWon) + " has won!", "Winner!", JOptionPane.ERROR_MESSAGE);
+				tg.clearBoard();
+			}
+			if (mess.IsDraw ==1 ){
+				tg.clearBoard();
+			}
+			
 			break;
 
 		case 202:

@@ -51,7 +51,11 @@ func ticTacToeListener (gameRoom *GameRoom) {
 				gameBoard = games.MakeMove(move, processed.MoveM.Player, gameBoard)
 				processed.MoveM.GameBoard = gameBoard
 				processed.MoveM.HasWon = games.HasWon(gameBoard)
+				
 				processed.MoveM.IsDraw = games.IsDraw(gameBoard)
+				if (processed.MoveM.IsDraw == 1 || processed.MoveM.HasWon != 0){
+					games.ClearBoard(gameBoard)
+				}
 				processed.MoveM.IsValid = 1	
 			} else {
 				processed.MoveM.IsValid = 0
