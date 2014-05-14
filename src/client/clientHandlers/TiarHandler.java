@@ -13,6 +13,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import packageManaging.ChatMessageEncoder;
+import packageManaging.HostRoom;
+import packageManaging.HostRoomEncoder;
 import packageManaging.Message;
 import packageManaging.TiarStartMessage;
 import packageManaging.TiarStartMessageEncoder;
@@ -33,7 +35,7 @@ public class TiarHandler implements HandlerInterface, ActionListener,
 	ChatMessageEncoder cme = new ChatMessageEncoder();
 	TiarUserMessageEncoder tume = new TiarUserMessageEncoder();
 	TiarStartMessageEncoder tsme = new TiarStartMessageEncoder();
-	int Player = 1;
+	int Player = 0;
 	final String userName;
 	private boolean loop = true;
 
@@ -77,9 +79,25 @@ public class TiarHandler implements HandlerInterface, ActionListener,
 			Message chatMessage = cme.decode(message);
 			tg.chat.chatUpdate(chatMessage.message, chatMessage.user);
 			break;
-
+			
+		case 101: //Init Message
+			HostRoomEncoder hre = new HostRoomEncoder();
+			HostRoom hr = hre.decode(message);
+			if(Player == 0)
+			this.Player = hr.Player;
+			
+			break;
+			
+		case 102:
+			HostRoomEncoder hre2 = new HostRoomEncoder();
+			HostRoom hr2 = hre2.decode(message);
+			if(Player == 0)
+			this.Player = hr2.Player;
+			
+			break;
+			
+			
 		case 201: // Move message
-
 			TiarUserMessage mess = tume.decode(message);
 			if (mess.isValid == 1) {
 				tg.updateGameBoard(mess.Gameboard);
@@ -91,18 +109,13 @@ public class TiarHandler implements HandlerInterface, ActionListener,
 				JOptionPane.showMessageDialog(null, "Player: " + Integer.toString(mess.HasWon) + " has won!", "Winner!", JOptionPane.ERROR_MESSAGE);
 				tg.clearBoard();
 			}
-			if (mess.IsDraw == 1 ){
+			if (mess.IsDraw ==1 ){
 				tg.clearBoard();
 			}
 			
 			break;
 
-		case 202:
 
-			TiarStartMessage tsm = tsme.decode(message);
-			Player = tsm.turn;
-
-			break;
 
 		default: // Should not come here
 				System.out.println( id + "\nstring: " + message);
@@ -175,27 +188,7 @@ public class TiarHandler implements HandlerInterface, ActionListener,
 
 	}
 
-	public void checkWinner() {
 
-		switch (tg.gl.hasWon()) {
-		case 1:
-			System.out.println("Spelare 1 vann");
-			/* Bör skriva ut ett meddelande */
-			tg.clearBoard();
-			break;
-		case 2:
-			System.out.println("Spelare 2 vann");
-			/* Bör skriva ut ett meddelande */
-			tg.clearBoard();
-			break;
-		default:
-			if (tg.gl.isDraw() == 1) {
-				tg.clearBoard();
-			}
-			// System.out.println(tg.gl.toString());
-		}
-
-	}
 
 	@Override
 	public void mouseEntered(MouseEvent arg0) {
