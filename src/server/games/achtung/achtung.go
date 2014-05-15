@@ -12,7 +12,7 @@ type Player struct {
 
 type Achtung struct {
 	POne, PTwo, PThree, PFour Player
-	
+	Field [10000]int
 }
 
 func GenPlayer(a *Achtung, clientList []connection.Connector) {
