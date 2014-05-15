@@ -11,22 +11,29 @@ func InitTicTac(gameRoom *GameRoom) {
 	
 	for {
 		processed := <- gameRoom.RuleChan
-		move := processed.MoveM.Move
-		if games.IsValidMove(move, gameBoard) == 1 {
-			gameBoard = games.MakeMove(move, processed.MoveM.Player, gameBoard)
-			
-			processed.MoveM.GameBoard = gameBoard
-			processed.MoveM.HasWon = games.HasWon(gameBoard)
-			processed.MoveM.IsDraw = games.IsDraw(gameBoard)
 
-			if processed.MoveM.IsDraw == 1 || processed.MoveM.HasWon != 0 {
-				gameBoard = games.ClearBoard(gameBoard)
+		if processed.ID == messages.TTT_MOVE_ID {
+			move := processed.MoveM.Move
+			if games.IsValidMove(move, gameBoard) == 1 {
+				gameBoard = games.MakeMove(move, processed.MoveM.Player, gameBoard)
+				
+				processed.MoveM.GameBoard = gameBoard
+				processed.MoveM.HasWon = games.HasWon(gameBoard)
+				processed.MoveM.IsDraw = games.IsDraw(gameBoard)
+				
+				if processed.MoveM.IsDraw == 1 || processed.MoveM.HasWon != 0 {
+					gameBoard = games.ClearBoard(gameBoard)
+				}
+				processed.MoveM.IsValid = 1
+			} else {
+				processed.MoveM.IsValid = 0
 			}
-			processed.MoveM.IsValid = 1
-		} else {
-			processed.MoveM.IsValid = 0
+			go sendImmediateMessage(encoders.EncodeMoveMessage(processed.MoveM), gameRoom.roomData.CS)
+
+		} else if processed.ID == messages.KICK_ID {
+			gameBoard = games.ClearBoard(gameBoard)
+			go sendImmediateMessage(encoders.EncodeMoveMessage(processed.MoveM), gameRoom.roomData.CS)
 		}
-		go sendImmediateMessage(encoders.EncodeMoveMessage(messages.TTT_MOVE_ID, processed.MoveM), gameRoom.roomData.CS)
 	}
 }
 

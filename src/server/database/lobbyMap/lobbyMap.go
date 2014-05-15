@@ -1,6 +1,7 @@
 package lobbyMap
 
 import (
+	"fmt"
 	"server/connection"
 	"server/database"
 	"server/messages"
@@ -37,6 +38,7 @@ func createRoom(s speaker, lm *LobbyMap, hostCollection map[int]messages.RoomDat
 	lm.nextID++
 
 	if roomID := lm.clientDB.GetRoom(s.rd.CS.Clients[0]); roomID > 0 {
+		fmt.Println("KIIIIIIIICKED")
 		kicker := joiner{}
 		kicker.sendBack = make(chan *messages.RoomData)
 		kicker.RoomID = roomID

@@ -5,11 +5,10 @@ import (
 	"server/messages"
 )
 
-func EncodeJoinedRoom(packageID int, room *messages.RoomData) string {
+func EncodeJoinedRoom(room *messages.RoomData) string {
 	obj := messages.HostRoomPacket{
-		PacketID: packageID,
+		PacketID: messages.JOIN_ID,
 		HostRoom: room.CS,
-		Player:   room.CS.ClientCount,
 	}
 	objStr, _ := json.Marshal(obj)
 	return string(objStr)

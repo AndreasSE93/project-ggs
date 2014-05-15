@@ -109,7 +109,7 @@ func ClientListener(lm *lobbyMap.LobbyMap, db *database.Database, client connect
 	go ActivateSender(finJSON, core.client)
 
 	refreshList := ReqUpdate(messages.UpdateRooms{}, *core)
-	finJSON <- encoders.EncodeRefreshList(messages.REFRESH_ID, refreshList)
+	finJSON <- encoders.EncodeRefreshList(refreshList)
 
 	processed := <-processedChan
 	client = db.Get(client.ConnectorID) //Shouldn't have changed, but just in case
@@ -117,7 +117,8 @@ func ClientListener(lm *lobbyMap.LobbyMap, db *database.Database, client connect
 	db.Update(client.ConnectorID, client) //Shouldn't have changed from Get
 	updateClient <-client
 
-	gameChan := make(chan messages.ProcessedMessage)
+	lobbyChan := make(chan messages.ProcessedMessage)
+	gameChan := lobbyChan
 	go dummyReceiveLobbyChat(gameChan)
 
 	for {
@@ -139,14 +140,20 @@ func ClientListener(lm *lobbyMap.LobbyMap, db *database.Database, client connect
 
 		} else if processed.ID == messages.REFRESH_ID {
 			refreshList := ReqUpdate(processed.Update, *core)
-			finJSON <- encoders.EncodeRefreshList(messages.REFRESH_ID, refreshList)
+			finJSON <- encoders.EncodeRefreshList(refreshList)
 
 		} else if processed.ID == messages.TTT_CHAT_ID {
 			gameChan <- processed
+
 		} else if processed.ID == messages.TTT_MOVE_ID {
 			gameChan <- processed
 
-		
+		} else if processed.ID == messages.START_ID {
+			gameChan <- processed
+
+		} else if processed.ID == messages.KICK_ID {
+			gameChan <- processed
+			gameChan = lobbyChan
 		} else {
 			fmt.Println("Something went wrong!")
 		}
@@ -156,7 +163,7 @@ func ClientListener(lm *lobbyMap.LobbyMap, db *database.Database, client connect
 
 func dummyReceiveLobbyChat(ch chan messages.ProcessedMessage) {
 	for {
-		msg := <-ch
+		msg := <- ch
 		fmt.Println("Ate lobby chat message:", msg)
 	}
 }

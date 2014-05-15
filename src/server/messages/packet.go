@@ -7,14 +7,17 @@ import (
 //-------------------------------------------------
 //            ID FOR PACKAGES
 const (
-	PING_ID    = 0
-	INIT_ID    = 99
-	CHAT_ID    = 100
-	HOST_ID    = 101
-	JOIN_ID    = 102
-	REFRESH_ID = 103
-	TTT_CHAT_ID= 200
-	TTT_MOVE_ID= 201
+	PING_ID      = 0
+	INIT_ID      = 99
+	CHAT_ID      = 100
+	HOST_ID      = 101
+	JOIN_ID      = 102
+	REFRESH_ID   = 103
+	KICK_ID      = 404
+	TTT_CHAT_ID  = 200
+	TTT_MOVE_ID  = 201
+	STARTABLE_ID = 202
+	START_ID     = 203
 )
 
 //-------------------------------------------------
@@ -67,20 +70,37 @@ type UpdateRooms struct {
 	PacketID int `json:"PacketID"`
 }
 
+type KickMessage struct {
+	PacketID int `json:"PacketID"`
+}
+
 //------------------------------------------------
 //             OUTGOING TO CLIENT
 
 type HostRoomPacket struct {
 	PacketID int `json:"PacketID"`
 	HostRoom ClientSection `json:"hostRoom"`
-	Player int `json:"Player"`
 }
 
+type Leave struct {
+	PacketID int `json:"PacketID"`
+}
 
 type RoomList struct {
 	PacketID int `json:"PacketID"`
 	Rooms []ClientSection `json:"UserList"`
 	Games []string `json:"GameHost"`
+}
+
+type Startable struct {
+	PacketID int `json:"PacketID"`
+	IsStartable bool `json:"IsStartable"`
+}
+
+type Started struct {
+	PacketID int `json:"PacketID"`
+	Started bool `json:"Started"`
+	Player int `json:"Player"`
 }
 
 type MoveMessage struct {
