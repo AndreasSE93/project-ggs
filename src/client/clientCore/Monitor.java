@@ -12,6 +12,7 @@ import packageManaging.InitializeClientMessageEncoder;
 
 
 import clientHandlers.LobbyHandler;
+import clientHandlers.SnakeHandler;
 import clientHandlers.TiarHandler;
 
 import clientNetworking.NetManager;
@@ -74,6 +75,10 @@ public class Monitor {
 		if(state == 2){
 			 TiarHandler th = new TiarHandler(net, userName);
 			 state = th.init();
+		}
+		if(state == 3){
+			 SnakeHandler SH = new SnakeHandler(net, userName);
+			 state = SH.init();
 		}
 		else{
 			System.out.println("hejdå");

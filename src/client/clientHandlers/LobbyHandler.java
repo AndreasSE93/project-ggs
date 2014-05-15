@@ -119,12 +119,17 @@ public class LobbyHandler implements HandlerInterface,
 			
 		case "createbutton":
 			try {
-				
+				JSONtext = gme.encode(new CreateGameMessage("Snakes", 4 , this.userName));
+				sendMessage(JSONtext);
+				JSONtext = rme.encode (new RefreshMessage());
+				state = 3; //Temporärt för att byta till tic tac toe
+				loop=false; // -||-_____*/
+				/*
 				JSONtext = gme.encode(new CreateGameMessage(lg.createList.getSelectedValue(), 2 , this.userName));
 				sendMessage(JSONtext);
 				JSONtext = rme.encode (new RefreshMessage());
 				state = 2; //Temporärt för att byta till tic tac toe
-				loop=false; // -||-_____
+				loop=false; // -||-_____*/
 			} catch (JSONException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
