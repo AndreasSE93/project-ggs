@@ -13,37 +13,44 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import packageManaging.ChatMessageEncoder;
+import packageManaging.KickMessageEncoder;
 import packageManaging.Message;
-import packageManaging.TiarStartMessage;
-import packageManaging.TiarStartMessageEncoder;
+import packageManaging.StageFlipper;
+import packageManaging.TiarStartableMessage;
+import packageManaging.TiarStartableMessageEncoder;
+import packageManaging.TiarStartedMessage;
+import packageManaging.TiarStartedMessageEncoder;
 import packageManaging.TiarUserMessage;
 import packageManaging.TiarUserMessageEncoder;
 
 import tiar.TiarGUI;
 
+import clientCore.Monitor;
 import clientNetworking.NetManager;
 
 /* Handler and initializer for a Tic Tac Toe game */
 
-public class TiarHandler implements HandlerInterface, ActionListener,
-		MouseListener {
-
+public class TiarHandler extends Monitor implements HandlerInterface, ActionListener, MouseListener {
 	NetManager network;
 	TiarGUI tg;
 	ChatMessageEncoder cme = new ChatMessageEncoder();
 	TiarUserMessageEncoder tume = new TiarUserMessageEncoder();
-	TiarStartMessageEncoder tsme = new TiarStartMessageEncoder();
-	int Player = 2;
+	TiarStartableMessageEncoder tsme = new TiarStartableMessageEncoder();
+	TiarStartedMessageEncoder tiStarter = new TiarStartedMessageEncoder();
+	KickMessageEncoder kEnc = new KickMessageEncoder();
+	int Player;
 	final String userName;
-	private boolean loop = true;
+	public boolean loop;
+	private boolean startable, started;
 
 	public TiarHandler(NetManager net, String username) {
 		this.network = net;
 		this.userName = username;
+		this.loop = true;
 
 	}
 
-	public int init() {
+	public void init() {
 		tg = new TiarGUI();
 		tg.render(this.userName);
 
@@ -55,10 +62,17 @@ public class TiarHandler implements HandlerInterface, ActionListener,
 		tg.chat.field.addActionListener(this);
 
 		tg.window.setVisible(true);
-
-		while (loop) {
+		runTicTac();
+	}
+	
+	public void runTicTac() {
+		if(super.lastMsg != null) {
+			StageFlipper startup = super.lastMsg;
+			super.lastMsg = null;
+		}
+		while(loop) {
 			try {
-				String mess = recieveMessage();
+				String mess = receiveMessage();
 
 				int id = retrieveId(mess);
 				decodeAndRender(id, mess);
@@ -67,41 +81,51 @@ public class TiarHandler implements HandlerInterface, ActionListener,
 				e.printStackTrace();
 			}
 		}
-		return 1;
 	}
 
 	public void decodeAndRender(int id, String message) throws JSONException {
 		switch (id) {
+		
 		case 100: // Chat message
 			System.out.println(message);
 			Message chatMessage = cme.decode(message);
 			tg.chat.chatUpdate(chatMessage.message, chatMessage.user);
 			break;
-
+		
 		case 201: // Move message
-
 			TiarUserMessage mess = tume.decode(message);
-			if (mess.isValid == 1) {
-				tg.updateGameBoard(mess.Gameboard);
-				tg.gl.changeTurn();
-			} else
-				tg.updateGameBoard(mess.Gameboard);
+			if (this.started) {
+				if (mess.isValid == 1) {
+					tg.updateGameBoard(mess.Gameboard);
+					tg.gl.changeTurn();
+				} else
+					tg.updateGameBoard(mess.Gameboard);
 			
-			if(mess.HasWon != 0){
-				JOptionPane.showMessageDialog(null, "Player: " + Integer.toString(mess.HasWon) + " has won!", "Winner!", JOptionPane.ERROR_MESSAGE);
-				tg.clearBoard();
+				if(mess.HasWon != 0){
+					JOptionPane.showMessageDialog(null, "Player: " + Integer.toString(mess.HasWon) + " has won!", "Winner!", JOptionPane.ERROR_MESSAGE);
+					tg.clearBoard();
+				}
+				if (mess.IsDraw ==1 ){
+					tg.clearBoard();
+				}
 			}
-			if (mess.IsDraw ==1 ){
-				tg.clearBoard();
-			}
-			
 			break;
-
+			
 		case 202:
-
-			TiarStartMessage tsm = tsme.decode(message);
-			Player = tsm.turn;
-
+			TiarStartableMessage tsm = tsme.decode(message);
+			this.startable = tsm.isStartable;
+			break;
+			
+		case 203:
+			TiarStartedMessage startedGame = tiStarter.decode(message);
+			this.started = startedGame.started;
+			this.Player = startedGame.playerID;
+			break;
+			
+		case 404:
+			StageFlipper flip = new StageFlipper(kEnc.decode(message));
+			super.stop(flip);
+			this.loop = false;
 			break;
 
 		default: // Should not come here
@@ -117,7 +141,7 @@ public class TiarHandler implements HandlerInterface, ActionListener,
 
 	}
 
-	public String recieveMessage() throws IOException {
+	public String receiveMessage() throws IOException {
 		return network.receiveMessage();
 	}
 

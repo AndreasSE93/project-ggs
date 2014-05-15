@@ -31,6 +31,8 @@ public String encode(JoinMessage mess) throws JSONException {
 		JoinMessage lsm = new JoinMessage();
 
 		lsm.RoomID = obj.getInt("RoomID");
+		lsm.GameType = obj.getString("GameType");
+		lsm.GameName = obj.getString("GameName");
 		
 		return lsm;
 	}

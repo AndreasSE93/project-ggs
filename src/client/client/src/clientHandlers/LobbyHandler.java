@@ -19,13 +19,14 @@ import packageManaging.Message;
 import packageManaging.ChatMessageEncoder;
 import packageManaging.RefeshMessageEncoder;
 import packageManaging.RefreshMessage;
+import packageManaging.StageFlipper;
 import graphicalReference.ChatGUI;
 import graphicalReference.LobbyGUI;
 
+import clientCore.Monitor;
 import clientNetworking.NetManager;
 
-public class LobbyHandler implements HandlerInterface,
-		ActionListener {
+public class LobbyHandler extends Monitor implements HandlerInterface, ActionListener {
 	LobbyGUI lg;
 	ChatGUI cg;
 	LobbyMessageEncoder lme = new LobbyMessageEncoder();
@@ -34,16 +35,17 @@ public class LobbyHandler implements HandlerInterface,
 	CreateGameMessageEncoder gme = new CreateGameMessageEncoder();
 	RefeshMessageEncoder  rme = new RefeshMessageEncoder();
 	NetManager network;
-	boolean loop = true;
+	public boolean loop;
 	int state;
 	final String userName;
 	
 	public LobbyHandler(NetManager net, String username){
 		this.network = net;
 		this.userName = username;
+		this.loop = true;
 	}
 	
-	public int init() {
+	public void init() {
 
 		String firstcall;
 		LobbyServerMessage LM = null;
@@ -66,10 +68,17 @@ public class LobbyHandler implements HandlerInterface,
 		} else {
 			System.out.println("Connection failed");
 		}
-
+		runLobby();
+	}
+	
+	public void runLobby() {
+		if (super.lastMsg != null) {
+			lg.lobby.setVisible(true);
+			StageFlipper startup = super.lastMsg;
+		}
 		while (loop) {
 			try {
-				String mess = recieveMessage();
+				String mess = receiveMessage();
 			
 				int id = retrieveId(mess);
 				decodeAndRender(id, mess);
@@ -78,11 +87,7 @@ public class LobbyHandler implements HandlerInterface,
 				e.printStackTrace();
 			}
 		}
-		
-		
-		 lg.lobby.setVisible(false);
-		 return state;
-
+		lg.lobby.setVisible(false);
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -96,49 +101,44 @@ public class LobbyHandler implements HandlerInterface,
 			} catch (JSONException e1) {
 				e1.printStackTrace();
 			}
-
 			break;
 
 		case "joinbutton":
 			try {
 				String players = (String) lg.jt.getModel().getValueAt(lg.jt.getSelectedRow(),1);
-				if(!(players.charAt(0) == players.charAt(2))){
+				
+				if (!(players.charAt(0) == players.charAt(2))) {
 				JSONtext = jme.encode(new JoinMessage((String)lg.jt.getModel().getValueAt(lg.jt.getSelectedRow(),3)));
-				state = 2; //Temporärt för att byta till tic tac toe
-				loop=false; // -||-_____
-				}
-				else{
+				} else {
 					JOptionPane.showMessageDialog(null, "Room is full!", "Warning", JOptionPane.ERROR_MESSAGE);
 				}
-				} catch (JSONException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-
+			} catch (JSONException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			break;
 			
 		case "createbutton":
 			try {
-				
 				JSONtext = gme.encode(new CreateGameMessage(lg.createList.getSelectedValue(), 2 , this.userName));
 				sendMessage(JSONtext);
-				JSONtext = rme.encode (new RefreshMessage());
-				state = 2; //Temporärt för att byta till tic tac toe
-				loop=false; // -||-_____
+				JSONtext = rme.encode(new RefreshMessage());
+				
 			} catch (JSONException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			
 			break;
+			
 		case "refreshbutton":		
 			try {
-				JSONtext = rme.encode (new RefreshMessage());
+				JSONtext = rme.encode(new RefreshMessage());
 			} catch (JSONException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			break;
+			
 		default:
 			JSONtext = "";
 
@@ -150,16 +150,15 @@ public class LobbyHandler implements HandlerInterface,
 	public void decodeAndRender(int id, String message) throws JSONException {
 		switch (id) {
 		case 100: // Message.java
-			ChatMessageEncoder mh = new ChatMessageEncoder();
-			Message chatMessage = mh.decode(message);
+			Message chatMessage = cme.decode(message);
 			lg.chatgui.chatUpdate(chatMessage.message, chatMessage.user);
 			break;
 
 		case 101: // Create session
-			
-			break;
 
 		case 102: // Join session
+			StageFlipper flip = new StageFlipper(jme.decode(message));
+			super.stop(flip);
 			break;
 
 		case 103: // LobbyClientMessage.java/LobbyServerMessage.java
@@ -176,7 +175,7 @@ public class LobbyHandler implements HandlerInterface,
 		network.send(message);
 	}
 
-	public String recieveMessage() throws IOException {
+	public String receiveMessage() throws IOException {
 		return network.receiveMessage();
 
 	}

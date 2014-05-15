@@ -8,6 +8,7 @@ import org.json.JSONException;
 
 import packageManaging.InitializeClientMessage;
 import packageManaging.InitializeClientMessageEncoder;
+import packageManaging.StageFlipper;
 
 
 
@@ -20,16 +21,20 @@ import clientNetworking.Connection;
 
 public class Monitor {
 	
+	public LobbyHandler LH;
+	public TiarHandler TH;
 	public  Connection conn;
 	public  NetManager net;
 	public String userName;
+	public int stage;
+	public StageFlipper lastMsg = null;
 	
 	public Monitor() {
 		
 	}
 
 	
-	public void init(){
+	public void init() {
 		
 		this.conn = new Connection("localhost", 8080);
 		this.net = new NetManager(conn);
@@ -51,36 +56,45 @@ public class Monitor {
 			} catch (JSONException e) {
 				JOptionPane.showMessageDialog(null, "Can't connect to server!", "Warning", JOptionPane.ERROR_MESSAGE);
 			}
-			
-			setState(1);
+			this.LH = new LobbyHandler(net, userName);
+			this.stage = 1;
+			Tick();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        
-
-      
-		
+        		
 		
 	}
 	
-	public void setState (int state){
-		while(true){
-		if(state == 1){
-			LobbyHandler lh = new LobbyHandler(net, userName);
-			state = lh.init();
-			continue;
+	public void Tick() {
+		while(true) {
+			if (this.stage == 1) {
+				this.LH.init();
+			} else if (this.stage == 20) {
+				this.TH = new TiarHandler(net, userName);
+				this.TH.init();
+			} else if (this.stage == 10) {
+				this.LH.loop = true;
+				this.LH.runLobby();
+			}
 		}
-		if(state == 2){
-			 TiarHandler th = new TiarHandler(net, userName);
-			 state = th.init();
-		}
-		else{
-			System.out.println("hejdå");
-		}
-		}
-		
 	}
+	
+	public void stop(StageFlipper flipper) {
+		
+		if(flipper.packageID == 102) {
+			this.LH.loop = false;
+			this.lastMsg = flipper;
+			this.stage = 20;
+			
+		} else if (flipper.packageID == 404) {
+			this.stage = 10;
+		} else {
+			System.out.println("Unknown packageID for Monitor.stop(StageFlipper)");
+		}
+	}
+	
 	
 	
 }
