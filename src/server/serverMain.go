@@ -28,7 +28,7 @@ func testConnection(conn connection.Connector) {
 	}()
 
 	ping := encoders.EncodePing("Connection test") + "\n"
-	fmt.Printf("Sending ping to client %d: %s", conn.ConnectorID, ping)
+	//fmt.Printf("Sending ping to client %d: %s", conn.ConnectorID, ping)
 	conn.Connection.Write([]byte(ping))
 
 	response := new(messages.Ping)
