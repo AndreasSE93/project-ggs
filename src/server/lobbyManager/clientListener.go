@@ -65,6 +65,10 @@ func messageInterpreter(messageTransfer chan string, sendToLobby chan messages.P
 			startM := new(messages.UpdateRooms)
 			json.Unmarshal([]byte(message), startM)
 			pMsg.Update = *startM
+		} else if pMsg.ID == messages.SNAKES_CLIENT_ID {
+			snakes := new(messages.SnakesEvent)
+			json.Unmarshal([]byte(message), snakes)
+			pMsg.Snakes = *snakes
 		} else {
 			fmt.Printf("Unknown packet received: %+v\n", *pMsg)
 			continue
@@ -158,6 +162,8 @@ func ClientListener(lm *lobbyMap.LobbyMap, db *database.Database, client connect
 		} else if processed.ID == messages.KICK_ID {
 			gameChan <- processed
 			gameChan = lobbyChan
+		} else if processed.ID == messages.SNAKES_CLIENT_ID {
+			gameChan <-processed
 		} else {
 			fmt.Println("Something went wrong!")
 		}

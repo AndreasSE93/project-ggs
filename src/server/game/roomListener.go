@@ -6,6 +6,8 @@ import(
 	"server/messages"
 	"server/encoders"
 	"server/connection"
+	"time"
+	"server/games"
 )
 
 type GameRoom struct {
@@ -71,6 +73,67 @@ func gameRoomListener(gameRoom *GameRoom) {
 	}
 }
 
+
+
+
+
+
+
+
+// SNAKE FUNCTIONS PORTED FROM CLIENT BRANCH
+func snakeListener(gameRoom *GameRoom){
+	
+	newGameRoom := make(chan messages.RoomData)
+	PlayerArray := []messages.Player{games.MakePlayerSnakes(1),games.MakePlayerSnakes(2),games.MakePlayerSnakes(3),games.MakePlayerSnakes(4)}
+	go snakesHandler(&PlayerArray, gameRoom, newGameRoom)
+	for {
+		processed := <- gameRoom.roomData.SS.GameChan
+		fmt.Println(gameRoom.roomData.CS.Clients)
+		if processed.ID == messages.SNAKES_CLIENT_ID {
+			fmt.Println(processed.Snakes.Move, "hhhhhhhhhhhhhhhhhhhhhheeeeeeeeeeeeeeeee")
+			PlayerArray[processed.Snakes.PlayerID-1] = games.UpdateMoveSnakes(PlayerArray[processed.Snakes.PlayerID-1], processed.Snakes.Move)
+		}
+
+		if processed.ID == messages.JOIN_ID {
+			newGameRoom <- gameRoom.lm.GetRoom(gameRoom.roomData.CS.RoomID)
+		}
+
+	}
+
+}
+
+func snakesHandler(pA *[]messages.Player, gameRoom *GameRoom, newGameRoom chan messages.RoomData){
+	gameBoard := games.InitBoardSnakes()
+	
+	for{
+		select{
+		case newerGameRoom := <- newGameRoom:
+			gameRoom.roomData = newerGameRoom
+			
+		default:
+
+		}
+
+		//gameRoom.roomData = gameRoom.lm.GetRoom(gameRoom.roomData.CS.RoomID)
+		*pA = games.UpdateAllMovesSnakes( *pA, gameBoard)
+		gameBoard = games.DoMove(*pA, gameBoard)
+		go sendImmediateMessage(encoders.EncodeSnakeMessage(messages.SNAKES_MOVES_ID, *pA), gameRoom.roomData.CS)
+		fmt.Println(gameRoom.roomData.CS.ClientCount) 
+		time.Sleep(25 * time.Millisecond )
+	}
+	
+
+}
+// PORTED FUNCTIONS END
+
+
+
+
+
+
+
+
+
 func CreateGameRoom(rd messages.RoomData, lm *lobbyMap.LobbyMap) {
 
 	game := new(GameRoom)
@@ -87,7 +150,7 @@ func CreateGameRoom(rd messages.RoomData, lm *lobbyMap.LobbyMap) {
 		go gameRoomListener(game)
 
 	case "Achtung":
-		go InitAchtung(game)
+		go snakeListener(game)
 		go gameRoomListener(game)
 		
 	default: go gameRoomListener(game)
