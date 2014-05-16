@@ -17,11 +17,12 @@ import javax.swing.border.EmptyBorder;
 
 public class SnakeGUI {
 
-	JFrame window = new JFrame();
+	public JFrame window = new JFrame();
 	ImageIcon ii;
 	BufferedImage bi;
 	public JLabel gamePane;
 	Image dimg;
+	public JPanel achtungPanel;
 	public JButton leaveGame;
 	public JButton startGame;
 	final private int WIDTH = 1035 - 200;
@@ -42,7 +43,7 @@ public class SnakeGUI {
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setBackground(Color.DARK_GRAY);
 
-		JPanel achtungPanel = new JPanel(new BorderLayout());
+		achtungPanel = new JPanel(new BorderLayout());
 		achtungPanel.setPreferredSize(new Dimension(1035, 790));
 
 		gamePane = new JLabel();
@@ -53,10 +54,11 @@ public class SnakeGUI {
 		achtungPanel.add(gamePane);
 
 		bi = new BufferedImage(WIDTH, HEIGTH, BufferedImage.TYPE_INT_RGB);
-
+		gamePane.setFocusable(true);
 		renderNewGame();
 
 		window.add(achtungPanel, BorderLayout.NORTH);
+		
 		window.setVisible(true);
 		window.validate();
 
@@ -153,7 +155,7 @@ public class SnakeGUI {
 			}
 		
 		}
-		System.out.println(index + "IN DEX");
+		
 		playerScores[id].setText(stringText.substring(0, index) + " " + p.getScore());
 
 	}
@@ -161,16 +163,22 @@ public class SnakeGUI {
 	public void repaint(SnakePlayer[] players) {
 		for (int i = 0; i < players.length; i++) {
 			// if(i == 0){ uncomment to only track player 1
-			System.out.println(i + "PosX:" + players[i].getPosX() + "PosY"
-					+ players[i].getPosY());
-
+			//System.out.println(i + "PosX:" + players[i].getPosX() + "PosY"
+			//		+ players[i].getPosY());
+			System.out.println("Kom hit till paint");
 			if (players[i].isAlive()) {
 
 				updateScore(players[i]);
-
-				bi.setRGB((int) players[i].getPosX(),
-						(int) players[i].getPosY(),
+				for(int d =0; d<10; d=d+2){
+				bi.setRGB((int) players[i].playerArray[d],
+						(int) players[i].playerArray[d+1],
 						ColorArray[players[i].PlayerID - 1]);
+				ii = new ImageIcon();
+				ii.setImage(bi);
+
+				gamePane.setIcon(ii);
+				gamePane.validate();
+				}
 				ii = new ImageIcon();
 				ii.setImage(bi);
 

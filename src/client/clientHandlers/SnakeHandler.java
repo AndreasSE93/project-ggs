@@ -48,14 +48,14 @@ public class SnakeHandler implements HandlerInterface, KeyListener, ActionListen
 	public StageFlipper init(StageFlipper nothing) {
 		SG = new SnakeGUI();
 		SG.render();
-		SG.gamePane.addKeyListener(this);
+		SG.achtungPanel.addKeyListener(this);
 		SG.startGame.addActionListener(this);
-		
+		SG.startGame.addKeyListener(this);
 		
 		while (loop) {
 			try {
 				String mess = receiveMessage();
-
+				System.out.println(mess);
 				int id = retrieveId(mess);
 				decodeAndRender(id, mess);
 
@@ -88,7 +88,7 @@ public class SnakeHandler implements HandlerInterface, KeyListener, ActionListen
 			break;
 			
 		case 302: // Recieved updated movements from players, repaint board
-			
+			System.out.println("Kom hit till decode");
 			SnakeServerMessage SSM = SME.decode(message);
 			SG.repaint(SSM.Players);
 			break;
@@ -123,6 +123,7 @@ public class SnakeHandler implements HandlerInterface, KeyListener, ActionListen
 
 	@Override
 	public void keyPressed(KeyEvent e) {
+		
 		int key = e.getKeyCode();
 		String keyEvent = "";
 		if (key == KeyEvent.VK_LEFT) {
@@ -174,5 +175,6 @@ public class SnakeHandler implements HandlerInterface, KeyListener, ActionListen
 		}
 		
 	 }
+
 	}
 }
