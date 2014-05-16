@@ -147,10 +147,7 @@ type SnakesEvent struct {
 
 }
 
-
-
-type Player struct{
-
+type  Player struct {
 	PlayerName string `json:"PlayerName"`
 	PlayerID int `json:"PlayerID"`
 	PosX float64 `json:"PosX"`
@@ -166,4 +163,6 @@ type SnakeMessage struct {
 
 
 }
+
+//----------------------------------------------------
 

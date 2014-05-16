@@ -1,7 +1,6 @@
 package clientHandlers;
 
 import java.io.IOException;
-
 import packageManaging.StageFlipper;
 
 public interface HandlerInterface {

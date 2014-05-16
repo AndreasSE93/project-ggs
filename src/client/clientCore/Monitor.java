@@ -13,6 +13,7 @@ import packageManaging.StageFlipper;
 
 
 import clientHandlers.LobbyHandler;
+import clientHandlers.SnakeHandler;
 import clientHandlers.TiarHandler;
 
 import clientNetworking.NetManager;

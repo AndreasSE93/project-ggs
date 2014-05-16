@@ -41,7 +41,7 @@ public class LobbyGUI {
 		lobby.getContentPane().setBackground(Color.DARK_GRAY);
 
 		
-		lobby.setSize(1035,790);
+		lobby.setSize(1035,720);
 		lobby.setLocationRelativeTo(null);
 		lobby.setResizable(false);
 		lobby.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

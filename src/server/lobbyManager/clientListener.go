@@ -164,13 +164,14 @@ func ClientListener(lm *lobbyMap.LobbyMap, db *database.Database, client connect
 
 		} else if processed.ID == messages.TTT_MOVE_ID {
 			gameChan <- processed
-
+			
 		} else if processed.ID == messages.START_ID {
 			gameChan <- processed
 
 		} else if processed.ID == messages.KICK_ID {
 			gameChan <- processed
 			gameChan = lobbyChan
+
 		} else if processed.ID == messages.SNAKES_CLIENT_ID {
 			gameChan <-processed
 		} else {

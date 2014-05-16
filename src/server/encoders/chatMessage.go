@@ -20,10 +20,7 @@ func EncodeMoveMessage(msg messages.MoveMessage) string {
 	return string(obj)
 }
 
-
 func EncodeSnakeMessage(packageID int, playerArray []messages.Player) string{
 	obj, _ := json.Marshal(messages.SnakeMessage{packageID, playerArray})
 	return string(obj)
 }
-
-

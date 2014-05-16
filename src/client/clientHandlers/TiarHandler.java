@@ -24,8 +24,6 @@ import packageManaging.TiarUserMessage;
 import packageManaging.TiarUserMessageEncoder;
 
 import tiar.TiarGUI;
-
-import clientCore.Monitor;
 import clientNetworking.NetManager;
 
 /* Handler and initializer for a Tic Tac Toe game */
@@ -43,7 +41,6 @@ public class TiarHandler implements HandlerInterface, ActionListener, MouseListe
 	final String userName;
 	public boolean loop;
 	private boolean startable, started;
-	
 
 	public TiarHandler(NetManager net, String username) {
 		this.network = net;
@@ -137,7 +134,7 @@ public class TiarHandler implements HandlerInterface, ActionListener, MouseListe
 			break;
 
 		default: // Should not come here
-				System.out.println( id + "\nstring: " + message);
+			System.out.println(id + "\nstring: " + message);
 			break;
 
 		}
@@ -200,10 +197,11 @@ public class TiarHandler implements HandlerInterface, ActionListener, MouseListe
 
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
+
 		if (Player == tg.gl.getTurn()) {
 			JButton l = (JButton) arg0.getSource();
-
 			int move = tg.getInt(l.getName());
+			
 			if (tg.gl.validMove(move, this.Player)) {
 				TiarUserMessage tum = new TiarUserMessage(move, this.Player);
 				try {
@@ -214,32 +212,9 @@ public class TiarHandler implements HandlerInterface, ActionListener, MouseListe
 				}
 			}
 		} else {
-			JOptionPane.showMessageDialog(null, "Not your turn!", "Warning",
-					JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, "Not your turn!",
+					"Warning", JOptionPane.ERROR_MESSAGE);
 		}
-
-	}
-
-	public void checkWinner() {
-
-		switch (tg.gl.hasWon()) {
-		case 1:
-			System.out.println("Spelare 1 vann");
-			/* Bör skriva ut ett meddelande */
-			tg.clearBoard();
-			break;
-		case 2:
-			System.out.println("Spelare 2 vann");
-			/* Bör skriva ut ett meddelande */
-			tg.clearBoard();
-			break;
-		default:
-			if (tg.gl.isDraw() == 1) {
-				tg.clearBoard();
-			}
-			// System.out.println(tg.gl.toString());
-		}
-
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package game
 
 import(
+	"fmt"
 	"server/database/lobbyMap"
 	"server/messages"
 	"server/encoders"
@@ -22,8 +23,10 @@ func sendToSingle(message string, conn connection.Connector) {
 }
 
 func sendImmediateMessage(message string, cs messages.ClientSection) {
+	//fmt.Printf("Sending to %d clients: %s\n", cs.ClientCount, message)
 	for i := 0; i < cs.ClientCount; i++ {
 		cs.Clients[i].Connection.Write([]byte(message + "\n"))
+		//fmt.Println(cs.ClientCount)
 	}
 }
 
@@ -71,13 +74,6 @@ func gameRoomListener(gameRoom *GameRoom) {
 	}
 }
 
-
-
-
-
-
-
-
 // SNAKE FUNCTIONS PORTED FROM CLIENT BRANCH
 func snakeListener(gameRoom *GameRoom){
 	
@@ -98,7 +94,7 @@ func snakeListener(gameRoom *GameRoom){
 
 }
 
-func snakesHandler(pA *[]messages.Player, gameRoom *GameRoom, newGameRoom chan messages.RoomData){
+func snakesHandler(pA *[]messages.Player, gameRoom *GameRoom, newGameRoom chan messages.RoomData) { 
 	gameBoard := games.InitBoardSnakes()
 	
 	for{
@@ -119,15 +115,6 @@ func snakesHandler(pA *[]messages.Player, gameRoom *GameRoom, newGameRoom chan m
 	
 
 }
-// PORTED FUNCTIONS END
-
-
-
-
-
-
-
-
 
 func CreateGameRoom(rd messages.RoomData, lm *lobbyMap.LobbyMap) {
 
