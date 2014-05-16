@@ -88,7 +88,7 @@ public class Monitor {
 		}
 	}
 	
-	public void stop(StageFlipper flipper) {
+	public void stop(StageFlipper flipper) { 
 		if(flipper.packageID == 102) {
 			System.out.println(flipper.jm.GameType);
 			if(flipper.jm.GameType.equals("TicTacToe")) {
