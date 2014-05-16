@@ -13,6 +13,7 @@ func ReqHost(hostNew messages.HostNew, clientInfo ClientCore) messages.RoomData 
 	rd.CS.ClientCount = 1
 	rd.CS.RoomName = hostNew.RoomName
 	rd.CS.GameName = hostNew.GameName
+	rd.CS.GameType = hostNew.GameName
 	rd.SS.GameChan = make(chan messages.ProcessedMessage)
 	c := make([]connection.Connector, rd.CS.MaxSize)
 	c[0] = clientInfo.client

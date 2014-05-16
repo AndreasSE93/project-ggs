@@ -6,7 +6,7 @@ import (
 	"server/messages"
 )
 
-func EncodeChatMessage(packageID int, msg messages.ChatMessage, client connection.Connector) string {
+func EncodeChatMessage(msg messages.ChatMessage, client connection.Connector) string {
 	obj, _ := json.Marshal(messages.ChatMessage{
 		PacketID: messages.CHAT_ID,
 		Message:  msg.Message,
@@ -15,7 +15,12 @@ func EncodeChatMessage(packageID int, msg messages.ChatMessage, client connectio
 	return string(obj)
 }
 
-func EncodeMoveMessage(packageID int, msg messages.MoveMessage) string {
+func EncodeMoveMessage(msg messages.MoveMessage) string {
 	obj, _ := json.Marshal(msg)
+	return string(obj)
+}
+
+func EncodeSnakeMessage(packageID int, playerArray []messages.Player) string{
+	obj, _ := json.Marshal(messages.SnakeMessage{packageID, playerArray})
 	return string(obj)
 }

@@ -28,7 +28,7 @@ func testConnection(conn connection.Connector) {
 	}()
 
 	ping := encoders.EncodePing("Connection test") + "\n"
-	fmt.Printf("Sending ping to client %d: %s", conn.ConnectorID, ping)
+	//fmt.Printf("Sending ping to client %d: %s", conn.ConnectorID, ping)
 	conn.Connection.Write([]byte(ping))
 
 	response := new(messages.Ping)
@@ -47,7 +47,7 @@ func testConnection(conn connection.Connector) {
 func connectionHandler(connectorChannel chan connection.Connector, db *database.Database, lm *lobbyMap.LobbyMap, waitingLobby chan connection.Connector, conList *list.List) {
 	for {
 		client := <- connectorChannel
-		fmt.Printf("Client %d connected: %+v\n", client.ConnectorID, client)
+		//fmt.Printf("Client %d connected: %+v\n", client.ConnectorID, client)
 		testConnection(client)
 		db.Add(client)
 		go lobbyManager.ClientListener(lm, db, client)

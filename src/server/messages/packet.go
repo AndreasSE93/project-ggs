@@ -7,14 +7,20 @@ import (
 //-------------------------------------------------
 //            ID FOR PACKAGES
 const (
-	PING_ID    = 0
-	INIT_ID    = 99
-	CHAT_ID    = 100
-	HOST_ID    = 101
-	JOIN_ID    = 102
-	REFRESH_ID = 103
-	TTT_CHAT_ID= 200
-	TTT_MOVE_ID= 201
+	PING_ID          = 0
+	INIT_ID          = 99
+	CHAT_ID          = 100
+	HOST_ID          = 101
+	JOIN_ID          = 102
+	REFRESH_ID       = 103
+	KICK_ID          = 404
+	ROOM_CLOSED_ID   = 405
+	TTT_CHAT_ID      = 200
+	TTT_MOVE_ID      = 201
+	STARTABLE_ID     = 202
+	START_ID         = 203
+	SNAKES_CLIENT_ID = 301
+	SNAKES_MOVES_ID  = 302
 )
 
 //-------------------------------------------------
@@ -38,6 +44,7 @@ type ProcessedMessage struct {
 	Join JoinExisting
 	Update UpdateRooms
 	MoveM MoveMessage
+	Snakes SnakesEvent
 }
 
 type InitMessage struct {
@@ -67,6 +74,10 @@ type UpdateRooms struct {
 	PacketID int `json:"PacketID"`
 }
 
+type KickMessage struct {
+	PacketID int `json:"PacketID"`
+}
+
 //------------------------------------------------
 //             OUTGOING TO CLIENT
 
@@ -75,11 +86,36 @@ type HostRoomPacket struct {
 	HostRoom ClientSection `json:"hostRoom"`
 }
 
+type Leave struct {
+	PacketID int `json:"PacketID"`
+}
 
 type RoomList struct {
 	PacketID int `json:"PacketID"`
 	Rooms []ClientSection `json:"UserList"`
 	Games []string `json:"GameHost"`
+}
+
+type Startable struct {
+	PacketID int `json:"PacketID"`
+	IsStartable bool `json:"IsStartable"`
+}
+
+type Started struct {
+	PacketID int `json:"PacketID"`
+	Started bool `json:"Started"`
+	Player int `json:"Player"`
+}
+
+type MoveMessage struct {
+	PacketID int `json:"PacketID"`
+	GameBoard []int  `json:"GameBoard"`
+	Move int `json:"Move"`
+	IsDraw int `json:"IsDraw"`
+	HasWon int `json:"HasWon"`
+	Player int `json:"Player"`
+	IsValid int `json:"IsValid"`
+	
 }
 
 //----------------------------------------------------
@@ -92,7 +128,7 @@ type RoomData struct {
 
 type ClientSection struct {
 	RoomID, MaxSize, ClientCount int
-	RoomName, GameName string
+	RoomName, GameName, GameType string
 	Clients []connection.Connector
 }
 
@@ -100,16 +136,32 @@ type ServerSection struct {
 	GameChan chan ProcessedMessage
 }
 
+//----------------------------------------------------
+//                ACHTUNG
 
-type MoveMessage struct {
+
+type SnakesEvent struct {
 	PacketID int `json:"PacketID"`
-	GameBoard []int  `json:"GameBoard"`
-	Move int `json:"Move"`
-	IsDraw int `json:"IsDraw"`
-	HasWon int `json:"HasWon"`
-	Player int `json:"Player"`
-	IsValid int `json:"IsValid"`
-	
+	PlayerID int `json:"PlayerID"`
+	Move string `json:"KeyEvent"`
+
+}
+
+type  Player struct {
+	PlayerName string `json:"PlayerName"`
+	PlayerID int `json:"PlayerID"`
+	PosX float64 `json:"PosX"`
+	PosY float64 `json:"PosY"`
+	Alive bool `json:"Alive"`
+	Direction float64 
+
+}
+
+type SnakeMessage struct {
+	PacketID int `json:"PacketID"`
+	PlayerArray []Player `json:"PlayerArray"`
+
+
 }
 
 //----------------------------------------------------

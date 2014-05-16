@@ -6,7 +6,7 @@ import (
 	"server/messages"
 )
 
-func EncodeRefreshList(packageID int, updateList []messages.RoomData) string {
+func EncodeRefreshList(updateList []messages.RoomData) string {
 
 	a := make([]messages.ClientSection, len(updateList))
 	for room := range updateList {
@@ -16,7 +16,7 @@ func EncodeRefreshList(packageID int, updateList []messages.RoomData) string {
 	obj := messages.RoomList{
 		PacketID: messages.REFRESH_ID,
 		Rooms: a,
-		Games: []string{"Dummy"},
+		Games: []string{"TicTacToe"},
 	}
 	objStr, err := json.Marshal(obj)
 	if err != nil {
