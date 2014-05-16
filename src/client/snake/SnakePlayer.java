@@ -7,12 +7,13 @@ public class SnakePlayer {
 	private double PosX;
 	private double PosY;
 	private boolean Alive;
-	
-	SnakePlayer(int player, double x, double y, boolean alive){
+	private int Score;
+	SnakePlayer(int player, double x, double y, boolean alive, int s){
 		PlayerID = player;
 		PosX = x;
 		PosY = y;
 		Alive = alive;
+		Score = s;
 	}
 	
 	public double getPosX(){
@@ -26,6 +27,10 @@ public class SnakePlayer {
 	
 	public boolean isAlive(){
 		return Alive;
+	}
+	
+	public int getScore(){
+		return Score;
 	}
 	
 	

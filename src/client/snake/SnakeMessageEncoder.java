@@ -35,7 +35,7 @@ public class SnakeMessageEncoder {
 		JSONArray JArr = obj.getJSONArray("PlayerArray");
 		for (int i=0; i<JArr.length(); i++) {
 		   JSONObject l = JArr.getJSONObject(i);
-		   SnakePlayer sp = new SnakePlayer(l.getInt("PlayerID"), l.getDouble("PosX"), l.getDouble("PosY"), l.getBoolean("Alive"));
+		   SnakePlayer sp = new SnakePlayer(l.getInt("PlayerID"), l.getDouble("PosX"), l.getDouble("PosY"), l.getBoolean("Alive"),l.getInt("Score"));
 		   SSM.Players[i] = sp;
 		}
 		
