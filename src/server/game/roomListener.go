@@ -47,7 +47,6 @@ func gameRoomListener(gameRoom *GameRoom) {
 			}
 			go sendImmediateMessage(encoders.EncodeJoinedRoom(gameRoom.roomData), gameRoom.roomData.CS)
 			if gameRoom.roomData.CS.ClientCount == gameRoom.roomData.CS.MaxSize {
-				fmt.Printf("Room %d is startable: %+v\n", gameRoom.roomData.CS.ClientCount, gameRoom)
 				gameRoom.Startable = true
 				go sendToSingle(encoders.EncodeStartable(true), gameRoom.roomData.CS.Clients[0])
 			}
@@ -70,9 +69,9 @@ func gameRoomListener(gameRoom *GameRoom) {
 		} else if processed.ID == messages.START_ID {
 			if gameRoom.Startable {
 				gameRoom.Started = true
+				fmt.Printf("Game %d started\n", gameRoom.roomData.CS.RoomID)
 				for place := 0; place < gameRoom.roomData.CS.ClientCount; place++ {
 					go sendToSingle(encoders.EncodeStartGame(true, place+1), gameRoom.roomData.CS.Clients[place])
-					fmt.Println("SENDING STARTEDMESSAGE")
 				}
 			}
 		}
