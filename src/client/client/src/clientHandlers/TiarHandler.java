@@ -30,7 +30,7 @@ import clientNetworking.NetManager;
 
 /* Handler and initializer for a Tic Tac Toe game */
 
-public class TiarHandler extends Monitor implements HandlerInterface, ActionListener, MouseListener {
+public class TiarHandler implements HandlerInterface, ActionListener, MouseListener {
 	NetManager network;
 	TiarGUI tg;
 	ChatMessageEncoder cme = new ChatMessageEncoder();
@@ -38,37 +38,44 @@ public class TiarHandler extends Monitor implements HandlerInterface, ActionList
 	TiarStartableMessageEncoder tsme = new TiarStartableMessageEncoder();
 	TiarStartedMessageEncoder tiStarter = new TiarStartedMessageEncoder();
 	KickMessageEncoder kEnc = new KickMessageEncoder();
+	StageFlipper saveMsg;
 	int Player;
 	final String userName;
 	public boolean loop;
 	private boolean startable, started;
+	
 
 	public TiarHandler(NetManager net, String username) {
 		this.network = net;
 		this.userName = username;
 		this.loop = true;
+		this.startable = false;
+		this.started = false;
 
 	}
 
-	public void init() {
+	public StageFlipper init(StageFlipper sf) {
 		tg = new TiarGUI();
 		tg.render(this.userName);
+		this.saveMsg = sf;
 
 		for (int i = 0; i < tg.game.length; i++) {
 			tg.game[i].addMouseListener(this);
 
 		}
+		tg.startGame.addActionListener(this);
 
 		tg.chat.field.addActionListener(this);
 
 		tg.window.setVisible(true);
-		runTicTac();
+		return runTicTac();
 	}
 	
-	public void runTicTac() {
-		if(super.lastMsg != null) {
-			StageFlipper startup = super.lastMsg;
-			super.lastMsg = null;
+	public StageFlipper runTicTac() {
+		if(saveMsg != null) {
+			StageFlipper startup = saveMsg;
+			//Use the message when starting gameroom
+			saveMsg = null;
 		}
 		while(loop) {
 			try {
@@ -81,6 +88,7 @@ public class TiarHandler extends Monitor implements HandlerInterface, ActionList
 				e.printStackTrace();
 			}
 		}
+		return null;
 	}
 
 	public void decodeAndRender(int id, String message) throws JSONException {
@@ -120,11 +128,11 @@ public class TiarHandler extends Monitor implements HandlerInterface, ActionList
 			TiarStartedMessage startedGame = tiStarter.decode(message);
 			this.started = startedGame.started;
 			this.Player = startedGame.playerID;
+			System.out.println("STARTEDMESSAGE" + this.Player);
 			break;
 			
 		case 404:
-			StageFlipper flip = new StageFlipper(kEnc.decode(message));
-			super.stop(flip);
+			this.saveMsg = new StageFlipper(kEnc.decode(message));
 			this.loop = false;
 			break;
 
@@ -166,15 +174,28 @@ public class TiarHandler extends Monitor implements HandlerInterface, ActionList
 				JSONtext = cme.encode(new Message(tg.chat.field.getText(),
 						tg.chat.userName));
 				tg.chat.field.setText("");
+				sendMessage(JSONtext);
 			} catch (JSONException e1) {
 				e1.printStackTrace();
 			}
 			break;
+		case "startButton":
+			if(startable){
+				try {
+					JSONtext = tiStarter.encode(new TiarStartedMessage());
+					sendMessage(JSONtext);
+				} catch (JSONException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				
+			}
+		break;
 		default:
-
-			break;
+	
 		}
-		sendMessage(JSONtext);
+		
 	}
 
 	@Override

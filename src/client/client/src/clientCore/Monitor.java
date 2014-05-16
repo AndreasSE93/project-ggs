@@ -70,13 +70,14 @@ public class Monitor {
 	public void Tick() {
 		while(true) {
 			if (this.stage == 1) {
-				this.LH.init();
+				StageFlipper passOn = LH.init(new StageFlipper());
+				stop(passOn);
 			} else if (this.stage == 20) {
 				this.TH = new TiarHandler(net, userName);
-				this.TH.init();
-			} else if (this.stage == 10) {
-				this.LH.loop = true;
-				this.LH.runLobby();
+				StageFlipper passOn = this.TH.init(lastMsg);
+				stop(passOn);
+			} else {
+				System.out.println("Weird stage");
 			}
 		}
 	}
@@ -84,12 +85,11 @@ public class Monitor {
 	public void stop(StageFlipper flipper) {
 		
 		if(flipper.packageID == 102) {
-			this.LH.loop = false;
 			this.lastMsg = flipper;
 			this.stage = 20;
 			
 		} else if (flipper.packageID == 404) {
-			this.stage = 10;
+			this.stage = 1;
 		} else {
 			System.out.println("Unknown packageID for Monitor.stop(StageFlipper)");
 		}

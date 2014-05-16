@@ -26,7 +26,7 @@ import graphicalReference.LobbyGUI;
 import clientCore.Monitor;
 import clientNetworking.NetManager;
 
-public class LobbyHandler extends Monitor implements HandlerInterface, ActionListener {
+public class LobbyHandler implements HandlerInterface, ActionListener {
 	LobbyGUI lg;
 	ChatGUI cg;
 	LobbyMessageEncoder lme = new LobbyMessageEncoder();
@@ -34,18 +34,19 @@ public class LobbyHandler extends Monitor implements HandlerInterface, ActionLis
 	JoinMessageEncoder jme = new JoinMessageEncoder();
 	CreateGameMessageEncoder gme = new CreateGameMessageEncoder();
 	RefeshMessageEncoder  rme = new RefeshMessageEncoder();
+	StageFlipper saveMsg;
 	NetManager network;
 	public boolean loop;
 	int state;
 	final String userName;
 	
-	public LobbyHandler(NetManager net, String username){
+	public LobbyHandler(NetManager net, String username) {
 		this.network = net;
 		this.userName = username;
 		this.loop = true;
 	}
 	
-	public void init() {
+	public StageFlipper init(StageFlipper nothing) {
 
 		String firstcall;
 		LobbyServerMessage LM = null;
@@ -68,13 +69,13 @@ public class LobbyHandler extends Monitor implements HandlerInterface, ActionLis
 		} else {
 			System.out.println("Connection failed");
 		}
-		runLobby();
+		return runLobby();
 	}
 	
-	public void runLobby() {
-		if (super.lastMsg != null) {
+	public StageFlipper runLobby() {
+		if (saveMsg != null) {
 			lg.lobby.setVisible(true);
-			StageFlipper startup = super.lastMsg;
+			StageFlipper startup = saveMsg;
 		}
 		while (loop) {
 			try {
@@ -87,7 +88,9 @@ public class LobbyHandler extends Monitor implements HandlerInterface, ActionLis
 				e.printStackTrace();
 			}
 		}
+		System.out.println("After while");
 		lg.lobby.setVisible(false);
+		return this.saveMsg;
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -157,8 +160,8 @@ public class LobbyHandler extends Monitor implements HandlerInterface, ActionLis
 		case 101: // Create session
 
 		case 102: // Join session
-			StageFlipper flip = new StageFlipper(jme.decode(message));
-			super.stop(flip);
+			this.saveMsg = new StageFlipper(jme.decode(message));
+			this.loop = false;
 			break;
 
 		case 103: // LobbyClientMessage.java/LobbyServerMessage.java

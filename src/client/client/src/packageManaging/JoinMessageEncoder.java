@@ -1,5 +1,6 @@
 package packageManaging;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -26,13 +27,14 @@ public String encode(JoinMessage mess) throws JSONException {
 	
 	public JoinMessage decode(String mess) throws JSONException {
 		JSONObject obj = new JSONObject(mess);
-		
+		System.out.println(mess);
 		
 		JoinMessage lsm = new JoinMessage();
+		JSONObject i = obj.getJSONObject("hostRoom");
 
-		lsm.RoomID = obj.getInt("RoomID");
-		lsm.GameType = obj.getString("GameType");
-		lsm.GameName = obj.getString("GameName");
+		lsm.RoomID = i.getInt("RoomID");
+		lsm.GameType = i.getString("GameType");
+		lsm.GameName = i.getString("GameName");
 		
 		return lsm;
 	}

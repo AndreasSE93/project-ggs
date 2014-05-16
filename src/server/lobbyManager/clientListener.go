@@ -61,6 +61,10 @@ func messageInterpreter(messageTransfer chan string, sendToLobby chan messages.P
 			moveM := new(messages.MoveMessage)
 			json.Unmarshal([]byte(message), moveM)
 			pMsg.MoveM = *moveM
+		} else if pMsg.ID == messages.START_ID {
+			startM := new(messages.UpdateRooms)
+			json.Unmarshal([]byte(message), startM)
+			pMsg.Update = *startM
 		} else {
 			fmt.Printf("Unknown packet received: %+v\n", *pMsg)
 			continue
