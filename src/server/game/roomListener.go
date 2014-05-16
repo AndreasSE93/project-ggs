@@ -23,7 +23,7 @@ func sendToSingle(message string, conn connection.Connector) {
 }
 
 func sendImmediateMessage(message string, cs messages.ClientSection) {
-	//fmt.Printf("Sending to %d clients: %s\n", cs.ClientCount, message)
+	fmt.Printf("Sending to %d clients: %s\n", cs.ClientCount, message)
 	for i := 0; i < cs.ClientCount; i++ {
 		cs.Clients[i].Connection.Write([]byte(message + "\n"))
 		//fmt.Println(cs.ClientCount)
@@ -113,7 +113,7 @@ func snakesHandler(pA *[]messages.Player, gameRoom *GameRoom, newGameRoom chan m
 		*pA = games.UpdateAllMovesSnakes( *pA, gameBoard)
 		gameBoard = games.DoMove(*pA, gameBoard)
 		go sendImmediateMessage(encoders.EncodeSnakeMessage(messages.SNAKES_MOVES_ID, *pA), gameRoom.roomData.CS)
-		time.Sleep(25 * time.Millisecond )
+		time.Sleep(10 * time.Millisecond )
 	}
 	
 

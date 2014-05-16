@@ -150,6 +150,7 @@ type SnakesEvent struct {
 type  Player struct {
 	PlayerName string `json:"PlayerName"`
 	PlayerID int `json:"PlayerID"`
+	PosArray [10]float64 `json:"Coordinates"`
 	PosX float64 `json:"PosX"`
 	PosY float64 `json:"PosY"`
 	Alive bool `json:"Alive"`
