@@ -65,6 +65,10 @@ func messageInterpreter(messageTransfer chan string, sendToLobby chan messages.P
 			moveM := new(messages.MoveMessage)
 			json.Unmarshal([]byte(message), moveM)
 			pMsg.MoveM = *moveM
+		} else if pMsg.ID == messages.START_ID {
+			startM := new(messages.UpdateRooms)
+			json.Unmarshal([]byte(message), startM)
+			pMsg.Update = *startM
 		} else if pMsg.ID == messages.SNAKES_CLIENT_ID {
 			snakes := new(messages.SnakesEvent)
 			json.Unmarshal([]byte(message), snakes)

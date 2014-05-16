@@ -63,6 +63,7 @@ func gameRoomListener(gameRoom *GameRoom) {
 				gameRoom.Started = true
 				for place := 0; place < gameRoom.roomData.CS.ClientCount; place++ {
 					go sendToSingle(encoders.EncodeStartGame(true, place+1), gameRoom.roomData.CS.Clients[place])
+					fmt.Println("SENDING STARTEDMESSAGE")
 				}
 			}
 		}
