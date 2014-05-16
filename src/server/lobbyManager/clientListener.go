@@ -100,7 +100,7 @@ func ActivateReceiver(messageProcessing chan messages.ProcessedMessage, client c
 func ActivateSender(serverTerminal chan string, client connection.Connector) {
 	for {
 		jsonString := <- serverTerminal
-		fmt.Printf("Sending to client %d: %s\n", client.ConnectorID, jsonString)
+		//fmt.Printf("Sending to client %d: %s\n", client.ConnectorID, jsonString)
 		client.Connection.Write([]byte(jsonString + "\n"))
 	}
 }
