@@ -38,8 +38,8 @@ func gameRoomListener(gameRoom *GameRoom) {
 
 		} else if processed.ID == messages.JOIN_ID {
 			gameRoom.roomData = gameRoom.lm.GetRoom(gameRoom.roomData.CS.RoomID)
-			go sendImmediateMessage(encoders.EncodeJoinedRoom(&gameRoom.roomData), gameRoom.roomData.CS)
-			go sendImmediateMessage(encoders.EncodeJoinedRoom(&gameRoom.roomData), gameRoom.roomData.CS)
+			go sendImmediateMessage(encoders.EncodeJoinedRoom(gameRoom.roomData), gameRoom.roomData.CS)
+			go sendImmediateMessage(encoders.EncodeJoinedRoom(gameRoom.roomData), gameRoom.roomData.CS)
 			if gameRoom.roomData.CS.ClientCount == gameRoom.roomData.CS.MaxSize {
 				gameRoom.Startable = true
 				go sendToSingle(encoders.EncodeStartable(true), gameRoom.roomData.CS.Clients[0])
@@ -53,7 +53,7 @@ func gameRoomListener(gameRoom *GameRoom) {
 			}
 			go sendToSingle(encoders.EncodeKick(), processed.Origin)
 			go sendToSingle(encoders.EncodeStartable(false), gameRoom.roomData.CS.Clients[0])
-			go sendImmediateMessage(encoders.EncodeJoinedRoom(&gameRoom.roomData), gameRoom.roomData.CS)
+			go sendImmediateMessage(encoders.EncodeJoinedRoom(gameRoom.roomData), gameRoom.roomData.CS)
 			if gameRoom.Started == true {
 				gameRoom.Started = false
 				gameRoom.Startable = false

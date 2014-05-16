@@ -6,7 +6,7 @@ import (
 	"server/messages"
 )
 
-func EncodeRefreshList(packageID int, updateList []messages.RoomData) string {
+func EncodeRefreshList(updateList []messages.RoomData) string {
 
 	a := make([]messages.ClientSection, len(updateList))
 	for room := range updateList {
