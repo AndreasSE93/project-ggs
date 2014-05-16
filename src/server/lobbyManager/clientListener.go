@@ -17,9 +17,13 @@ type ClientCore struct {
 }
 
 func messageInterpreter(messageTransfer chan string, sendToLobby chan messages.ProcessedMessage, client connection.Connector, updateClient chan connection.Connector) {
+	defer close(sendToLobby)
 	for {
 		pMsg := new(messages.ProcessedMessage)
-		message := <- messageTransfer
+		message, ok := <- messageTransfer
+		if !ok {
+			return
+		}
 		json.Unmarshal([]byte(message), pMsg)
 		pMsg.Origin = client
 
@@ -75,9 +79,8 @@ func messageInterpreter(messageTransfer chan string, sendToLobby chan messages.P
 }
 
 func ActivateReceiver(messageProcessing chan messages.ProcessedMessage, client connection.Connector, updateClient chan connection.Connector) {
-	defer client.Connection.Close()
-
 	messageTransfer := make(chan string)
+	defer close(messageTransfer)
 	go messageInterpreter(messageTransfer, messageProcessing, client, updateClient)
 
 	for client.Scanner.Scan() {
@@ -100,6 +103,8 @@ func ActivateSender(serverTerminal chan string, client connection.Connector) {
 }
 
 func ClientListener(lm *lobbyMap.LobbyMap, db *database.Database, client connection.Connector) {
+	defer client.Connection.Close()
+
 	core := new(ClientCore)
 	core.client = client
 	core.lm = lm
@@ -125,8 +130,13 @@ func ClientListener(lm *lobbyMap.LobbyMap, db *database.Database, client connect
 	gameChan := lobbyChan
 	go dummyReceiveLobbyChat(gameChan)
 
+	defer lm.Kick(client)
+
 	for {
-		processed := <- processedChan
+		processed, ok := <- processedChan
+		if !ok {
+			return
+		}
 		fmt.Printf("Received decoded message: %v\n", processed)
 
 		if processed.ID == messages.CHAT_ID {

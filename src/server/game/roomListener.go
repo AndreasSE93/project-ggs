@@ -31,7 +31,6 @@ func sendImmediateMessage(message string, cs messages.ClientSection) {
 
 func gameRoomListener(gameRoom *GameRoom) {
 	go sendImmediateMessage(encoders.EncodeHostedRoom(gameRoom.roomData),gameRoom.roomData.CS)
-	go sendImmediateMessage(encoders.EncodeHostedRoom(gameRoom.roomData),gameRoom.roomData.CS)
 	for {
 		processed := <- gameRoom.roomData.SS.GameChan
 		
@@ -40,7 +39,6 @@ func gameRoomListener(gameRoom *GameRoom) {
 
 		} else if processed.ID == messages.JOIN_ID {
 			gameRoom.roomData = gameRoom.lm.GetRoom(gameRoom.roomData.CS.RoomID)
-			go sendImmediateMessage(encoders.EncodeJoinedRoom(gameRoom.roomData), gameRoom.roomData.CS)
 			go sendImmediateMessage(encoders.EncodeJoinedRoom(gameRoom.roomData), gameRoom.roomData.CS)
 			if gameRoom.roomData.CS.ClientCount == gameRoom.roomData.CS.MaxSize {
 				gameRoom.Startable = true
