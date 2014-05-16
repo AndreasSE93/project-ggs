@@ -15,6 +15,9 @@ const (
 	REFRESH_ID = 103
 	TTT_CHAT_ID= 200
 	TTT_MOVE_ID= 201
+	SNAKES_CLIENT_ID = 301
+	SNAKES_MOVES_ID = 302
+	
 )
 
 //-------------------------------------------------
@@ -38,6 +41,8 @@ type ProcessedMessage struct {
 	Join JoinExisting
 	Update UpdateRooms
 	MoveM MoveMessage
+	Snakes SnakesEvent
+
 }
 
 type InitMessage struct {
@@ -111,6 +116,32 @@ type MoveMessage struct {
 	IsValid int `json:"IsValid"`
 	
 }
+
+
+type SnakesEvent struct {
+	PacketID int `json:"PacketID"`
+	PlayerID int `json:"PlayerID"`
+	Move string `json:"KeyEvent"`
+
+}
+type  Player struct{
+
+	PlayerName string `json:"PlayerName"`
+	PlayerID int `json:"PlayerID"`
+	PosX float64 `json:"PosX"`
+	PosY float64 `json:"PosY"`
+	Alive bool `json:"Alive"`
+	Direction float64 
+
+}
+
+type SnakeMessage struct {
+	PacketID int `json:"PacketID"`
+	PlayerArray []Player `json:"PlayerArray"`
+
+
+}
+
 
 //----------------------------------------------------
 

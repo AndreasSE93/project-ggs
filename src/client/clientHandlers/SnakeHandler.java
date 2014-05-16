@@ -20,7 +20,7 @@ import clientNetworking.NetManager;
 public class SnakeHandler implements HandlerInterface, KeyListener {
 	NetManager network;
 	final String userName;
-	int Player = 1;
+	int Player = 2;
 	SnakeMessageEncoder SME = new SnakeMessageEncoder();
 	HostRoomEncoder hre = new HostRoomEncoder();
 	SnakeGUI SG;

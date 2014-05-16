@@ -16,7 +16,6 @@ import packageManaging.ChatMessageEncoder;
 import packageManaging.HostRoom;
 import packageManaging.HostRoomEncoder;
 import packageManaging.Message;
-import packageManaging.TiarStartMessage;
 import packageManaging.TiarStartMessageEncoder;
 import packageManaging.TiarUserMessage;
 import packageManaging.TiarUserMessageEncoder;
@@ -38,6 +37,7 @@ public class TiarHandler implements HandlerInterface, ActionListener,
 	int Player = 0;
 	final String userName;
 	private boolean loop = true;
+	private int isFull = 0;
 
 	public TiarHandler(NetManager net, String username) {
 		this.network = net;
@@ -79,24 +79,30 @@ public class TiarHandler implements HandlerInterface, ActionListener,
 			Message chatMessage = cme.decode(message);
 			tg.chat.chatUpdate(chatMessage.message, chatMessage.user);
 			break;
-			
-		case 101: //Init Message
+
+		case 101: // Init Message
 			HostRoomEncoder hre = new HostRoomEncoder();
 			HostRoom hr = hre.decode(message);
-			if(Player == 0)
-			this.Player = hr.Player;
-			
+			if (Player == 0) {
+				this.Player = hr.Player;
+				tg.gameName.setText(tg.gameName.getText()
+						+ "\n\nYou are: Player "
+						+ Integer.toString(this.Player)
+						+ "\n\nRoom isn't full yet!\nPlease wait.");
+			}
 			break;
-			
+
 		case 102:
 			HostRoomEncoder hre2 = new HostRoomEncoder();
 			HostRoom hr2 = hre2.decode(message);
-			if(Player == 0)
-			this.Player = hr2.Player;
-			
+			if (Player == 0) {
+				this.Player = hr2.Player;
+			}
+			tg.gameName.setText("Tic Tac Toe" + "\n\nYou are: Player "
+					+ Integer.toString(this.Player));
+			isFull = 1;
 			break;
-			
-			
+
 		case 201: // Move message
 			TiarUserMessage mess = tume.decode(message);
 			if (mess.isValid == 1) {
@@ -104,21 +110,22 @@ public class TiarHandler implements HandlerInterface, ActionListener,
 				tg.gl.changeTurn();
 			} else
 				tg.updateGameBoard(mess.Gameboard);
-			
-			if(mess.HasWon != 0){
-				JOptionPane.showMessageDialog(null, "Player: " + Integer.toString(mess.HasWon) + " has won!", "Winner!", JOptionPane.ERROR_MESSAGE);
+
+			if (mess.HasWon != 0) {
+				JOptionPane.showMessageDialog(null,
+						"Player: " + Integer.toString(mess.HasWon)
+								+ " has won!", "Winner!",
+						JOptionPane.ERROR_MESSAGE);
 				tg.clearBoard();
 			}
-			if (mess.IsDraw ==1 ){
+			if (mess.IsDraw == 1) {
 				tg.clearBoard();
 			}
-			
+
 			break;
 
-
-
 		default: // Should not come here
-				System.out.println( id + "\nstring: " + message);
+			System.out.println(id + "\nstring: " + message);
 			break;
 
 		}
@@ -168,27 +175,30 @@ public class TiarHandler implements HandlerInterface, ActionListener,
 
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
-		if (Player == tg.gl.getTurn()) {
-			JButton l = (JButton) arg0.getSource();
+		if (isFull == 1) {
 
-			int move = tg.getInt(l.getName());
-			if (tg.gl.validMove(move, this.Player)) {
-				TiarUserMessage tum = new TiarUserMessage(move, this.Player);
-				try {
-					sendMessage(tume.encode(tum));
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+			if (Player == tg.gl.getTurn()) {
+				JButton l = (JButton) arg0.getSource();
+
+				int move = tg.getInt(l.getName());
+				if (tg.gl.validMove(move, this.Player)) {
+					TiarUserMessage tum = new TiarUserMessage(move, this.Player);
+					try {
+						sendMessage(tume.encode(tum));
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
+			} else {
+				JOptionPane.showMessageDialog(null, "Not your turn!",
+						"Warning", JOptionPane.ERROR_MESSAGE);
 			}
-		} else {
-			JOptionPane.showMessageDialog(null, "Not your turn!", "Warning",
-					JOptionPane.ERROR_MESSAGE);
-		}
+		} else
+			JOptionPane.showMessageDialog(null, "Room isn't full yet!",
+					"Warning", JOptionPane.ERROR_MESSAGE);
 
 	}
-
-
 
 	@Override
 	public void mouseEntered(MouseEvent arg0) {

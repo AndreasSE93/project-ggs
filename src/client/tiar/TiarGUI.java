@@ -38,6 +38,7 @@ public class TiarGUI extends GameLogic {
 
 	public JFrame window = new JFrame();
 	public JPanel chatPanel = new JPanel();
+	public JTextArea gameName = new JTextArea("Tic Tac Toe");;
 
 	public ChatGUI chat;
 
@@ -47,7 +48,7 @@ public class TiarGUI extends GameLogic {
 	
 	public void render(String usr) {
 
-		window.setSize(1035,790);
+		window.setSize(1035,720);
 		window.setLayout(new BorderLayout());
 		
 		window.setLocationRelativeTo(null);
@@ -65,10 +66,10 @@ public class TiarGUI extends GameLogic {
 		gamePane.add(gameInfo, BorderLayout.EAST);
 		
 		
-		JTextArea gameName = new JTextArea("Tic Tac Toe");
+		
 		Font font = new Font("Helvetica", Font.BOLD, 12);
 		gameName.setFont(font);
-		gameName.setEditable(false);
+		gameName.setEditable(true);
 		gameName.setBackground(Color.gray.darker());
 		gameName.setForeground(Color.WHITE);
 		gameInfo.add(gameName, BorderLayout.NORTH);

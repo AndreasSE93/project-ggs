@@ -104,7 +104,7 @@ public class LobbyHandler implements HandlerInterface,
 				String players = (String) lg.jt.getModel().getValueAt(lg.jt.getSelectedRow(),1);
 				if(!(players.charAt(0) == players.charAt(2))){
 				JSONtext = jme.encode(new JoinMessage((String)lg.jt.getModel().getValueAt(lg.jt.getSelectedRow(),3)));
-				state = 2; //Temporärt för att byta till tic tac toe
+				state = 3; //Temporärt för att byta till tic tac toe
 				loop=false; // -||-_____
 				}
 				else{

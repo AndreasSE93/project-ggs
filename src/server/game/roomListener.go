@@ -6,6 +6,7 @@ import(
 	"server/messages"
 	"server/encoders"
 	"server/games"
+	"time"
 )
 
 type GameRoom struct {
@@ -14,9 +15,10 @@ type GameRoom struct {
 }
 
 func sendImmediateMessage(message string, cs messages.ClientSection) {
-	fmt.Printf("Sending to %d clients: %s\n", cs.ClientCount, message)
+	//fmt.Printf("Sending to %d clients: %s\n", cs.ClientCount, message)
 	for i := 0; i < cs.ClientCount; i++ {
 		cs.Clients[i].Connection.Write([]byte(message + "\n"))
+		//fmt.Println(cs.ClientCount)
 	}
 }
 
@@ -69,7 +71,36 @@ func ticTacToeListener (gameRoom *GameRoom) {
 }
 
 
+func snakeListener(gameRoom *GameRoom){
+	
+	PlayerArray := []messages.Player{games.MakePlayerSnakes(1),games.MakePlayerSnakes(2),games.MakePlayerSnakes(3),games.MakePlayerSnakes(4)}
+	go snakesHandler(&PlayerArray, gameRoom)
+	for {
+		processed := <- gameRoom.roomData.SS.GameChan
+		fmt.Println(gameRoom.roomData.CS.Clients)
+		if processed.ID == messages.SNAKES_CLIENT_ID {
+			fmt.Println(processed.Snakes.Move, "hhhhhhhhhhhhhhhhhhhhhheeeeeeeeeeeeeeeee")
+			PlayerArray[processed.Snakes.PlayerID-1] = games.UpdateMoveSnakes(PlayerArray[processed.Snakes.PlayerID-1], processed.Snakes.Move)
+		}
+	}
 
+}
+
+
+func snakesHandler(pA *[]messages.Player, gameRoom *GameRoom ){
+	gameBoard := games.InitBoardSnakes()
+	
+	for{
+		gameRoom.roomData = gameRoom.lm.GetRoom(gameRoom.roomData.CS.RoomID)
+		*pA = games.UpdateAllMovesSnakes( *pA, gameBoard)
+		gameBoard = games.DoMove(*pA, gameBoard)
+		go sendImmediateMessage(encoders.EncodeSnakeMessage(messages.SNAKES_MOVES_ID, *pA), gameRoom.roomData.CS)
+		fmt.Println(gameRoom.roomData.CS.ClientCount) 
+		time.Sleep(5 * time.Millisecond )
+	}
+	
+
+}
 
 func CreateGameRoom(rd messages.RoomData, lm *lobbyMap.LobbyMap) {
 
@@ -79,6 +110,8 @@ func CreateGameRoom(rd messages.RoomData, lm *lobbyMap.LobbyMap) {
 	
 	switch rd.CS.GameName {
 	case "Dummy": go ticTacToeListener(game)
+
+	case "Snakes": go snakeListener(game)
 	
 	default: go gameRoomListener(game)
 	}
