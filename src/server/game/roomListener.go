@@ -34,11 +34,13 @@ func gameRoomListener(gameRoom *GameRoom) {
 	go sendImmediateMessage(encoders.EncodeHostedRoom(gameRoom.roomData),gameRoom.roomData.CS)
 	for {
 		processed := <- gameRoom.roomData.SS.GameChan
+		fmt.Println("INSIDE ROOM",processed)
 		
 		if processed.ID == messages.CHAT_ID {
 			go sendImmediateMessage(encoders.EncodeChatMessage(processed.ChatM, processed.Origin), gameRoom.roomData.CS)
 
 		} else if processed.ID == messages.JOIN_ID {
+			fmt.Println("JOINED")
 			gameRoom.roomData = gameRoom.lm.GetRoom(gameRoom.roomData.CS.RoomID)
 			go sendImmediateMessage(encoders.EncodeJoinedRoom(gameRoom.roomData), gameRoom.roomData.CS)
 			if gameRoom.roomData.CS.ClientCount == gameRoom.roomData.CS.MaxSize {
@@ -75,23 +77,24 @@ func gameRoomListener(gameRoom *GameRoom) {
 }
 
 // SNAKE FUNCTIONS PORTED FROM CLIENT BRANCH
-func snakeListener(gameRoom *GameRoom){
-	
+func snakeListener(gameRoom *GameRoom) {
+	for {
+		processed := <- gameRoom.RuleChan
+		if processed.ID == messages.START_ID {
+			break
+		}
+	}
 	newGameRoom := make(chan messages.RoomData)
 	PlayerArray := []messages.Player{games.MakePlayerSnakes(1),games.MakePlayerSnakes(2),games.MakePlayerSnakes(3),games.MakePlayerSnakes(4)}
 	go snakesHandler(&PlayerArray, gameRoom, newGameRoom)
 	for {
-		processed := <- gameRoom.roomData.SS.GameChan
+		processed := <- gameRoom.RuleChan
 		if processed.ID == messages.SNAKES_CLIENT_ID {
 			PlayerArray[processed.Snakes.PlayerID-1] = games.UpdateMoveSnakes(PlayerArray[processed.Snakes.PlayerID-1], processed.Snakes.Move)
-		}
-
-		if processed.ID == messages.JOIN_ID {
+		} else if processed.ID == messages.JOIN_ID {
 			newGameRoom <- gameRoom.lm.GetRoom(gameRoom.roomData.CS.RoomID)
-		}
-
+		} 
 	}
-
 }
 
 func snakesHandler(pA *[]messages.Player, gameRoom *GameRoom, newGameRoom chan messages.RoomData) { 
@@ -131,7 +134,7 @@ func CreateGameRoom(rd messages.RoomData, lm *lobbyMap.LobbyMap) {
 		go InitTicTac(game)
 		go gameRoomListener(game)
 
-	case "Achtung":
+	case "Achtung Die Kurve":
 		go snakeListener(game)
 		go gameRoomListener(game)
 		

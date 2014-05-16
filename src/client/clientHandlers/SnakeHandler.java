@@ -1,5 +1,7 @@
 package clientHandlers;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.IOException;
@@ -9,7 +11,12 @@ import org.json.JSONObject;
 
 import packageManaging.HostRoom;
 import packageManaging.HostRoomEncoder;
+import packageManaging.KickMessageEncoder;
 import packageManaging.StageFlipper;
+import packageManaging.TiarStartableMessage;
+import packageManaging.TiarStartableMessageEncoder;
+import packageManaging.TiarStartedMessage;
+import packageManaging.TiarStartedMessageEncoder;
 
 import snake.SnakeGUI;
 import snake.SnakeMessageEncoder;
@@ -18,14 +25,19 @@ import snake.SnakeUserMessage;
 
 import clientNetworking.NetManager;
 
-public class SnakeHandler implements HandlerInterface, KeyListener {
+public class SnakeHandler implements HandlerInterface, KeyListener, ActionListener {
 	NetManager network;
 	final String userName;
 	int Player = 2;
 	SnakeMessageEncoder SME = new SnakeMessageEncoder();
 	HostRoomEncoder hre = new HostRoomEncoder();
+	KickMessageEncoder kEnc = new KickMessageEncoder();
+	TiarStartableMessageEncoder tsme = new TiarStartableMessageEncoder();
+	TiarStartedMessageEncoder tiStarter = new TiarStartedMessageEncoder();
+	StageFlipper saveMsg;
 	SnakeGUI SG;
 	boolean loop = true;
+	private boolean startable, started;
 
 	public SnakeHandler(NetManager net, String username) {
 		network = net;
@@ -37,7 +49,9 @@ public class SnakeHandler implements HandlerInterface, KeyListener {
 		SG = new SnakeGUI();
 		SG.render();
 		SG.gamePane.addKeyListener(this);
-
+		SG.startGame.addActionListener(this);
+		
+		
 		while (loop) {
 			try {
 				String mess = receiveMessage();
@@ -50,25 +64,27 @@ public class SnakeHandler implements HandlerInterface, KeyListener {
 			}
 		}
 
-		return null;
+		return saveMsg;
 	}
 
 	public void decodeAndRender(int id, String message) throws JSONException {
 		switch (id) {
 		
-		case 101: //Init Message
-			
-			HostRoom hr = hre.decode(message);
-			if(Player == 0)
-			this.Player = hr.Player;
-			
+		case 202:
+			TiarStartableMessage tsm = tsme.decode(message);
+			this.startable = tsm.isStartable;
 			break;
 			
-		case 102:
-			HostRoom hr2 = hre.decode(message);
-			if(Player == 0)
-			this.Player = hr2.Player;
+		case 203:
+			TiarStartedMessage startedGame = tiStarter.decode(message);
+			this.started = startedGame.started;
+			this.Player = startedGame.playerID;
+			System.out.println("STARTEDMESSAGE" + this.Player);
+			break;
 			
+		case 404:
+			this.saveMsg = new StageFlipper(kEnc.decode(message));
+			this.loop = false;
 			break;
 			
 		case 302: // Recieved updated movements from players, repaint board
@@ -116,7 +132,7 @@ public class SnakeHandler implements HandlerInterface, KeyListener {
 		if (key == KeyEvent.VK_RIGHT) {
 			keyEvent = "VK_RIGHT";
 		}
-		if(keyEvent != ""){
+		if(keyEvent != "" && started){
 		SnakeUserMessage SUM = new SnakeUserMessage(Player, keyEvent);
 		try {
 			sendMessage(SME.encodeSnakeUserMessage(SUM));
@@ -139,4 +155,24 @@ public class SnakeHandler implements HandlerInterface, KeyListener {
 
 	}
 
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		String command = arg0.getActionCommand();
+		String JSONtext = "";
+		switch (command) {
+		case "startButton":
+		if(startable){
+			try {
+				JSONtext = tiStarter.encode(new TiarStartedMessage());
+				sendMessage(JSONtext);
+			} catch (JSONException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+			
+		}
+		
+	 }
+	}
 }

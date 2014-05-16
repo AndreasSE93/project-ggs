@@ -152,6 +152,7 @@ func ClientListener(lm *lobbyMap.LobbyMap, db *database.Database, client connect
 
 		} else if processed.ID == messages.JOIN_ID {
 			joinedRoom := ReqJoin(processed.Join, *core)
+			fmt.Println(joinedRoom.SS.GameChan)
 			gameChan = joinedRoom.SS.GameChan
 			gameChan <- processed
 

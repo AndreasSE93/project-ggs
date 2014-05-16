@@ -153,6 +153,7 @@ type  Player struct {
 	PosX float64 `json:"PosX"`
 	PosY float64 `json:"PosY"`
 	Alive bool `json:"Alive"`
+	Score int `json:"Score"`
 	Direction float64 
 
 }

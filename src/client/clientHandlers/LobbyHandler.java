@@ -123,10 +123,8 @@ public class LobbyHandler implements HandlerInterface, ActionListener {
 			
 		case "createbutton":
 			try {
-				JSONtext = gme.encode(new CreateGameMessage(lg.createList.getSelectedValue(), 2 , this.userName));
-				sendMessage(JSONtext);
-				JSONtext = rme.encode(new RefreshMessage());
-				
+				JSONtext = gme.encode(new CreateGameMessage(lg.createList.getSelectedValue(), 4 , this.userName));
+				System.out.println("hello");
 			} catch (JSONException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();

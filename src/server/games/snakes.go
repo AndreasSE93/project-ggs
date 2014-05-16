@@ -48,7 +48,7 @@ func UpdateMoveSnakes (player messages.Player, move string) messages.Player{
 
 func MakePlayerSnakes(ID int) messages.Player{
 	rand.Seed(time.Now().UTC().UnixNano())
-	player := messages.Player{ "",ID, float64(rand.Intn(700-135)+135), float64(rand.Intn(655-135)+135), true, float64(rand.Intn(360))}
+	player := messages.Player{ "",ID, float64(rand.Intn(700-135)+135), float64(rand.Intn(655-135)+135), true, 0, float64(rand.Intn(360))}
 	return player
 }
 
