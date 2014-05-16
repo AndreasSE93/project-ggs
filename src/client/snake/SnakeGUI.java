@@ -62,7 +62,7 @@ public class SnakeGUI {
 
 		// Temp play
 
-	/*	SnakePlayer[] players = new SnakePlayer[4];
+		/*SnakePlayer[] players = new SnakePlayer[4];
 		int posy1 = 100;
 		int posy2 = 200;
 		int posy3 = 300;
@@ -113,6 +113,7 @@ public class SnakeGUI {
 		startGame = new JButton("Start");
 		startGame.setFont(font);
 		startGame.setBackground(Color.gray.darker());
+		startGame.setActionCommand("startButton");
 
 		buttons.setBorder(new EmptyBorder(250, 0, 0, 0));
 		buttons.setBackground(Color.gray.darker());

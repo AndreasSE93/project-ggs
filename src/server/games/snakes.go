@@ -36,10 +36,10 @@ func LegalMoveSnakes (player messages.Player, gameBoard [835][790]float64) bool{
 func UpdateMoveSnakes (player messages.Player, move string) messages.Player{
 	
 	if move == "VK_LEFT"{
-		player.Direction -= 2
+		player.Direction -= 10
 	}
 	if move == "VK_RIGHT"{
-		player.Direction += 2
+		player.Direction += 10
 	}
 
 	
@@ -48,7 +48,8 @@ func UpdateMoveSnakes (player messages.Player, move string) messages.Player{
 
 func MakePlayerSnakes(ID int) messages.Player{
 	rand.Seed(time.Now().UTC().UnixNano())
-	player := messages.Player{ "",ID, float64(rand.Intn(700-135)+135), float64(rand.Intn(655-135)+135), true, float64(rand.Intn(360))}
+	var x [10]float64
+	player := messages.Player{ "",ID, x, float64(rand.Intn(700-135)+135), float64(rand.Intn(655-135)+135), true, 0, float64(rand.Intn(360))}
 	return player
 }
 
@@ -57,11 +58,28 @@ func UpdateAllMovesSnakes(playerArray []messages.Player, gameBoard [835][790]flo
 	
 	for i:=0; i<4; i++{
 		if LegalMoveSnakes (playerArray[i], gameBoard) {
-		playerArray[i].Direction = math.Mod(playerArray[i].Direction, 360)
-		playerArray[i].PosX += 1 * math.Cos(playerArray[i].Direction*(math.Pi/180.0))
-		playerArray[i].PosY += 1 * math.Sin(playerArray[i].Direction*(math.Pi/180.0))	
+			playerArray[i].Direction = math.Mod(playerArray[i].Direction, 360)
+			playerArray[i].PosX += 2 * math.Cos(playerArray[i].Direction*(math.Pi/180.0))
+			playerArray[i].PosY += 2 * math.Sin(playerArray[i].Direction*(math.Pi/180.0))	
+		
+			playerArray[i].PosArray[0] = playerArray[i].PosX
+			playerArray[i].PosArray[1] = playerArray[i].PosY
+
+			playerArray[i].PosArray[2] = playerArray[i].PosX+1
+			playerArray[i].PosArray[3] = playerArray[i].PosY
+			
+			playerArray[i].PosArray[4] = playerArray[i].PosX-1
+			playerArray[i].PosArray[5] = playerArray[i].PosY
+			
+			playerArray[i].PosArray[6] = playerArray[i].PosX
+			playerArray[i].PosArray[7] = playerArray[i].PosY+1
+			
+			playerArray[i].PosArray[8] = playerArray[i].PosX
+			playerArray[i].PosArray[9] = playerArray[i].PosY -1
+		
 		}
 	}
+	
 
 	return playerArray
 }
@@ -72,6 +90,11 @@ func DoMove (playerArray []messages.Player, gameBoard [835][790]float64) [835][7
 	for i:= 0 ; i<4; i++{
 		if LegalMoveSnakes(playerArray[i], gameBoard)  {
 			gameBoard[int(playerArray[i].PosX)][int(playerArray[i].PosY)] = 1
+			gameBoard[int(playerArray[i].PosX)][int(playerArray[i].PosY+1)] = 1
+			gameBoard[int(playerArray[i].PosX)][int(playerArray[i].PosY-1)] = 1
+			gameBoard[int(playerArray[i].PosX+1)][int(playerArray[i].PosY)] = 1
+			gameBoard[int(playerArray[i].PosX-1)][int(playerArray[i].PosY)] = 1
+
 		}
 	}
 	return gameBoard

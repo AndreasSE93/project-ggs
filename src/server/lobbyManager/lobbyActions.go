@@ -1,6 +1,7 @@
 package lobbyManager
 
 import (
+	"fmt"
 	"server/connection"
 	"server/database/lobbyMap"
 	"server/messages"
@@ -25,6 +26,7 @@ func ReqHost(hostNew messages.HostNew, clientInfo ClientCore) messages.RoomData 
 }
 
 func ReqJoin(join messages.JoinExisting, clientInfo ClientCore) *messages.RoomData {
+	fmt.Println("ROOM ID", join.RoomID)
 	return clientInfo.lm.Join(join.RoomID, clientInfo.client)
 }
 
