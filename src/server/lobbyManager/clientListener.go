@@ -73,7 +73,6 @@ func messageInterpreter(messageTransfer chan string, sendToLobby chan messages.P
 			fmt.Printf("Unknown packet received: %+v\n", *pMsg)
 			continue
 		}
-		fmt.Printf("Decoded message: %+v\n", *pMsg)
 		sendToLobby <- *pMsg
 	}
 }
@@ -84,7 +83,7 @@ func ActivateReceiver(messageProcessing chan messages.ProcessedMessage, client c
 	go messageInterpreter(messageTransfer, messageProcessing, client, updateClient)
 
 	for client.Scanner.Scan() {
-		fmt.Printf("Received message from client %d: %+v\n", client.ConnectorID, client.Scanner.Text())
+		//fmt.Printf("Received message from client %d: %+v\n", client.ConnectorID, client.Scanner.Text())
 		messageTransfer <- client.Scanner.Text()
 	}
 	if err := client.Scanner.Err(); err != nil {
@@ -137,7 +136,7 @@ func ClientListener(lm *lobbyMap.LobbyMap, db *database.Database, client connect
 		if !ok {
 			return
 		}
-		fmt.Printf("Received decoded message: %v\n", processed)
+		//fmt.Printf("Received decoded message: %v\n", processed)
 
 		if processed.ID == messages.CHAT_ID {
 			gameChan <- processed
@@ -173,7 +172,7 @@ func ClientListener(lm *lobbyMap.LobbyMap, db *database.Database, client connect
 		} else {
 			fmt.Println("Something went wrong!")
 		}
-		fmt.Printf("lm=%+v\n", lm.GetShadow())
+		//fmt.Printf("lm=%+v\n", lm.GetShadow())
 	}
 }
 

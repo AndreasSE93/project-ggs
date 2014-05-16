@@ -1,7 +1,6 @@
 package game
 
 import(
-	"fmt"
 	"server/database/lobbyMap"
 	"server/messages"
 	"server/encoders"
@@ -23,7 +22,6 @@ func sendToSingle(message string, conn connection.Connector) {
 }
 
 func sendImmediateMessage(message string, cs messages.ClientSection) {
-	fmt.Printf("Sending to %d clients: %s\n", cs.ClientCount, message)
 	for i := 0; i < cs.ClientCount; i++ {
 		cs.Clients[i].Connection.Write([]byte(message + "\n"))
 	}
@@ -87,9 +85,7 @@ func snakeListener(gameRoom *GameRoom){
 	go snakesHandler(&PlayerArray, gameRoom, newGameRoom)
 	for {
 		processed := <- gameRoom.roomData.SS.GameChan
-		fmt.Println(gameRoom.roomData.CS.Clients)
 		if processed.ID == messages.SNAKES_CLIENT_ID {
-			fmt.Println(processed.Snakes.Move, "hhhhhhhhhhhhhhhhhhhhhheeeeeeeeeeeeeeeee")
 			PlayerArray[processed.Snakes.PlayerID-1] = games.UpdateMoveSnakes(PlayerArray[processed.Snakes.PlayerID-1], processed.Snakes.Move)
 		}
 
@@ -117,7 +113,6 @@ func snakesHandler(pA *[]messages.Player, gameRoom *GameRoom, newGameRoom chan m
 		*pA = games.UpdateAllMovesSnakes( *pA, gameBoard)
 		gameBoard = games.DoMove(*pA, gameBoard)
 		go sendImmediateMessage(encoders.EncodeSnakeMessage(messages.SNAKES_MOVES_ID, *pA), gameRoom.roomData.CS)
-		fmt.Println(gameRoom.roomData.CS.ClientCount) 
 		time.Sleep(25 * time.Millisecond )
 	}
 	
