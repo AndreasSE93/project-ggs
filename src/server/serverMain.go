@@ -96,7 +96,7 @@ func idGenerator(idCh chan int) {
 //Keep now. Redo later..
 func main() {
 	go func() {
-		http.ListenAndServe("localhost:6060", nil)
+		http.ListenAndServe(":6060", nil)
 	}()
 	listenAddr := flag.String("host", ":8080", "address to host server on")
 	flag.Parse()
