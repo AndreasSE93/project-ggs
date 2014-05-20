@@ -16,8 +16,8 @@ func snakeListener(gameRoom *GameRoom) {
 	}
 	newGameRoom := make(chan messages.RoomData)
 	termChan    := make(chan interface{})
-	PlayerArray := []messages.Player{games.MakePlayerSnakes(1),games.MakePlayerSnakes(2),games.MakePlayerSnakes(3),games.MakePlayerSnakes(4)}
-	go snakesHandler(&PlayerArray, gameRoom, newGameRoom, termChan)
+	PlayerArray := games.InitAchtungPlayerArray(4)
+	go snakesHandler(PlayerArray, gameRoom, newGameRoom, termChan)
 	for {
 		processed := <- gameRoom.RuleChan
 		if processed.ID == messages.SNAKES_CLIENT_ID {
@@ -31,9 +31,10 @@ func snakeListener(gameRoom *GameRoom) {
 	}
 }
 
-func snakesHandler(pA *[]messages.Player, gameRoom *GameRoom, newGameRoom chan messages.RoomData, termChan chan interface{}) { 
+func snakesHandler(pA []messages.Player, gameRoom *GameRoom, newGameRoom chan messages.RoomData, termChan chan interface{}) { 
 	gameBoard := games.InitBoardSnakes()
 	
+	var Time uint16
 	for {
 		select {
 		case newerGameRoom := <- newGameRoom:
@@ -44,9 +45,16 @@ func snakesHandler(pA *[]messages.Player, gameRoom *GameRoom, newGameRoom chan m
 		}
 		
 		//gameRoom.roomData = gameRoom.lm.GetRoom(gameRoom.roomData.CS.RoomID)
-		*pA = games.UpdateAllMovesSnakes( *pA, gameBoard)
-		gameBoard = games.DoMove(*pA, gameBoard)
-		gameRoom.SendMult <- MultipleMessage{encoders.EncodeSnakeMessage(messages.SNAKES_MOVES_ID, *pA), gameRoom.roomData.CS.ClientCount, gameRoom.roomData.CS.Clients}
-		time.Sleep(10 * time.Millisecond )
+		pA = games.UpdateAllMovesSnakes(pA, gameBoard, Time)
+		games.DoMove(pA, gameBoard, Time)
+		clear := games.AchtungFinished(pA, gameBoard)
+		gameRoom.SendMult <- MultipleMessage{encoders.EncodeSnakeMessage(messages.SNAKES_MOVES_ID, pA, clear), gameRoom.roomData.CS.ClientCount, gameRoom.roomData.CS.Clients}
+		if clear {
+			Time = 0
+			time.Sleep(3 * time.Second)
+		} else {
+			time.Sleep(30 * time.Millisecond )
+		}
+		Time++
 	}
 }

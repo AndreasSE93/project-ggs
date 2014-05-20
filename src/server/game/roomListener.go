@@ -52,7 +52,6 @@ func sendImmediateMessage(SendOutChan chan MultipleMessage) {
 	}()
 
 	for {
-		fmt.Println(len(SendOutChan))
 		message := <- SendOutChan
 //		fmt.Printf("Sending to %d clients: %s\n", message.ClientCount, message.message)
 		for i := 0; i < message.ClientCount; i++ {
@@ -66,8 +65,6 @@ func gameRoomListener(gameRoom *GameRoom) {
 	gameRoom.SendMult <- MultipleMessage{encoders.EncodeHostedRoom(gameRoom.roomData), gameRoom.roomData.CS.ClientCount, gameRoom.roomData.CS.Clients}
 	for {
 		processed := <- gameRoom.roomData.SS.GameChan
-		fmt.Println("INSIDE ROOM",processed)
-		
 		if processed.ID == messages.CHAT_ID {
 			gameRoom.SendMult <- MultipleMessage{encoders.EncodeChatMessage(processed.ChatM, processed.Origin), gameRoom.roomData.CS.ClientCount, gameRoom.roomData.CS.Clients}
 
