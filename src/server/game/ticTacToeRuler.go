@@ -33,6 +33,8 @@ func InitTicTac(gameRoom *GameRoom) {
 		} else if processed.ID == messages.KICK_ID {
 			gameBoard = games.ClearBoard(gameBoard)
 			go sendImmediateMessage(encoders.EncodeMoveMessage(processed.MoveM), gameRoom.roomData.CS)
+		} else if processed.ID == messages.ROOM_CLOSED_ID {
+			break
 		}
 	}
 }

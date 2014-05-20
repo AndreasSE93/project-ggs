@@ -7,20 +7,20 @@ import (
 //-------------------------------------------------
 //            ID FOR PACKAGES
 const (
-	PING_ID      = 0
-	INIT_ID      = 99
-	CHAT_ID      = 100
-	HOST_ID      = 101
-	JOIN_ID      = 102
-	REFRESH_ID   = 103
-	KICK_ID      = 404
-	TTT_CHAT_ID  = 200
-	TTT_MOVE_ID  = 201
-	STARTABLE_ID = 202
-	START_ID     = 203
+	PING_ID          = 0
+	INIT_ID          = 99
+	CHAT_ID          = 100
+	HOST_ID          = 101
+	JOIN_ID          = 102
+	REFRESH_ID       = 103
+	KICK_ID          = 404
+	ROOM_CLOSED_ID   = 405
+	TTT_CHAT_ID      = 200
+	TTT_MOVE_ID      = 201
+	STARTABLE_ID     = 202
+	START_ID         = 203
 	SNAKES_CLIENT_ID = 301
-	SNAKES_MOVES_ID = 302
-	
+	SNAKES_MOVES_ID  = 302
 )
 
 //-------------------------------------------------
@@ -150,6 +150,7 @@ type SnakesEvent struct {
 type  Player struct {
 	PlayerName string `json:"PlayerName"`
 	PlayerID int `json:"PlayerID"`
+	PosArray [10]float64 `json:"Coordinates"`
 	PosX float64 `json:"PosX"`
 	PosY float64 `json:"PosY"`
 	Alive bool `json:"Alive"`
