@@ -79,7 +79,7 @@ public class SnakeHandler implements HandlerInterface, KeyListener, ActionListen
 			TiarStartedMessage startedGame = tiStarter.decode(message);
 			this.started = startedGame.started;
 			this.Player = startedGame.playerID;
-			System.out.println("STARTEDMESSAGE" + this.Player);
+			this.SG.achtungPanel.requestFocus();
 			break;
 			
 		case 404:
@@ -88,9 +88,12 @@ public class SnakeHandler implements HandlerInterface, KeyListener, ActionListen
 			break;
 			
 		case 302: // Recieved updated movements from players, repaint board
-			System.out.println("Kom hit till decode");
 			SnakeServerMessage SSM = SME.decode(message);
+			if(!SSM.clearBoard)
 			SG.repaint(SSM.Players);
+			else
+			SG.renderNewGame();
+			
 			break;
 			
 		default:

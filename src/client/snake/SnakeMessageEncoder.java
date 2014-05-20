@@ -45,6 +45,7 @@ public class SnakeMessageEncoder {
 		   }
 		   SnakePlayer sp = new SnakePlayer(l.getInt("PlayerID"), l.getDouble("PosX"), l.getDouble("PosY"), l.getBoolean("Alive"),l.getInt("Score"),p);
 		   SSM.Players[i] = sp;
+		   SSM.clearBoard = obj.getBoolean("ClearBoard");
 		}
 		
 
