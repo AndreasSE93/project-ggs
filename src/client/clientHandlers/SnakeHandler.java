@@ -79,7 +79,7 @@ public class SnakeHandler implements HandlerInterface, KeyListener, ActionListen
 			TiarStartedMessage startedGame = tiStarter.decode(message);
 			this.started = startedGame.started;
 			this.Player = startedGame.playerID;
-			System.out.println("STARTEDMESSAGE" + this.Player);
+			this.SG.achtungPanel.requestFocus();
 			break;
 			
 		case 404:
@@ -165,6 +165,7 @@ public class SnakeHandler implements HandlerInterface, KeyListener, ActionListen
 		if(startable){
 			try {
 				JSONtext = tiStarter.encode(new TiarStartedMessage());
+				System.out.println(JSONtext);
 				sendMessage(JSONtext);
 			} catch (JSONException e1) {
 				// TODO Auto-generated catch block
