@@ -117,17 +117,20 @@ func UpdateAllMovesSnakes(playerArray []messages.Player, gameBoard achtungBoard,
 	return playerArray
 }
 
-func AchtungFinished(playerArray []messages.Player, gameBoard achtungBoard) (clear bool) {
-	clear = true
+func AchtungFinished(playerArray []messages.Player, gameBoard achtungBoard) bool {
+	alivePlayers := 0
 	for _, player := range(playerArray) {
 		if player.Alive {
-			clear = false
-			return
+			alivePlayers++
 		}
 	}
-	ResetAchtungPlayerArray(playerArray)
-	*gameBoard = *InitBoardSnakes()
-	return
+	if alivePlayers <= 1 {
+		ResetAchtungPlayerArray(playerArray)
+		*gameBoard = *InitBoardSnakes()
+		return true
+	} else {
+		return false
+	}
 }
 
 func fillPixel(gameBoard achtungBoard, x, y int, n byte, time uint16) {

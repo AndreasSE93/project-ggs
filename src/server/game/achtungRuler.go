@@ -33,12 +33,16 @@ func snakeListener(gameRoom *GameRoom) {
 
 func snakesHandler(pA []messages.Player, gameRoom *GameRoom, newGameRoom chan messages.RoomData, termChan chan interface{}) { 
 	gameBoard := games.InitBoardSnakes()
-	
+
+	msg := MultipleMessage{}
+	msg.ClientCount = gameRoom.roomData.CS.ClientCount
+
 	var Time uint16
 	for {
 		select {
 		case newerGameRoom := <- newGameRoom:
 			gameRoom.roomData = newerGameRoom
+			msg.ClientCount = gameRoom.roomData.CS.ClientCount
 		case <- termChan:
 			return
 		default:
@@ -48,7 +52,9 @@ func snakesHandler(pA []messages.Player, gameRoom *GameRoom, newGameRoom chan me
 		pA = games.UpdateAllMovesSnakes(pA, gameBoard, Time)
 		games.DoMove(pA, gameBoard, Time)
 		clear := games.AchtungFinished(pA, gameBoard)
-		gameRoom.SendMult <- MultipleMessage{encoders.EncodeSnakeMessage(messages.SNAKES_MOVES_ID, pA, clear), gameRoom.roomData.CS.ClientCount, gameRoom.roomData.CS.Clients}
+		msg.message = encoders.EncodeSnakeMessage(messages.SNAKES_MOVES_ID, pA, clear)
+		msg.conn = gameRoom.roomData.CS.Clients
+		gameRoom.SendMult <- msg
 		if clear {
 			Time = 0
 			time.Sleep(3 * time.Second)
