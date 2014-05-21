@@ -9,19 +9,15 @@ import org.json.JSONException;
 import packageManaging.InitializeClientMessage;
 import packageManaging.InitializeClientMessageEncoder;
 import packageManaging.StageFlipper;
-
-
-
 import clientHandlers.LobbyHandler;
 import clientHandlers.SnakeHandler;
 import clientHandlers.TiarHandler;
-
-import clientNetworking.NetManager;
 import clientNetworking.Connection;
+import clientNetworking.NetManager;
 
 
 public class Monitor {
-	
+
 	public LobbyHandler LH;
 	public TiarHandler TH;
 	public SnakeHandler SH;
@@ -30,15 +26,15 @@ public class Monitor {
 	public String userName;
 	public int stage;
 	public StageFlipper lastMsg = null;
-	
+
 	public Monitor() {
-		
+
 	}
 
-	
+
 	public void init() {
-		
-		this.conn = new Connection("130.243.137.247", 8081);
+
+		this.conn = new Connection("localhost", 8080);
 		this.net = new NetManager(conn);
         try {
 			net.connectToServer();
@@ -65,10 +61,10 @@ public class Monitor {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        		
-		
+
+
 	}
-	
+
 	public void Tick() {
 		while(true) {
 			if (this.stage == 1) {
@@ -87,8 +83,8 @@ public class Monitor {
 			}
 		}
 	}
-	
-	public void stop(StageFlipper flipper) { 
+
+	public void stop(StageFlipper flipper) {
 		if(flipper.packageID == 102) {
 			System.out.println(flipper.jm.GameType);
 			if(flipper.jm.GameType.equals("TicTacToe")) {
@@ -99,14 +95,14 @@ public class Monitor {
 				this.lastMsg = flipper;
 				this.stage = 30;
 			}
-			
+
 		} else if (flipper.packageID == 404) {
 			this.stage = 1;
 		} else {
 			System.out.println("Unknown packageID for Monitor.stop(StageFlipper)");
 		}
 	}
-	
-	
-	
+
+
+
 }
