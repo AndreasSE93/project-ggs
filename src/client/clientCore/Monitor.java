@@ -38,7 +38,7 @@ public class Monitor {
 	
 	public void init() {
 		
-		this.conn = new Connection("130.243.137.236", 8080);
+		this.conn = new Connection("130.243.137.247", 8081);
 		this.net = new NetManager(conn);
         try {
 			net.connectToServer();

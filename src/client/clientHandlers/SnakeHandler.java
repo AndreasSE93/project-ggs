@@ -9,7 +9,6 @@ import java.io.IOException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import packageManaging.HostRoom;
 import packageManaging.HostRoomEncoder;
 import packageManaging.KickMessageEncoder;
 import packageManaging.StageFlipper;
@@ -55,7 +54,7 @@ public class SnakeHandler implements HandlerInterface, KeyListener, ActionListen
 		while (loop) {
 			try {
 				String mess = receiveMessage();
-				System.out.println(mess);
+				//System.out.println(mess);
 				int id = retrieveId(mess);
 				decodeAndRender(id, mess);
 
@@ -103,6 +102,7 @@ public class SnakeHandler implements HandlerInterface, KeyListener, ActionListen
 
 	@Override
 	public void sendMessage(String message) {
+		
 		network.send(message);
 
 	}

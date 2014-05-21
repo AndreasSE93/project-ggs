@@ -197,7 +197,7 @@ public class SnakeGUI {
 		 */
 
 		for (int k = 0; k < WIDTH; k++) {
-			for (int i = 1; i < HEIGTH; i++) {
+			for (int i = 0; i < HEIGTH; i++) {
 				bi.setRGB(k, i, Color.BLACK.getRGB());
 
 			}
