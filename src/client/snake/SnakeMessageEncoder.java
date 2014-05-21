@@ -31,12 +31,23 @@ public class SnakeMessageEncoder {
 		
 		
 		SnakeServerMessage SSM = new SnakeServerMessage();
-
+		double[]p;
 		JSONArray JArr = obj.getJSONArray("PlayerArray");
 		for (int i=0; i<JArr.length(); i++) {
+			p = new double[10];
 		   JSONObject l = JArr.getJSONObject(i);
-		   SnakePlayer sp = new SnakePlayer(l.getInt("PlayerID"), l.getDouble("PosX"), l.getDouble("PosY"), l.getBoolean("Alive"),l.getInt("Score"));
+		   JSONArray JArr2 = l.getJSONArray("Coordinates");
+		   
+		   for(int d =0; d<p.length;d++){
+			   p[d]= JArr2.getDouble(d);
+			  
+			  
+		   }
+		   SnakePlayer sp = new SnakePlayer(l.getInt("PlayerID"), l.getDouble("PosX"), l.getDouble("PosY"), l.getBoolean("Alive"),l.getInt("Score"),p);
+		   sp.PlayerName = l.getString("PlayerName");
+		 //  System.out.println(sp.PlayerName);
 		   SSM.Players[i] = sp;
+		   SSM.clearBoard = obj.getBoolean("ClearBoard");
 		}
 		
 

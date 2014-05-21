@@ -28,11 +28,11 @@ func InitTicTac(gameRoom *GameRoom) {
 			} else {
 				processed.MoveM.IsValid = 0
 			}
-			go sendImmediateMessage(encoders.EncodeMoveMessage(processed.MoveM), gameRoom.roomData.CS)
+			gameRoom.SendMult <- MultipleMessage{encoders.EncodeMoveMessage(processed.MoveM), gameRoom.roomData.CS.ClientCount, gameRoom.roomData.CS.Clients}
 
 		} else if processed.ID == messages.KICK_ID {
 			gameBoard = games.ClearBoard(gameBoard)
-			go sendImmediateMessage(encoders.EncodeMoveMessage(processed.MoveM), gameRoom.roomData.CS)
+			gameRoom.SendMult <- MultipleMessage{encoders.EncodeMoveMessage(processed.MoveM), gameRoom.roomData.CS.ClientCount, gameRoom.roomData.CS.Clients}
 		} else if processed.ID == messages.ROOM_CLOSED_ID {
 			break
 		}

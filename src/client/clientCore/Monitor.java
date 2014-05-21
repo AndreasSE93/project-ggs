@@ -24,6 +24,7 @@ public class Monitor {
 	
 	public LobbyHandler LH;
 	public TiarHandler TH;
+	public SnakeHandler SH;
 	public  Connection conn;
 	public  NetManager net;
 	public String userName;
@@ -37,7 +38,7 @@ public class Monitor {
 	
 	public void init() {
 		
-		this.conn = new Connection("localhost", 8080);
+		this.conn = new Connection("130.243.137.247", 8081);
 		this.net = new NetManager(conn);
         try {
 			net.connectToServer();
@@ -77,17 +78,27 @@ public class Monitor {
 				this.TH = new TiarHandler(net, userName);
 				StageFlipper passOn = this.TH.init(lastMsg);
 				stop(passOn);
+			} else if (this.stage == 30) {
+				this.SH = new SnakeHandler(net, userName);
+				StageFlipper passOn = this.SH.init(lastMsg);
+				stop(passOn);
 			} else {
 				System.out.println("Weird stage");
 			}
 		}
 	}
 	
-	public void stop(StageFlipper flipper) {
-		
+	public void stop(StageFlipper flipper) { 
 		if(flipper.packageID == 102) {
-			this.lastMsg = flipper;
-			this.stage = 20;
+			System.out.println(flipper.jm.GameType);
+			if(flipper.jm.GameType.equals("TicTacToe")) {
+				this.lastMsg = flipper;
+				this.stage = 20;
+			} else if (flipper.jm.GameType.equals("Achtung Die Kurve")) {
+				System.out.println("STOP");
+				this.lastMsg = flipper;
+				this.stage = 30;
+			}
 			
 		} else if (flipper.packageID == 404) {
 			this.stage = 1;
