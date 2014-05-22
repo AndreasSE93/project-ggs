@@ -5,6 +5,7 @@ import(
 	"server/encoders"
 	"server/games"
 	"server/messages"
+//	"fmt"
 )
 
 func snakeListener(gameRoom *GameRoom) {
@@ -17,6 +18,8 @@ func snakeListener(gameRoom *GameRoom) {
 	newGameRoom := make(chan messages.RoomData)
 	termChan    := make(chan interface{})
 	PlayerArray := games.InitAchtungPlayerArray(4)
+	PlayerArray[0].PlayerName = gameRoom.roomData.CS.Clients[0].UserName
+	PlayerArray[1].PlayerName = gameRoom.roomData.CS.Clients[1].UserName
 	go snakesHandler(PlayerArray, gameRoom, newGameRoom, termChan)
 	for {
 		processed := <- gameRoom.RuleChan
@@ -48,10 +51,11 @@ func snakesHandler(pA []messages.Player, gameRoom *GameRoom, newGameRoom chan me
 		default:
 		}
 		
-		//gameRoom.roomData = gameRoom.lm.GetRoom(gameRoom.roomData.CS.RoomID)
+	
 		pA = games.UpdateAllMovesSnakes(pA, gameBoard, Time)
 		games.DoMove(pA, gameBoard, Time)
 		clear := games.AchtungFinished(pA, gameBoard)
+	
 		msg.message = encoders.EncodeSnakeMessage(messages.SNAKES_MOVES_ID, pA, clear)
 		msg.conn = gameRoom.roomData.CS.Clients
 		gameRoom.SendMult <- msg
@@ -61,6 +65,10 @@ func snakesHandler(pA []messages.Player, gameRoom *GameRoom, newGameRoom chan me
 		} else {
 			time.Sleep(30 * time.Millisecond )
 		}
+		
+
 		Time++
 	}
 }
+
+

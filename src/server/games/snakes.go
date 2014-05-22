@@ -134,22 +134,45 @@ func AchtungFinished(playerArray []messages.Player, gameBoard achtungBoard) bool
 }
 
 func fillPixel(gameBoard achtungBoard, x, y int, n byte, time uint16) {
-	if x >=0 && x < GAME_W && y >=0 && y < GAME_H {
-		gameBoard[x][y] = achtungPixel{
-			Player:   n,
-			Creation: time,
+	if x >=0 && x < GAME_W && y >=0 && y < GAME_H  {
+		if gameBoard[x][y].Player == 0{
+			gameBoard[x][y] = achtungPixel{
+				Player:   n,
+				Creation: time,
+			}
 		}
 	}
 }
+
+
+
+/*
+
+X X X
+X O X
+X X X
+
+
+*/
+
+
 
 func DoMove (playerArray []messages.Player, gameBoard achtungBoard, time uint16) {
 	for i := 0; i<4; i++ {
 		if LegalMoveSnakes(&playerArray[i], gameBoard, playerArray, time)  {
 			fillPixel(gameBoard, int(playerArray[i].PosX  ), int(playerArray[i].PosY  ), byte(i + 1), time)
+
 			fillPixel(gameBoard, int(playerArray[i].PosX  ), int(playerArray[i].PosY+1), byte(i + 1), time)
 			fillPixel(gameBoard, int(playerArray[i].PosX  ), int(playerArray[i].PosY-1), byte(i + 1), time)
 			fillPixel(gameBoard, int(playerArray[i].PosX+1), int(playerArray[i].PosY  ), byte(i + 1), time)
 			fillPixel(gameBoard, int(playerArray[i].PosX-1), int(playerArray[i].PosY  ), byte(i + 1), time)
+
+
+			fillPixel(gameBoard, int(playerArray[i].PosX+1  ), int(playerArray[i].PosY+1), byte(i + 1), time)
+			fillPixel(gameBoard, int(playerArray[i].PosX-1  ), int(playerArray[i].PosY-1), byte(i + 1), time)
+			fillPixel(gameBoard, int(playerArray[i].PosX+1), int(playerArray[i].PosY-1  ), byte(i + 1), time)
+			fillPixel(gameBoard, int(playerArray[i].PosX-1), int(playerArray[i].PosY+1  ), byte(i + 1), time)
+
 		}
 	}
 }
