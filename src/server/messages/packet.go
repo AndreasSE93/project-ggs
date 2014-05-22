@@ -127,7 +127,7 @@ type RoomData struct {
 }
 
 type ClientSection struct {
-	RoomID, MaxSize, ClientCount int
+	RoomID, MinSize, MaxSize, ClientCount int
 	RoomName, GameName, GameType string
 	Clients []connection.Connector
 }

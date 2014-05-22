@@ -10,8 +10,10 @@ import(
 
 func snakeListener(gameRoom *GameRoom) {
 	for {
-		processed := <- gameRoom.RuleChan
-		if processed.ID == messages.START_ID {
+		processed, ok := <- gameRoom.RuleChan
+		if !ok {
+			return
+		} else if processed.ID == messages.START_ID {
 			break
 		}
 	}
@@ -21,8 +23,7 @@ func snakeListener(gameRoom *GameRoom) {
 	PlayerArray[0].PlayerName = gameRoom.roomData.CS.Clients[0].UserName
 	PlayerArray[1].PlayerName = gameRoom.roomData.CS.Clients[1].UserName
 	go snakesHandler(PlayerArray, gameRoom, newGameRoom, termChan)
-	for {
-		processed := <- gameRoom.RuleChan
+	for processed := range gameRoom.RuleChan {
 		if processed.ID == messages.SNAKES_CLIENT_ID {
 			PlayerArray[processed.Snakes.PlayerID-1] = games.UpdateMoveSnakes(PlayerArray[processed.Snakes.PlayerID-1], processed.Snakes.Move)
 		} else if processed.ID == messages.JOIN_ID {

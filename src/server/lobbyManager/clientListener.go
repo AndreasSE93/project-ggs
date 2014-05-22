@@ -146,9 +146,13 @@ func ClientListener(lm *lobbyMap.LobbyMap, db *database.Database, client connect
 			gameChan <- processed
 	
 		} else if processed.ID == messages.HOST_ID {
-			hostedRoom := ReqHost(processed.Host, *core)
-			gameChan = hostedRoom.SS.GameChan
-			go game.CreateGameRoom(hostedRoom, core.lm)
+			hostedRoom, hostedErr := ReqHost(processed.Host, *core)
+			if hostedErr == nil {
+				gameChan = hostedRoom.SS.GameChan
+				go game.CreateGameRoom(hostedRoom, core.lm)
+			} else {
+				fmt.Printf("Unable to host room: %s\n", hostedErr)
+			}
 
 		} else if processed.ID == messages.JOIN_ID {
 			joinedRoom := ReqJoin(processed.Join, *core)

@@ -9,9 +9,7 @@ import(
 func InitTicTac(gameRoom *GameRoom) {
 	gameBoard := games.InitBoard()
 	
-	for {
-		processed := <- gameRoom.RuleChan
-
+	for processed := range gameRoom.RuleChan {
 		if processed.ID == messages.TTT_MOVE_ID {
 			move := processed.MoveM.Move
 			if games.IsValidMove(move, gameBoard) == 1 {

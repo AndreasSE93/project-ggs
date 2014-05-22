@@ -1,11 +1,14 @@
 Project
 =======
 
+* PROJEKTRAPPORT
+  * [GGS - Projektrapport](https://docs.google.com/document/d/1iZoRp350gvUfxcr-iesviBv2d8UuIjbj-WgcRntKAYU/edit?usp=sharing)
 * GOLANG DOCUMENTATION 
   * [Documentation Root](http://golang.org/doc/)
 
 * GOLANG BLOG
   * [Slices](http://blog.golang.org/slices)
+  * [GO profiling routines](http://blog.golang.org/profiling-go-programs)
 
 * GO PACKAGES LIBRARY
   * [Packages Root](http://golang.org/pkg/)

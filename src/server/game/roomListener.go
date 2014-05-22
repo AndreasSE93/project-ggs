@@ -2,6 +2,7 @@ package game
 
 import(
 	"fmt"
+	"errors"
 	"server/database/lobbyMap"
 	"server/messages"
 	"server/encoders"
@@ -38,8 +39,12 @@ func sendToSingle(SendOutChan chan SingleMessage) {
 	}()
 
 	for {
-		message := <- SendOutChan
-		message.conn.Connection.Write([]byte(message.message + "\n"))
+		message, ok := <- SendOutChan
+		if ok {
+			message.conn.Connection.Write([]byte(message.message + "\n"))
+		} else {
+			return
+		}
 	}
 }
 
@@ -52,19 +57,20 @@ func sendImmediateMessage(SendOutChan chan MultipleMessage) {
 	}()
 
 	for {
-		message := <- SendOutChan
-//		fmt.Printf("Sending to %d clients: %s\n", message.ClientCount, message.message)
-		for i := 0; i < message.ClientCount; i++ {
-			message.conn[i].Connection.Write([]byte(message.message + "\n"))
+		message, ok := <- SendOutChan
+		if ok {
+			for i := 0; i < message.ClientCount; i++ {
+				message.conn[i].Connection.Write([]byte(message.message + "\n"))
+			}
+		} else {
+			return
 		}
 	}
 }
 
 func gameRoomListener(gameRoom *GameRoom) {
-	defer fmt.Printf("Room %d closed\n", gameRoom.roomData.CS.RoomID)
 	gameRoom.SendMult <- MultipleMessage{encoders.EncodeHostedRoom(gameRoom.roomData), gameRoom.roomData.CS.ClientCount, gameRoom.roomData.CS.Clients}
-	for {
-		processed := <- gameRoom.roomData.SS.GameChan
+	for processed := range gameRoom.roomData.SS.GameChan {
 		if processed.ID == messages.CHAT_ID {
 			gameRoom.SendMult <- MultipleMessage{encoders.EncodeChatMessage(processed.ChatM, processed.Origin), gameRoom.roomData.CS.ClientCount, gameRoom.roomData.CS.Clients}
 
@@ -75,11 +81,10 @@ func gameRoomListener(gameRoom *GameRoom) {
 				break
 			}
 			gameRoom.SendMult <- MultipleMessage{encoders.EncodeJoinedRoom(gameRoom.roomData), gameRoom.roomData.CS.ClientCount, gameRoom.roomData.CS.Clients}
-			if gameRoom.roomData.CS.ClientCount == gameRoom.roomData.CS.MaxSize {
+			if gameRoom.roomData.CS.ClientCount >= gameRoom.roomData.CS.MinSize {
 				gameRoom.Startable = true
 				gameRoom.SendSingle <- SingleMessage{encoders.EncodeStartable(true), gameRoom.roomData.CS.Clients[0]}
 			}
-
 		} else if processed.ID == messages.KICK_ID {
 			if room := gameRoom.lm.Kick(processed.Origin); room != nil {
 				gameRoom.roomData = *room
@@ -112,29 +117,40 @@ func gameRoomListener(gameRoom *GameRoom) {
 }
 
 func CreateGameRoom(rd messages.RoomData, lm *lobbyMap.LobbyMap) {
+	defer func() {
+		lm.Delete(rd.CS.RoomID)
+		if err := recover(); err == nil {
+			defer fmt.Printf("Room %d closed\n", rd.CS.RoomID)
+		} else {
+			fmt.Printf("Room %d crashed: %s\n", rd.CS.RoomID, err)
+			return
+		}
+	}()
 
 	game := new(GameRoom)
 	game.roomData = rd
 	game.lm = lm
 	game.RuleChan = make(chan messages.ProcessedMessage)
+	defer close(game.RuleChan)
 	game.GameType = rd.CS.GameName
 	game.Started = false
 	game.Startable = false
 	game.SendSingle = make(chan SingleMessage)
+	defer close(game.SendSingle)
 	game.SendMult = make(chan MultipleMessage, 10)
+	defer close(game.SendMult)
 
 	go sendToSingle(game.SendSingle)
 	go sendImmediateMessage(game.SendMult)
-	
-	switch game.GameType {
-	case "TicTacToe": 
-		go InitTicTac(game)
-		go gameRoomListener(game)
 
+	switch game.GameType {
+	case "TicTacToe":
+		go InitTicTac(game)
 	case "Achtung Die Kurve":
 		go snakeListener(game)
-		go gameRoomListener(game)
-		
-	default: go gameRoomListener(game)
+	default:
+		panic(errors.New("Invalid game type: " + game.GameType))
 	}
+
+	gameRoomListener(game)
 }
