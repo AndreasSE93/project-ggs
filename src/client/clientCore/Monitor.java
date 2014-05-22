@@ -89,12 +89,11 @@ public class Monitor {
 
 	public void stop(StageFlipper flipper) {
 		if (flipper.packageID == 102) {
-			System.out.println(flipper.jm.GameType);
 			if (flipper.jm.GameType.equals("TicTacToe")) {
 				this.lastMsg = flipper;
 				this.stage = 20;
 			} else if (flipper.jm.GameType.equals("Achtung Die Kurve")) {
-				System.out.println("STOP");
+
 				this.lastMsg = flipper;
 				this.stage = 30;
 			}
