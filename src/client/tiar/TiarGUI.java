@@ -37,6 +37,7 @@ public class TiarGUI extends GameLogic {
 	public JButton[] game = new JButton[9];
 	
 	public JButton startGame;
+	public JButton leaveGame;
 
 	public JFrame window = new JFrame();
 	public JPanel chatPanel = new JPanel();
@@ -78,7 +79,11 @@ public class TiarGUI extends GameLogic {
 		startGame = new JButton("Start Game");
 		startGame.setActionCommand("startButton");
 		gameInfo.add(gameName, BorderLayout.NORTH);
-		gameInfo.add(startGame);
+		gameInfo.add(startGame, BorderLayout.EAST);
+
+		leaveGame = new JButton("Leave Game");
+		leaveGame.setActionCommand("kick");
+		gameInfo.add(leaveGame, BorderLayout.WEST);
 		
 		
 		JPanel gameCointainer = new JPanel();
