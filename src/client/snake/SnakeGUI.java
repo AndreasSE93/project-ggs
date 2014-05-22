@@ -239,6 +239,7 @@ public class SnakeGUI {
 		
 		for (int i = 0 ; i < SSM.Players.length; i++){
 			playerScores[i].setVisible(true);
+			playerScores[i].setEditable(false);
 		}
 	}
 
