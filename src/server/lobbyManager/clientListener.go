@@ -2,12 +2,13 @@ package lobbyManager
 
 import (
 	"fmt"
+	"encoding/json"
 	"server/connection"
 	"server/database"
 	"server/database/lobbyMap"
 	"server/encoders"
 	"server/messages"
-	"encoding/json"
+	"server/chatRoom"
 	"server/game"
 )
 
@@ -25,12 +26,12 @@ func messageInterpreter(messageTransfer chan string, sendToLobby chan messages.P
 			return
 		}
 		json.Unmarshal([]byte(message), pMsg)
-		pMsg.Origin = client
 
 		select {
 		case client = <-updateClient:
 		default:
 		}
+		pMsg.Origin = client
 
 		if pMsg.ID == messages.INIT_ID {
 			initM := new(messages.InitMessage)
@@ -105,7 +106,7 @@ func ActivateSender(serverTerminal chan string, client connection.Connector) {
 	}
 }
 
-func ClientListener(lm *lobbyMap.LobbyMap, db *database.Database, client connection.Connector) {
+func ClientListener(lm *lobbyMap.LobbyMap, db *database.Database, client connection.Connector, cr *chatRoom.ChatRoom) {
 	defer client.Connection.Close()
 
 	core := new(ClientCore)
@@ -124,14 +125,16 @@ func ClientListener(lm *lobbyMap.LobbyMap, db *database.Database, client connect
 	finJSON <- encoders.EncodeRefreshList(refreshList)
 
 	processed := <-processedChan
-	client = db.Get(client.ConnectorID) //Shouldn't have changed, but just in case
+	client = db.Get(interface{}(client.ConnectorID)).(connection.Connector)
 	client.UserName = processed.InitM.UserName
-	db.Update(client.ConnectorID, client) //Shouldn't have changed from Get
+	db.Add(interface{}(client.ConnectorID), interface{}(client))
 	updateClient <-client
+	fmt.Println("after first processed")
+	cr.Connect(client)
 
 	lobbyChan := make(chan messages.ProcessedMessage)
 	gameChan := lobbyChan
-	go dummyReceiveLobbyChat(gameChan)
+	go receiveLobbyChat(lobbyChan, cr)
 
 	defer lm.Kick(client)
 
@@ -149,6 +152,7 @@ func ClientListener(lm *lobbyMap.LobbyMap, db *database.Database, client connect
 			hostedRoom, hostedErr := ReqHost(processed.Host, *core)
 			if hostedErr == nil {
 				gameChan = hostedRoom.SS.GameChan
+				cr.Disconnect(processed.Origin)
 				go game.CreateGameRoom(hostedRoom, core.lm)
 			} else {
 				fmt.Printf("Unable to host room: %s\n", hostedErr)
@@ -159,6 +163,7 @@ func ClientListener(lm *lobbyMap.LobbyMap, db *database.Database, client connect
 			fmt.Println(joinedRoom.SS.GameChan)
 			gameChan = joinedRoom.SS.GameChan
 			gameChan <- processed
+			cr.Disconnect(processed.Origin)
 
 		} else if processed.ID == messages.REFRESH_ID {
 			refreshList := ReqUpdate(processed.Update, *core)
@@ -176,6 +181,7 @@ func ClientListener(lm *lobbyMap.LobbyMap, db *database.Database, client connect
 		} else if processed.ID == messages.KICK_ID {
 			gameChan <- processed
 			gameChan = lobbyChan
+			cr.Connect(processed.Origin)
 
 		} else if processed.ID == messages.SNAKES_CLIENT_ID {
 			gameChan <-processed
@@ -186,9 +192,12 @@ func ClientListener(lm *lobbyMap.LobbyMap, db *database.Database, client connect
 	}
 }
 
-func dummyReceiveLobbyChat(ch chan messages.ProcessedMessage) {
-	for {
-		msg := <- ch
-		fmt.Println("Ate lobby chat message:", msg)
+func receiveLobbyChat(ch chan messages.ProcessedMessage, cr *chatRoom.ChatRoom) {
+	for msg := range ch {
+		if msg.ID == messages.CHAT_ID {
+			cr.SendMessage(msg)
+		} else {
+			fmt.Println("ATE RANDOM PACKAGE", msg.ID)
+		}
 	}
 }
