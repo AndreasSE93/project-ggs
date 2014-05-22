@@ -94,7 +94,8 @@ public class SnakeHandler implements HandlerInterface, KeyListener, ActionListen
 			SG.repaint(SSM.Players);
 			else
 			SG.renderNewGame();
-			setNames(SSM);
+			if (SG.nameSet == 0)
+			SG.setNames(SSM);
 			
 			break;
 			
@@ -103,19 +104,7 @@ public class SnakeHandler implements HandlerInterface, KeyListener, ActionListen
 		}
 	}
 
-	public void setNames(SnakeServerMessage SSM){
-		int nrPlayers = SG.playerScores.length;
-		for (int i = 0; i < nrPlayers; i++){
-			String name = SSM.Players[i].PlayerName;
-			if (name.length() < 4) {
-				
-				name = "Nils" + i;
-			}
-			System.out.println(name);
-			SG.playerScores[i].setText(name +": " + SSM.Players[i].getScore());
-		}
-		
-	}
+	
 	
 	@Override
 	public void sendMessage(String message) {
@@ -155,6 +144,7 @@ public class SnakeHandler implements HandlerInterface, KeyListener, ActionListen
 		}
 		if(keyEvent != "" && started){
 		SnakeUserMessage SUM = new SnakeUserMessage(Player, keyEvent);
+		System.out.println(SUM);
 		try {
 			sendMessage(SME.encodeSnakeUserMessage(SUM));
 		} catch (JSONException e1) {
@@ -204,8 +194,8 @@ public class SnakeHandler implements HandlerInterface, KeyListener, ActionListen
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
+		
 			*/
-			
 		
 		
 			

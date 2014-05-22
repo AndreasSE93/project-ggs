@@ -30,9 +30,10 @@ public class SnakeMessageEncoder {
 		JSONObject obj = new JSONObject(mess);
 		
 		
-		SnakeServerMessage SSM = new SnakeServerMessage();
+		
 		double[]p;
 		JSONArray JArr = obj.getJSONArray("PlayerArray");
+		SnakeServerMessage SSM = new SnakeServerMessage(JArr.length());
 		for (int i=0; i<JArr.length(); i++) {
 			p = new double[10];
 		   JSONObject l = JArr.getJSONObject(i);
@@ -46,6 +47,7 @@ public class SnakeMessageEncoder {
 		   SnakePlayer sp = new SnakePlayer(l.getInt("PlayerID"), l.getDouble("PosX"), l.getDouble("PosY"), l.getBoolean("Alive"),l.getInt("Score"),p);
 		   sp.PlayerName = l.getString("PlayerName");
 		   //System.out.println(sp.PlayerName);
+		   
 		   SSM.Players[i] = sp;
 		   SSM.clearBoard = obj.getBoolean("ClearBoard");
 		}

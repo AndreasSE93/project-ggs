@@ -25,15 +25,17 @@ public class SnakeGUI {
 	public JPanel achtungPanel;
 	public JButton leaveGame;
 	public JButton startGame;
-	
+
 	final private int WIDTH = 1035 - 200;
 	final private int HEIGTH = 790;
 
-	private JTextArea p1, p2, p3, p4;
-	public JTextArea[] playerScores = { p1, p2, p3, p4 };
+	private JTextArea p1, p2, p3, p4, p5, p6, p7, p8;
+	public JTextArea[] playerScores = { p1, p2, p3, p4, p5, p6, p7, p8 };
 
 	private int[] ColorArray = { Color.red.getRGB(), Color.blue.getRGB(),
-			Color.green.getRGB(), Color.yellow.getRGB() };
+			Color.green.getRGB(), Color.yellow.getRGB(), Color.pink.getRGB(), Color.cyan.getRGB(), Color.lightGray.getRGB(), Color.orange.getRGB(), Color.white.getRGB() };
+
+	public int nameSet = 0;
 
 	public void render() {
 		window.setSize(1035, 790);
@@ -59,35 +61,25 @@ public class SnakeGUI {
 		renderNewGame();
 
 		window.add(achtungPanel, BorderLayout.NORTH);
-		
+
 		window.setVisible(true);
 		window.validate();
 
 		// Temp play
 
-		/*SnakePlayer[] players = new SnakePlayer[4];
-		int posy1 = 100;
-		int posy2 = 200;
-		int posy3 = 300;
-		int posy4 = 400;
-		for (int i = 0; i < (1035 - 200); i++) {
-			SnakePlayer p1 = new SnakePlayer(1, i, posy1, true, 0);
-			SnakePlayer p2 = new SnakePlayer(2, i, posy2, true, 10);
-			SnakePlayer p3 = new SnakePlayer(3, i, posy3, true, 15);
-			SnakePlayer p4 = new SnakePlayer(4, i, posy4, true, i);
-			players[0] = p1;
-			players[1] = p2;
-			players[2] = p3;
-			players[3] = p4;
-			repaint(players);
-			try {
-				Thread.sleep(15);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-		}*/
+		/*
+		 * SnakePlayer[] players = new SnakePlayer[4]; int posy1 = 100; int
+		 * posy2 = 200; int posy3 = 300; int posy4 = 400; for (int i = 0; i <
+		 * (1035 - 200); i++) { SnakePlayer p1 = new SnakePlayer(1, i, posy1,
+		 * true, 0); SnakePlayer p2 = new SnakePlayer(2, i, posy2, true, 10);
+		 * SnakePlayer p3 = new SnakePlayer(3, i, posy3, true, 15); SnakePlayer
+		 * p4 = new SnakePlayer(4, i, posy4, true, i); players[0] = p1;
+		 * players[1] = p2; players[2] = p3; players[3] = p4; repaint(players);
+		 * try { Thread.sleep(15); } catch (InterruptedException e) { // TODO
+		 * Auto-generated catch block e.printStackTrace(); }
+		 * 
+		 * }
+		 */
 
 	}
 
@@ -133,9 +125,9 @@ public class SnakeGUI {
 		Font playerFont = new Font("Helvetica", Font.BOLD, 20);
 		int i;
 		for (i = 0; i < playerScores.length; i++) {
-			
-			playerScores[i] = new JTextArea("Player " + i + ": 0");
 
+			playerScores[i] = new JTextArea("Player " + i + ": 0");
+			playerScores[i].setVisible(false);
 			playerScores[i].setFont(playerFont);
 			playerScores[i].setBackground(Color.gray.darker());
 			playerScores[i].setBorder(new EmptyBorder(0, 0, 30, 0));
@@ -152,35 +144,36 @@ public class SnakeGUI {
 		String stringText = playerScores[id].getText();
 		int index = 0;
 		for (int i = stringText.length() - 1; i >= 0; i--) {
-			if (stringText.substring(i-1,i).equals(":")) {
+			if (stringText.substring(i - 1, i).equals(":")) {
 				index = i;
 				break;
 			}
-		
+
 		}
-		
-		playerScores[id].setText(stringText.substring(0, index) + " " + p.getScore());
+
+		playerScores[id].setText(stringText.substring(0, index) + " "
+				+ p.getScore());
 
 	}
 
 	public void repaint(SnakePlayer[] players) {
 		for (int i = 0; i < players.length; i++) {
 			// if(i == 0){ uncomment to only track player 1
-			//System.out.println(i + "PosX:" + players[i].getPosX() + "PosY"
-			//		+ players[i].getPosY());
-			//System.out.println("Kom hit till paint");
+			// System.out.println(i + "PosX:" + players[i].getPosX() + "PosY"
+			// + players[i].getPosY());
+			System.out.println(i);
 			if (players[i].isAlive()) {
 
 				updateScore(players[i]);
-				for(int d =0; d<10; d=d+2){
-				bi.setRGB((int) players[i].playerArray[d],
-						(int) players[i].playerArray[d+1],
-						ColorArray[players[i].PlayerID - 1]);
-				ii = new ImageIcon();
-				ii.setImage(bi);
+				for (int d = 0; d < 10; d = d + 2) {
+					bi.setRGB((int) players[i].playerArray[d],
+							(int) players[i].playerArray[d + 1],
+							ColorArray[players[i].PlayerID - 1]);
+					ii = new ImageIcon();
+					ii.setImage(bi);
 
-				gamePane.setIcon(ii);
-				gamePane.validate();
+					gamePane.setIcon(ii);
+					gamePane.validate();
 				}
 				ii = new ImageIcon();
 				ii.setImage(bi);
@@ -190,6 +183,27 @@ public class SnakeGUI {
 				// }
 			}
 		}
+	}
+
+	public void setNames(SnakeServerMessage SSM) {
+		for (int i = 0; i < SSM.Players.length; i++) {
+			String name = SSM.Players[i].PlayerName;
+			if (name.length() < 2) {
+
+				name = "Nils   " + i;
+			}
+			if (name.length() < 5) {
+
+				name += "   ";
+			}
+			if (name.length() > 10) {
+				name = name.substring(0, 9);
+			}
+			System.out.println(name);
+			playerScores[i].setText(name + ": " + SSM.Players[i].getScore());
+		}
+		showScores(SSM);
+		nameSet = 1;
 	}
 
 	public void renderNewGame() {
@@ -213,10 +227,19 @@ public class SnakeGUI {
 
 	}
 
-	/*public static void main(String[] arg) {
-		SnakeGUI SG = new SnakeGUI();
-		SG.render();
+	/*
+	 * public static void main(String[] arg) { SnakeGUI SG = new SnakeGUI();
+	 * SG.render();
+	 * 
+	 * }
+	 */
 
-	}*/
+	public void showScores(SnakeServerMessage SSM) {
+		
+		
+		for (int i = 0 ; i < SSM.Players.length; i++){
+			playerScores[i].setVisible(true);
+		}
+	}
 
 }
