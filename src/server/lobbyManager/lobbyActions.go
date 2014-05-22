@@ -26,7 +26,7 @@ func ReqHost(hostNew messages.HostNew, clientInfo ClientCore) (hostedRoom messag
 		rd.CS.MaxSize = 2
 	case "Achtung Die Kurve":
 		rd.CS.MinSize = 2
-		rd.CS.MaxSize = 4
+		rd.CS.MaxSize = 8
 	default:
 		panic("Invalid game type: " + rd.CS.GameType)
 	}

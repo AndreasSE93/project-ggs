@@ -45,6 +45,7 @@ type ProcessedMessage struct {
 	Update UpdateRooms
 	MoveM MoveMessage
 	Snakes SnakesEvent
+	Kick KickMessage
 }
 
 type InitMessage struct {

@@ -4,6 +4,7 @@ import(
 	"server/messages"
 	"server/games"
 	"server/encoders"
+	"fmt"
 )
 
 func InitTicTac(gameRoom *GameRoom) {
@@ -29,6 +30,7 @@ func InitTicTac(gameRoom *GameRoom) {
 			gameRoom.SendMult <- MultipleMessage{encoders.EncodeMoveMessage(processed.MoveM), gameRoom.roomData.CS.ClientCount, gameRoom.roomData.CS.Clients}
 
 		} else if processed.ID == messages.KICK_ID {
+			fmt.Println("KickMessage Recived")
 			gameBoard = games.ClearBoard(gameBoard)
 			gameRoom.SendMult <- MultipleMessage{encoders.EncodeMoveMessage(processed.MoveM), gameRoom.roomData.CS.ClientCount, gameRoom.roomData.CS.Clients}
 		} else if processed.ID == messages.ROOM_CLOSED_ID {

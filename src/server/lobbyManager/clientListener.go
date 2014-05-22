@@ -73,6 +73,10 @@ func messageInterpreter(messageTransfer chan string, sendToLobby chan messages.P
 			snakes := new(messages.SnakesEvent)
 			json.Unmarshal([]byte(message), snakes)
 			pMsg.Snakes = *snakes
+		} else if pMsg.ID == messages.KICK_ID {
+			kick := new(messages.KickMessage)
+			json.Unmarshal([]byte(message), kick)
+			pMsg.Kick = *kick
 		} else {
 			fmt.Printf("Unknown packet received: %+v\n", *pMsg)
 			continue

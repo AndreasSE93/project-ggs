@@ -86,11 +86,16 @@ func gameRoomListener(gameRoom *GameRoom) {
 				gameRoom.SendSingle <- SingleMessage{encoders.EncodeStartable(true), gameRoom.roomData.CS.Clients[0]}
 			}
 		} else if processed.ID == messages.KICK_ID {
+			
 			if room := gameRoom.lm.Kick(processed.Origin); room != nil {
+
 				gameRoom.roomData = *room
+			
 			} else {
+			
 				break
 			}
+		
 			gameRoom.SendSingle <- SingleMessage{encoders.EncodeKick(), processed.Origin}
 			gameRoom.SendSingle <- SingleMessage{encoders.EncodeStartable(false), gameRoom.roomData.CS.Clients[0]}
 			gameRoom.SendMult <- MultipleMessage{encoders.EncodeJoinedRoom(gameRoom.roomData), gameRoom.roomData.CS.ClientCount, gameRoom.roomData.CS.Clients}
