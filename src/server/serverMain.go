@@ -8,13 +8,13 @@ import (
 	"bufio"
 	"flag"
 	"encoding/json"
-	"container/list"
 	"server/database"
 	"server/database/lobbyMap"
 	"server/connection"
 	"server/lobbyManager"
 	"server/messages"
 	"server/encoders"
+	"server/chatRoom"
 	_ "net/http/pprof"
 	"net/http"
 )
@@ -46,19 +46,19 @@ func testConnection(conn connection.Connector) {
 //Have a channel to created server clients.
 //Now make them available to waitingLobbyManager to continue.
 //Save in slice, array or map?
-func connectionHandler(connectorChannel chan connection.Connector, db *database.Database, lm *lobbyMap.LobbyMap, waitingLobby chan connection.Connector, conList *list.List) {
+func connectionHandler(connectorChannel chan connection.Connector, db *database.Database, lm *lobbyMap.LobbyMap, cr *chatRoom.ChatRoom) {
 	for {
 		client := <- connectorChannel
 		//fmt.Printf("Client %d connected: %+v\n", client.ConnectorID, client)
 		testConnection(client)
-		db.Add(client)
-		go lobbyManager.ClientListener(lm, db, client)
+		db.Add(interface{}(client.ConnectorID), interface{}(client))
+		go lobbyManager.ClientListener(lm, db, client, cr)
 	}
 }
 
 //Managing which waitinglobby the connectors get to join.
 //Handling spawning of new waitinglobbys.
-func waitingLobbyManager(lobbyContact chan chan connection.Connector, conList *list.List) {
+func waitingLobbyManager(lobbyContact chan chan connection.Connector) {
 	db := database.New()
 
 	lm := lobbyMap.Init(db)
@@ -66,19 +66,18 @@ func waitingLobbyManager(lobbyContact chan chan connection.Connector, conList *l
 	connectionChannel := make(chan connection.Connector)
 	lobbyContact <- connectionChannel
 
-	wlChannel := make(chan connection.Connector)
-	connectionHandler(connectionChannel, db, lm, wlChannel, conList)
+	cr := chatRoom.Initialise()
+	connectionHandler(connectionChannel, db, lm, cr)
 }
 
 //Create a connection. Simulates as a client on the server.
 //CREATE A CONNECTOR(Client) PACKAGE FOR THIS?
-func initConnector(netConn net.Conn, lobbyContact chan connection.Connector, idCh chan int, conList *list.List) {
+func initConnector(netConn net.Conn, lobbyContact chan connection.Connector, idCh chan int) {
 	conn := new(connection.Connector)
 	conn.ConnectorID = <- idCh
 	conn.Connection  = netConn
 	conn.CurrentRoom = -1
 	conn.Scanner = bufio.NewScanner(netConn)
-	conList.PushBack(conn.Connection)
 
 	lobbyContact <- *conn
 }
@@ -104,9 +103,7 @@ func main() {
 	lobbyContact := make(chan chan connection.Connector)
 	idChannel := make(chan int)
 
-	conList := list.New()
-
-	go waitingLobbyManager(lobbyContact, conList)
+	go waitingLobbyManager(lobbyContact)
 	go idGenerator(idChannel)
 
 	//Here to not depend on the channel created in the initiation of the server.
@@ -126,6 +123,6 @@ func main() {
 			continue
 		}
 		// a goroutine handles conn so that the loop can accept other connections
-		go initConnector(conn, clientChannel, idChannel, conList)
+		go initConnector(conn, clientChannel, idChannel)
 	}	
 }

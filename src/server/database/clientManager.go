@@ -9,12 +9,12 @@ func (db Database) GetID(conn connection.Connector) {
 }
 
 func (db Database) GetRoom(conn connection.Connector) int {
-	return db.Get(conn.ConnectorID).CurrentRoom
+	return db.Get(interface{}(conn.ConnectorID)).(connection.Connector).CurrentRoom
 }
 
 func (db Database) SetRoom(conn connection.Connector, newRoomID int) connection.Connector {
-	client := db.Get(conn.ConnectorID)
+	client := db.Get(interface{}(conn.ConnectorID)).(connection.Connector)
 	client.CurrentRoom = newRoomID
-	db.Update(client.ConnectorID, client)
+	db.Add(interface{}(client.ConnectorID), interface{}(client))
 	return client
 }
