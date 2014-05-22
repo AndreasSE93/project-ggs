@@ -52,7 +52,7 @@ public class SnakeGUI {
 
 		gamePane = new JLabel();
 		gamePane.setFocusable(true);
-		// gamePane.addKeyListener(this);
+
 
 		achtungPanel.add(createTextPanel(), BorderLayout.EAST);
 		achtungPanel.add(gamePane);
@@ -66,21 +66,7 @@ public class SnakeGUI {
 		window.setVisible(true);
 		window.validate();
 
-		// Temp play
 
-		/*
-		 * SnakePlayer[] players = new SnakePlayer[4]; int posy1 = 100; int
-		 * posy2 = 200; int posy3 = 300; int posy4 = 400; for (int i = 0; i <
-		 * (1035 - 200); i++) { SnakePlayer p1 = new SnakePlayer(1, i, posy1,
-		 * true, 0); SnakePlayer p2 = new SnakePlayer(2, i, posy2, true, 10);
-		 * SnakePlayer p3 = new SnakePlayer(3, i, posy3, true, 15); SnakePlayer
-		 * p4 = new SnakePlayer(4, i, posy4, true, i); players[0] = p1;
-		 * players[1] = p2; players[2] = p3; players[3] = p4; repaint(players);
-		 * try { Thread.sleep(15); } catch (InterruptedException e) { // TODO
-		 * Auto-generated catch block e.printStackTrace(); }
-		 * 
-		 * }
-		 */
 
 	}
 
@@ -112,7 +98,6 @@ public class SnakeGUI {
 		startGame.setBackground(Color.gray.darker());
 		startGame.setActionCommand("startButton");
 
-		//buttons.setBorder(new EmptyBorder(500, 0, 0, 0));
 		buttons.setBackground(Color.gray.darker());
 		buttons.add(startGame);
 		buttons.add(leaveGame);
@@ -134,15 +119,16 @@ public class SnakeGUI {
 			playerScores[i].setVisible(false);
 			playerScores[i].setFont(playerFont);
 			playerScores[i].setBackground(Color.gray.darker());
-			//playerScores[i].setPreferredSize(new Dimension(150,40));
-			//playerScores[i].setBorder(new EmptyBorder(0, 0, 30, 0));
+			
+
+			
 			Color clr = new Color(ColorArray[i]);
 			playerScores[i].setForeground(clr);
 			panelScores.add(playerScores[i]);
 
 		}
 		gameInfo.add(panelScores,BorderLayout.CENTER);
-		// playerScores[i-1].setBorder(new EmptyBorder(0,0,250,0));
+
 	}
 
 	public void updateScore(SnakePlayer p) {
@@ -209,10 +195,7 @@ public class SnakeGUI {
 
 	public void renderNewGame() {
 
-		/*
-		 * for(int index= 0; index<PlayerArray.length; index++){
-		 * PlayerArray[index].revivePlayer(); }
-		 */
+
 
 		for (int k = 0; k < WIDTH; k++) {
 			for (int i = 0; i < HEIGTH; i++) {
@@ -228,12 +211,7 @@ public class SnakeGUI {
 
 	}
 
-	/*
-	 * public static void main(String[] arg) { SnakeGUI SG = new SnakeGUI();
-	 * SG.render();
-	 * 
-	 * }
-	 */
+
 
 	public void showScores(SnakeServerMessage SSM) {
 		

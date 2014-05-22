@@ -56,7 +56,6 @@ public class SnakeHandler implements HandlerInterface, KeyListener, ActionListen
 		while (loop) {
 			try {
 				String mess = receiveMessage();
-				//System.out.println(mess);
 				int id = retrieveId(mess);
 				decodeAndRender(id, mess);
 
@@ -144,7 +143,7 @@ public class SnakeHandler implements HandlerInterface, KeyListener, ActionListen
 		}
 		if(keyEvent != "" && started){
 		SnakeUserMessage SUM = new SnakeUserMessage(Player, keyEvent);
-		System.out.println(SUM);
+
 		try {
 			sendMessage(SME.encodeSnakeUserMessage(SUM));
 		} catch (JSONException e1) {
@@ -175,7 +174,7 @@ public class SnakeHandler implements HandlerInterface, KeyListener, ActionListen
 		if(startable){
 			try {
 				JSONtext = tiStarter.encode(new TiarStartedMessage());
-				System.out.println(JSONtext);
+
 				sendMessage(JSONtext);
 			} catch (JSONException e1) {
 				// TODO Auto-generated catch block
