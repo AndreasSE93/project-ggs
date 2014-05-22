@@ -168,6 +168,7 @@ public class SnakeHandler implements HandlerInterface, KeyListener, ActionListen
 		if(startable){
 			try {
 				JSONtext = tiStarter.encode(new TiarStartedMessage());
+				System.out.println(JSONtext);
 				sendMessage(JSONtext);
 			} catch (JSONException e1) {
 				// TODO Auto-generated catch block

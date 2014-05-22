@@ -13,9 +13,8 @@ import packageManaging.StageFlipper;
 import clientHandlers.LobbyHandler;
 import clientHandlers.SnakeHandler;
 import clientHandlers.TiarHandler;
-
-import clientNetworking.NetManager;
 import clientNetworking.Connection;
+import clientNetworking.NetManager;
 
 public class Monitor {
 
@@ -32,9 +31,11 @@ public class Monitor {
 
 	}
 
+
 	public void init() {
 
-		this.conn = new Connection("192.168.0.17", 8080);
+		this.conn = new Connection("localhost", 8080);
+
 		this.net = new NetManager(conn);
 		try {
 			net.connectToServer();
@@ -105,5 +106,6 @@ public class Monitor {
 					.println("Unknown packageID for Monitor.stop(StageFlipper)");
 		}
 	}
+
 
 }

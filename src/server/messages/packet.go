@@ -162,8 +162,7 @@ type  Player struct {
 type SnakeMessage struct {
 	PacketID int `json:"PacketID"`
 	PlayerArray []Player `json:"PlayerArray"`
-
-
+	ClearBoard bool
 }
 
 //----------------------------------------------------

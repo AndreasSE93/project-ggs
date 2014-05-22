@@ -15,6 +15,8 @@ import (
 	"server/lobbyManager"
 	"server/messages"
 	"server/encoders"
+	_ "net/http/pprof"
+	"net/http"
 )
 
 //Use it as a check that all is completed for a client to know it have a connection to the server
@@ -47,7 +49,7 @@ func testConnection(conn connection.Connector) {
 func connectionHandler(connectorChannel chan connection.Connector, db *database.Database, lm *lobbyMap.LobbyMap, waitingLobby chan connection.Connector, conList *list.List) {
 	for {
 		client := <- connectorChannel
-		fmt.Printf("Client %d connected: %+v\n", client.ConnectorID, client)
+		//fmt.Printf("Client %d connected: %+v\n", client.ConnectorID, client)
 		testConnection(client)
 		db.Add(client)
 		go lobbyManager.ClientListener(lm, db, client)
@@ -93,6 +95,9 @@ func idGenerator(idCh chan int) {
 //Purpose is to establish all for connection requests, waiting lobbys, etc.
 //Keep now. Redo later..
 func main() {
+	go func() {
+		http.ListenAndServe(":6060", nil)
+	}()
 	listenAddr := flag.String("host", ":8080", "address to host server on")
 	flag.Parse()
 

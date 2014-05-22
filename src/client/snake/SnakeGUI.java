@@ -167,7 +167,7 @@ public class SnakeGUI {
 			// if(i == 0){ uncomment to only track player 1
 			//System.out.println(i + "PosX:" + players[i].getPosX() + "PosY"
 			//		+ players[i].getPosY());
-	
+			//System.out.println("Kom hit till paint");
 			if (players[i].isAlive()) {
 
 				updateScore(players[i]);
