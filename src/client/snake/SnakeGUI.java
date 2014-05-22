@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 
@@ -39,7 +40,7 @@ public class SnakeGUI {
 
 	public void render() {
 		window.setSize(1035, 790);
-		window.setLayout(new BorderLayout());
+	
 
 		window.setLocationRelativeTo(null);
 		window.setResizable(false);
@@ -60,7 +61,7 @@ public class SnakeGUI {
 		gamePane.setFocusable(true);
 		renderNewGame();
 
-		window.add(achtungPanel, BorderLayout.NORTH);
+		window.add(achtungPanel);
 
 		window.setVisible(true);
 		window.validate();
@@ -85,11 +86,11 @@ public class SnakeGUI {
 
 	public JPanel createTextPanel() {
 
-		JPanel gameInfo = new JPanel();
+		JPanel gameInfo = new JPanel(new BorderLayout());
 		gameInfo.setPreferredSize(new Dimension(200, 790));
 		gameInfo.setBackground(Color.gray.darker());
 
-		JTextArea gameName = new JTextArea("Achtung Die Kurve");
+		JTextArea gameName = new JTextArea("          Achtung Die Kurve");
 		Font font = new Font("Helvetica", Font.BOLD, 12);
 		gameName.setFont(font);
 		gameName.setEditable(false);
@@ -111,7 +112,7 @@ public class SnakeGUI {
 		startGame.setBackground(Color.gray.darker());
 		startGame.setActionCommand("startButton");
 
-		buttons.setBorder(new EmptyBorder(250, 0, 0, 0));
+		//buttons.setBorder(new EmptyBorder(500, 0, 0, 0));
 		buttons.setBackground(Color.gray.darker());
 		buttons.add(startGame);
 		buttons.add(leaveGame);
@@ -123,6 +124,9 @@ public class SnakeGUI {
 
 	public void createPlayerPanels(JPanel gameInfo) {
 		Font playerFont = new Font("Helvetica", Font.BOLD, 20);
+		JPanel panelScores = new JPanel(new GridLayout(8,1));
+		panelScores.setBorder(new EmptyBorder(0, 40, 0, 0));
+		panelScores.setBackground(Color.gray.darker());
 		int i;
 		for (i = 0; i < playerScores.length; i++) {
 
@@ -130,12 +134,14 @@ public class SnakeGUI {
 			playerScores[i].setVisible(false);
 			playerScores[i].setFont(playerFont);
 			playerScores[i].setBackground(Color.gray.darker());
-			playerScores[i].setBorder(new EmptyBorder(0, 0, 30, 0));
+			//playerScores[i].setPreferredSize(new Dimension(150,40));
+			//playerScores[i].setBorder(new EmptyBorder(0, 0, 30, 0));
 			Color clr = new Color(ColorArray[i]);
 			playerScores[i].setForeground(clr);
-			gameInfo.add(playerScores[i]);
+			panelScores.add(playerScores[i]);
 
 		}
+		gameInfo.add(panelScores,BorderLayout.CENTER);
 		// playerScores[i-1].setBorder(new EmptyBorder(0,0,250,0));
 	}
 
@@ -196,8 +202,8 @@ public class SnakeGUI {
 
 				name += "   ";
 			}
-			if (name.length() > 10) {
-				name = name.substring(0, 9);
+			if (name.length() > 8) {
+				name = name.substring(0, 7);
 			}
 			System.out.println(name);
 			playerScores[i].setText(name + ": " + SSM.Players[i].getScore());

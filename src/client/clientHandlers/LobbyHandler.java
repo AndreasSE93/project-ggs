@@ -80,7 +80,7 @@ public class LobbyHandler implements HandlerInterface, ActionListener {
 		while (loop) {
 			try {
 				String mess = receiveMessage();
-			
+				System.out.println(mess);
 				int id = retrieveId(mess);
 				decodeAndRender(id, mess);
 				
