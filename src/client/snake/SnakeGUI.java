@@ -25,11 +25,12 @@ public class SnakeGUI {
 	public JPanel achtungPanel;
 	public JButton leaveGame;
 	public JButton startGame;
+	
 	final private int WIDTH = 1035 - 200;
 	final private int HEIGTH = 790;
 
 	private JTextArea p1, p2, p3, p4;
-	private JTextArea[] playerScores = { p1, p2, p3, p4 };
+	public JTextArea[] playerScores = { p1, p2, p3, p4 };
 
 	private int[] ColorArray = { Color.red.getRGB(), Color.blue.getRGB(),
 			Color.green.getRGB(), Color.yellow.getRGB() };
@@ -131,6 +132,7 @@ public class SnakeGUI {
 		Font playerFont = new Font("Helvetica", Font.BOLD, 20);
 		int i;
 		for (i = 0; i < playerScores.length; i++) {
+			
 			playerScores[i] = new JTextArea("Player " + i + ": 0");
 
 			playerScores[i].setFont(playerFont);

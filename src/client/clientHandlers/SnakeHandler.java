@@ -92,7 +92,7 @@ public class SnakeHandler implements HandlerInterface, KeyListener, ActionListen
 			SG.repaint(SSM.Players);
 			else
 			SG.renderNewGame();
-			
+			SG.playerScores[0].setText(SSM.Players[0].PlayerName +": " + SSM.Players[0].getScore());
 			break;
 			
 		default:

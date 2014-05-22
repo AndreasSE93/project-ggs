@@ -57,7 +57,7 @@ public class LobbyGUI {
 		topPanel.setLayout(new BorderLayout());
 		eastTopPanel.setLayout(new BorderLayout());
 		westTopPanel.setLayout(new BorderLayout());
-		refreshButton = new JButton();
+		refreshButton = new JButton("r");
 		makeJButton(refreshButton, "resources/refreshButton.png",
 				"refreshbutton");
 		
@@ -93,7 +93,7 @@ public class LobbyGUI {
 		
 		refreshButton.setBorder(null);
 		
-		joinButton = new JButton();
+		joinButton = new JButton("j");
 		panel.setBorder((new EmptyBorder(10, 30, 10, 30)));
 		panel.setBackground(Color.DARK_GRAY);
 		makeJButton(joinButton, "resources/JoinButton.png", "joinbutton");
@@ -110,7 +110,7 @@ public class LobbyGUI {
 	}
 
 	public void makeGameList(JPanel panel, ArrayList<String> L) {
-		createButton = new JButton();
+		createButton = new JButton("C");
 		
 		makeJButton(createButton, "resources/CreateButton.png", "createbutton");
 		panel.add(createButton, BorderLayout.SOUTH);
