@@ -164,10 +164,6 @@ public class SnakeGUI {
 
 	public void repaint(SnakePlayer[] players) {
 		for (int i = 0; i < players.length; i++) {
-			// if(i == 0){ uncomment to only track player 1
-			// System.out.println(i + "PosX:" + players[i].getPosX() + "PosY"
-			// + players[i].getPosY());
-			System.out.println(i);
 			if (players[i].isAlive()) {
 
 				updateScore(players[i]);
@@ -205,7 +201,6 @@ public class SnakeGUI {
 			if (name.length() > 8) {
 				name = name.substring(0, 7);
 			}
-			System.out.println(name);
 			playerScores[i].setText(name + ": " + SSM.Players[i].getScore());
 		}
 		showScores(SSM);

@@ -88,7 +88,6 @@ public class LobbyHandler implements HandlerInterface, ActionListener {
 				e.printStackTrace();
 			}
 		}
-		System.out.println("After while");
 		lg.lobby.setVisible(false);
 		return this.saveMsg;
 	}
