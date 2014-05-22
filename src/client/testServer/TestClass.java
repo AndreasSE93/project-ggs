@@ -27,7 +27,7 @@ public class TestClass implements Runnable{
 		}
 		
 	public void init(){
-		Connection conn = new Connection("130.243.137.247", 8081);
+		Connection conn = new Connection("130.243.137.96", 8080);
 		NetManager network = new NetManager(conn);
 		CreateGameMessageEncoder gme = new CreateGameMessageEncoder();
 		TiarStartedMessageEncoder tiStarter = new TiarStartedMessageEncoder();
@@ -77,7 +77,7 @@ public class TestClass implements Runnable{
 	}
 	
 	public void init2(){
-		Connection conn = new Connection("130.243.137.247", 8080);
+		Connection conn = new Connection("130.243.137.96", 8080);
 		NetManager network = new NetManager(conn);
 		CreateGameMessageEncoder gme = new CreateGameMessageEncoder();
 		TiarStartedMessageEncoder tiStarter = new TiarStartedMessageEncoder();

@@ -112,6 +112,7 @@ public class SnakeGUI {
 		leaveGame = new JButton("Leave");
 		leaveGame.setFont(font);
 		leaveGame.setBackground(Color.gray.darker());
+		leaveGame.setActionCommand("kick");
 
 		startGame = new JButton("Start");
 		startGame.setFont(font);

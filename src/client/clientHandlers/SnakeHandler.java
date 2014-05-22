@@ -10,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import packageManaging.HostRoomEncoder;
+import packageManaging.KickMessage;
 import packageManaging.KickMessageEncoder;
 import packageManaging.StageFlipper;
 import packageManaging.TiarStartableMessage;
@@ -50,6 +51,7 @@ public class SnakeHandler implements HandlerInterface, KeyListener, ActionListen
 		SG.achtungPanel.addKeyListener(this);
 		SG.startGame.addActionListener(this);
 		SG.startGame.addKeyListener(this);
+		SG.leaveGame.addActionListener(this);
 		
 		while (loop) {
 			try {
@@ -92,7 +94,8 @@ public class SnakeHandler implements HandlerInterface, KeyListener, ActionListen
 			SG.repaint(SSM.Players);
 			else
 			SG.renderNewGame();
-			SG.playerScores[0].setText(SSM.Players[0].PlayerName +": " + SSM.Players[0].getScore());
+			setNames(SSM);
+			
 			break;
 			
 		default:
@@ -100,6 +103,20 @@ public class SnakeHandler implements HandlerInterface, KeyListener, ActionListen
 		}
 	}
 
+	public void setNames(SnakeServerMessage SSM){
+		int nrPlayers = SG.playerScores.length;
+		for (int i = 0; i < nrPlayers; i++){
+			String name = SSM.Players[i].PlayerName;
+			if (name.length() < 4) {
+				
+				name = "Nils" + i;
+			}
+			System.out.println(name);
+			SG.playerScores[i].setText(name +": " + SSM.Players[i].getScore());
+		}
+		
+	}
+	
 	@Override
 	public void sendMessage(String message) {
 		
@@ -177,6 +194,24 @@ public class SnakeHandler implements HandlerInterface, KeyListener, ActionListen
 			
 			
 		}
+		
+		/*case "kick":
+			try {
+				JSONtext = kEnc.encode(new KickMessage());
+				System.out.println(JSONtext);
+				sendMessage(JSONtext);
+			} catch (JSONException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			*/
+			
+		
+		
+			
+		default:
+			break;
+		
 		
 	 }
 
