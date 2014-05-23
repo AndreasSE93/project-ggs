@@ -17,7 +17,7 @@ type ClientCore struct {
 	lm *lobbyMap.LobbyMap
 }
 
-func messageInterpreter(messageTransfer chan string, sendToLobby chan messages.ProcessedMessage, client connection.Connector, updateClient chan connection.Connector) {
+func messageInterpreter(messageTransfer chan string, sendToLobby chan messages.ProcessedMessage, client connection.Connector) {
 	defer close(sendToLobby)
 	for {
 		pMsg := new(messages.ProcessedMessage)
@@ -26,17 +26,13 @@ func messageInterpreter(messageTransfer chan string, sendToLobby chan messages.P
 			return
 		}
 		json.Unmarshal([]byte(message), pMsg)
-
-		select {
-		case client = <-updateClient:
-		default:
-		}
 		pMsg.Origin = client
 
 		if pMsg.ID == messages.INIT_ID {
 			initM := new(messages.InitMessage)
 			json.Unmarshal([]byte(message), initM)
 			pMsg.InitM = *initM
+			client.UserName = initM.UserName
 		} else if pMsg.ID == messages.CHAT_ID {
 			chatM := new(messages.ChatMessage)
 			json.Unmarshal([]byte(message), chatM)
@@ -82,10 +78,10 @@ func messageInterpreter(messageTransfer chan string, sendToLobby chan messages.P
 	}
 }
 
-func ActivateReceiver(messageProcessing chan messages.ProcessedMessage, client connection.Connector, updateClient chan connection.Connector) {
+func ActivateReceiver(messageProcessing chan messages.ProcessedMessage, client connection.Connector) {
 	messageTransfer := make(chan string)
 	defer close(messageTransfer)
-	go messageInterpreter(messageTransfer, messageProcessing, client, updateClient)
+	go messageInterpreter(messageTransfer, messageProcessing, client)
 
 	for client.Scanner.Scan() {
 		//fmt.Printf("Received message from client %d: %+v\n", client.ConnectorID, client.Scanner.Text())
@@ -115,10 +111,8 @@ func ClientListener(lm *lobbyMap.LobbyMap, db *database.Database, client connect
 	processedChan := make(chan messages.ProcessedMessage)
 
 	finJSON := make(chan string)
-
-	updateClient := make(chan connection.Connector)
 	
-	go ActivateReceiver(processedChan, core.client, updateClient)
+	go ActivateReceiver(processedChan, core.client)
 	go ActivateSender(finJSON, core.client)
 
 	refreshList := ReqUpdate(messages.UpdateRooms{}, *core)
@@ -128,8 +122,6 @@ func ClientListener(lm *lobbyMap.LobbyMap, db *database.Database, client connect
 	client = db.Get(interface{}(client.ConnectorID)).(connection.Connector)
 	client.UserName = processed.InitM.UserName
 	db.Add(interface{}(client.ConnectorID), interface{}(client))
-	updateClient <-client
-	fmt.Println("after first processed")
 	cr.Connect(client)
 
 	lobbyChan := make(chan messages.ProcessedMessage)
