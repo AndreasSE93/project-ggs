@@ -1,6 +1,7 @@
+// A simple chat room.
 package chatRoom
 
-import(
+import (
 	"fmt"
 	"server/connection"
 	"server/messages"
@@ -9,6 +10,7 @@ import(
 )
 
 type ChatRoom struct {
+	// Channels for sending requests to receiver
 	add chan connection.Connector
 	del chan int
 	collectMsg chan messages.ProcessedMessage
@@ -20,23 +22,28 @@ type send struct {
 	shadow []interface{}
 }
 
+// Sends the chat message to all clients connected to the chat room, including the sender.
 func (chatRoom ChatRoom) SendMessage(msg messages.ProcessedMessage) {
 	chatRoom.collectMsg <- msg
 }
 
+// Adds the client to the chat room.
+// Any messages send to the chat room will be relayed to the new client.
 func (chatRoom ChatRoom) Connect(client connection.Connector) {
-	fmt.Println("COnnect")
 	chatRoom.add <- client
 }
 
+// Removes the client from the chat room.
+// Messages send to the chat room will not be sent to this client any more
 func (chatRoom ChatRoom) Disconnect(client connection.Connector) {
 	chatRoom.del <- client.ConnectorID
 }
 
+// Go-routine for sending chat messages to all clients
 func sender(outgoing chan send) {
 	defer func() {
 		if err := recover(); err != nil {
-			fmt.Println("Player has left chatroom")
+			fmt.Println("Failed to send chat message:", err)
 		}
 	}()
 
@@ -49,6 +56,7 @@ func sender(outgoing chan send) {
 	}
 }
 
+// Opens a new chat room
 func Initialise() *ChatRoom {
 	db := database.New()
 	chatRoom := new(ChatRoom)
@@ -62,18 +70,18 @@ func Initialise() *ChatRoom {
 	return chatRoom
 }
 
+// Go-routine for listening to requests.
+// Used to create a bottleneck to prevent data races
 func receiver(chatRoom ChatRoom, db *database.Database) {
 	s := send{}
 	for {
 		select {
 		case e := <- chatRoom.add:
 			db.Add(interface{}(e.ConnectorID), interface{}(e))
-			fmt.Println(db.GetShadow())
 		case key := <- chatRoom.del:
 			db.Delete(interface{}(key))
 		case msg := <- chatRoom.collectMsg:
 			s.shadow = db.GetShadow()
-			fmt.Println(s.shadow)
 			s.msg = msg
 			chatRoom.sendCh <- s
 		}
