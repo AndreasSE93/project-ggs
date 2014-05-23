@@ -11,7 +11,8 @@ func InitTicTac(gameRoom *GameRoom) {
 	gameBoard := games.InitBoard()
 	
 	for processed := range gameRoom.RuleChan {
-		if processed.ID == messages.TTT_MOVE_ID {
+		switch processed.ID {
+		case messages.TTT_MOVE_ID:
 			move := processed.MoveM.Move
 			if games.IsValidMove(move, gameBoard) == 1 {
 				gameBoard = games.MakeMove(move, processed.MoveM.Player, gameBoard)
@@ -28,12 +29,11 @@ func InitTicTac(gameRoom *GameRoom) {
 				processed.MoveM.IsValid = 0
 			}
 			gameRoom.SendMult <- MultipleMessage{encoders.EncodeMoveMessage(processed.MoveM), gameRoom.roomData.CS.ClientCount, gameRoom.roomData.CS.Clients}
-
-		} else if processed.ID == messages.KICK_ID {
+		case messages.KICK_ID:
 			fmt.Println("KickMessage Recived")
 			gameBoard = games.ClearBoard(gameBoard)
 			gameRoom.SendMult <- MultipleMessage{encoders.EncodeMoveMessage(processed.MoveM), gameRoom.roomData.CS.ClientCount, gameRoom.roomData.CS.Clients}
-		} else if processed.ID == messages.ROOM_CLOSED_ID {
+		case messages.ROOM_CLOSED_ID:
 			break
 		}
 	}

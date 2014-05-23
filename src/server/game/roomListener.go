@@ -38,13 +38,8 @@ func sendToSingle(SendOutChan chan SingleMessage) {
 		}
 	}()
 
-	for {
-		message, ok := <- SendOutChan
-		if ok {
-			message.conn.Connection.Write([]byte(message.message + "\n"))
-		} else {
-			return
-		}
+	for message := range SendOutChan {
+		message.conn.Connection.Write([]byte(message.message + "\n"))
 	}
 }
 
@@ -56,14 +51,9 @@ func sendImmediateMessage(SendOutChan chan MultipleMessage) {
 		}
 	}()
 
-	for {
-		message, ok := <- SendOutChan
-		if ok {
-			for i := 0; i < message.ClientCount; i++ {
-				message.conn[i].Connection.Write([]byte(message.message + "\n"))
-			}
-		} else {
-			return
+	for message := range SendOutChan {
+		for i := 0; i < message.ClientCount; i++ {
+			message.conn[i].Connection.Write([]byte(message.message + "\n"))
 		}
 	}
 }
@@ -71,10 +61,10 @@ func sendImmediateMessage(SendOutChan chan MultipleMessage) {
 func gameRoomListener(gameRoom *GameRoom) {
 	gameRoom.SendMult <- MultipleMessage{encoders.EncodeHostedRoom(gameRoom.roomData), gameRoom.roomData.CS.ClientCount, gameRoom.roomData.CS.Clients}
 	for processed := range gameRoom.roomData.SS.GameChan {
-		if processed.ID == messages.CHAT_ID {
+		switch processed.ID {
+		case messages.CHAT_ID:
 			gameRoom.SendMult <- MultipleMessage{encoders.EncodeChatMessage(processed.ChatM, processed.Origin), gameRoom.roomData.CS.ClientCount, gameRoom.roomData.CS.Clients}
-
-		} else if processed.ID == messages.JOIN_ID {
+		case messages.JOIN_ID:
 			if room := gameRoom.lm.GetRoom(gameRoom.roomData.CS.RoomID); room.CS.RoomID > 0 {
 				gameRoom.roomData = room
 			} else {
@@ -85,17 +75,12 @@ func gameRoomListener(gameRoom *GameRoom) {
 				gameRoom.Startable = true
 				gameRoom.SendSingle <- SingleMessage{encoders.EncodeStartable(true), gameRoom.roomData.CS.Clients[0]}
 			}
-		} else if processed.ID == messages.KICK_ID {
-			
+		case messages.KICK_ID:
 			if room := gameRoom.lm.Kick(processed.Origin); room != nil {
-
 				gameRoom.roomData = *room
-			
 			} else {
-			
 				break
 			}
-		
 			gameRoom.SendSingle <- SingleMessage{encoders.EncodeKick(), processed.Origin}
 			gameRoom.SendSingle <- SingleMessage{encoders.EncodeStartable(false), gameRoom.roomData.CS.Clients[0]}
 			gameRoom.SendMult <- MultipleMessage{encoders.EncodeJoinedRoom(gameRoom.roomData), gameRoom.roomData.CS.ClientCount, gameRoom.roomData.CS.Clients}
@@ -104,8 +89,7 @@ func gameRoomListener(gameRoom *GameRoom) {
 				gameRoom.Startable = false
 				gameRoom.SendMult <- MultipleMessage{encoders.EncodeStartGame(false, 0), gameRoom.roomData.CS.ClientCount, gameRoom.roomData.CS.Clients}
 			}
-
-		} else if processed.ID == messages.START_ID {
+		case messages.START_ID:
 			if gameRoom.Startable {
 				gameRoom.Started = true
 				fmt.Printf("Game %d started\n", gameRoom.roomData.CS.RoomID)

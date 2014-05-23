@@ -25,21 +25,18 @@ func snakeListener(gameRoom *GameRoom) {
 	setNames(gameRoom, PlayerArray)
 	go snakesHandler(PlayerArray, gameRoom, newGameRoom, termChan)
 	for processed := range gameRoom.RuleChan {
-		if processed.ID == messages.SNAKES_CLIENT_ID {
+		switch processed.ID {
+		case messages.SNAKES_CLIENT_ID:
 			fmt.Println("ID",processed.Snakes.PlayerID)
 			PlayerArray[processed.Snakes.PlayerID-1] = games.UpdateMoveSnakes(PlayerArray[processed.Snakes.PlayerID-1], processed.Snakes.Move)
-		} else if processed.ID == messages.JOIN_ID {
+		case messages.JOIN_ID:
 			newGameRoom <- gameRoom.lm.GetRoom(gameRoom.roomData.CS.RoomID)
-			
-			
-		} else if processed.ID == messages.ROOM_CLOSED_ID {
+		case messages.ROOM_CLOSED_ID:
 			termChan <- nil
-		} else if processed.ID == messages.KICK_ID {
+		case messages.KICK_ID:
 			for player:= range PlayerArray {
-			
 				if PlayerArray[player].PlayerName == processed.Origin.UserName {
 					PlayerArray[player] = messages.Player{}
-
 				}
 			}
 		}

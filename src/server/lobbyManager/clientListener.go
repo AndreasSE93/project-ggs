@@ -19,62 +19,54 @@ type ClientCore struct {
 
 func messageInterpreter(messageTransfer chan string, sendToLobby chan messages.ProcessedMessage, client connection.Connector) {
 	defer close(sendToLobby)
-	for {
+	for message := range messageTransfer {
 		pMsg := new(messages.ProcessedMessage)
-		message, ok := <- messageTransfer
-		if !ok {
-			return
-		}
 		json.Unmarshal([]byte(message), pMsg)
 		pMsg.Origin = client
 
-		if pMsg.ID == messages.INIT_ID {
+		switch pMsg.ID {
+		case messages.INIT_ID:
 			initM := new(messages.InitMessage)
 			json.Unmarshal([]byte(message), initM)
 			pMsg.InitM = *initM
 			client.UserName = initM.UserName
-		} else if pMsg.ID == messages.CHAT_ID {
+		case messages.CHAT_ID:
 			chatM := new(messages.ChatMessage)
 			json.Unmarshal([]byte(message), chatM)
 			pMsg.ChatM = *chatM
-
-		} else if pMsg.ID == messages.HOST_ID {
+		case messages.HOST_ID:
 			hostM := new(messages.HostNew)
 			json.Unmarshal([]byte(message), hostM)
 			pMsg.Host = *hostM
-
-		} else if pMsg.ID == messages.JOIN_ID {
+		case messages.JOIN_ID:
 			joinM := new(messages.JoinExisting)
 			json.Unmarshal([]byte(message), joinM) 
 			pMsg.Join = *joinM
-
-		} else if pMsg.ID == messages.REFRESH_ID {
+		case messages.REFRESH_ID:
 			updateM := new(messages.UpdateRooms)
 			json.Unmarshal([]byte(message), updateM)
 			pMsg.Update = *updateM
-
-		} else if pMsg.ID == messages.TTT_CHAT_ID {
+		case messages.TTT_CHAT_ID:
 			chatM := new(messages.ChatMessage)
 			json.Unmarshal([]byte(message), chatM)
 			pMsg.ChatM = *chatM
-			
-		} else if pMsg.ID == messages.TTT_MOVE_ID {
+		case messages.TTT_MOVE_ID:
 			moveM := new(messages.MoveMessage)
 			json.Unmarshal([]byte(message), moveM)
 			pMsg.MoveM = *moveM
-		} else if pMsg.ID == messages.START_ID {
+		case messages.START_ID:
 			startM := new(messages.UpdateRooms)
 			json.Unmarshal([]byte(message), startM)
 			pMsg.Update = *startM
-		} else if pMsg.ID == messages.SNAKES_CLIENT_ID {
+		case messages.SNAKES_CLIENT_ID:
 			snakes := new(messages.SnakesEvent)
 			json.Unmarshal([]byte(message), snakes)
 			pMsg.Snakes = *snakes
-		} else if pMsg.ID == messages.KICK_ID {
+		case messages.KICK_ID:
 			kick := new(messages.KickMessage)
 			json.Unmarshal([]byte(message), kick)
 			pMsg.Kick = *kick
-		} else {
+		default:
 			fmt.Printf("Unknown packet received: %+v\n", *pMsg)
 			continue
 		}
@@ -134,17 +126,11 @@ func ClientListener(lm *lobbyMap.LobbyMap, db *database.Database, client connect
 
 	defer lm.Kick(client)
 
-	for {
-		processed, ok := <- processedChan
-		if !ok {
-			return
-		}
-		//fmt.Printf("Received decoded message: %v\n", processed)
-
-		if processed.ID == messages.CHAT_ID {
+	for processed := range processedChan {
+		switch processed.ID {
+		case messages.CHAT_ID:
 			gameChan <- processed
-	
-		} else if processed.ID == messages.HOST_ID {
+		case messages.HOST_ID:
 			hostedRoom, hostedErr := ReqHost(processed.Host, *core)
 			if hostedErr == nil {
 				gameChan = hostedRoom.SS.GameChan
@@ -153,38 +139,30 @@ func ClientListener(lm *lobbyMap.LobbyMap, db *database.Database, client connect
 			} else {
 				fmt.Printf("Unable to host room: %s\n", hostedErr)
 			}
-
-		} else if processed.ID == messages.JOIN_ID {
+		case messages.JOIN_ID:
 			joinedRoom := ReqJoin(processed.Join, *core)
 			fmt.Println(joinedRoom.SS.GameChan)
 			gameChan = joinedRoom.SS.GameChan
 			gameChan <- processed
 			cr.Disconnect(processed.Origin)
-
-		} else if processed.ID == messages.REFRESH_ID {
+		case messages.REFRESH_ID:
 			refreshList := ReqUpdate(processed.Update, *core)
 			finJSON <- encoders.EncodeRefreshList(refreshList)
-
-		} else if processed.ID == messages.TTT_CHAT_ID {
+		case messages.TTT_CHAT_ID:
 			gameChan <- processed
-
-		} else if processed.ID == messages.TTT_MOVE_ID {
+		case messages.TTT_MOVE_ID:
 			gameChan <- processed
-			
-		} else if processed.ID == messages.START_ID {
+		case messages.START_ID:
 			gameChan <- processed
-
-		} else if processed.ID == messages.KICK_ID {
+		case messages.KICK_ID:
 			gameChan <- processed
 			gameChan = lobbyChan
 			cr.Connect(processed.Origin)
-
-		} else if processed.ID == messages.SNAKES_CLIENT_ID {
+		case messages.SNAKES_CLIENT_ID:
 			gameChan <-processed
-		} else {
+		default:
 			fmt.Println("Something went wrong!")
 		}
-		//fmt.Printf("lm=%+v\n", lm.GetShadow())
 	}
 }
 
