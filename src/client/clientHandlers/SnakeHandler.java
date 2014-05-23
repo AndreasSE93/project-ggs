@@ -93,11 +93,13 @@ public class SnakeHandler implements HandlerInterface, KeyListener, ActionListen
 			SnakeServerMessage SSM = SME.decode(message);
 			if(!SSM.clearBoard)
 			SG.repaint(SSM.Players);
-				if (SSM.hasWon){
-					JOptionPane.showMessageDialog(null, SSM.winnerName + " has won!", "WinnerWinnerChickenDinner", JOptionPane.INFORMATION_MESSAGE);
-				}
-			else
+				
+			else{
 			SG.renderNewGame();
+			if (SSM.hasWon){
+				JOptionPane.showMessageDialog(null, SSM.winnerName + " has won!", "WinnerWinnerChickenDinner", JOptionPane.INFORMATION_MESSAGE);
+			}
+				}
 			if (SG.nameSet == 0)
 			SG.setNames(SSM);
 			
