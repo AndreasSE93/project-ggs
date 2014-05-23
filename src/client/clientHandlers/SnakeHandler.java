@@ -66,6 +66,7 @@ public class SnakeHandler implements HandlerInterface, KeyListener, ActionListen
 			}
 		}
 
+		SG.window.setVisible(false);
 		return saveMsg;
 	}
 
@@ -85,6 +86,7 @@ public class SnakeHandler implements HandlerInterface, KeyListener, ActionListen
 			break;
 			
 		case 404:
+			System.out.println("404 kcik");
 			this.saveMsg = new StageFlipper(kEnc.decode(message));
 			this.loop = false;
 			break;
@@ -194,17 +196,17 @@ public class SnakeHandler implements HandlerInterface, KeyListener, ActionListen
 			
 		}
 		
-		/*case "kick":
+		case "kick":
 			try {
 				JSONtext = kEnc.encode(new KickMessage());
-				System.out.println(JSONtext);
+				//aJOsSystem.out.println(JSONtext);
 				sendMessage(JSONtext);
 			} catch (JSONException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		
-			*/
+			
 		
 		
 			

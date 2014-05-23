@@ -58,7 +58,7 @@ public class Monitor {
 				JOptionPane.showMessageDialog(null, "Can't connect to server!",
 						"Warning", JOptionPane.ERROR_MESSAGE);
 			}
-			this.LH = new LobbyHandler(net, userName);
+			//this.LH = new LobbyHandler(net, userName);
 			this.stage = 1;
 			Tick();
 		} catch (IOException e) {
@@ -71,6 +71,8 @@ public class Monitor {
 	public void Tick() {
 		while (true) {
 			if (this.stage == 1) {
+				System.out.println("eneter stat 1");
+				this.LH = new LobbyHandler(net, userName);
 				StageFlipper passOn = LH.init(new StageFlipper());
 				stop(passOn);
 			} else if (this.stage == 20) {
@@ -99,6 +101,7 @@ public class Monitor {
 			}
 
 		} else if (flipper.packageID == 404) {
+			System.out.println("Sate 1");
 			this.stage = 1;
 		} else {
 			System.out
