@@ -109,12 +109,14 @@ public class TiarHandler implements HandlerInterface, ActionListener, MouseListe
 					tg.updateGameBoard(mess.Gameboard);
 			
 				if(mess.HasWon != 0){
-					JOptionPane.showMessageDialog(null, "Player: " + Integer.toString(mess.HasWon) + " has won!", "Winner!", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Player: " + Integer.toString(mess.HasWon) + " has won!", "Winner!", JOptionPane.INFORMATION_MESSAGE);
 					tg.clearBoard();
 				}
 				if (mess.IsDraw ==1 ){
+					JOptionPane.showMessageDialog(null, "The game is a draw!", "Draw!", JOptionPane.INFORMATION_MESSAGE);
 					tg.clearBoard();
 				}
+				
 			}
 			break;
 			
