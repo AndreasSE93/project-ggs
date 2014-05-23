@@ -45,6 +45,7 @@ type ProcessedMessage struct {
 	Update UpdateRooms
 	MoveM MoveMessage
 	Snakes SnakesEvent
+	Kick KickMessage
 }
 
 type InitMessage struct {
@@ -163,6 +164,8 @@ type SnakeMessage struct {
 	PacketID int `json:"PacketID"`
 	PlayerArray []Player `json:"PlayerArray"`
 	ClearBoard bool
+	HasWon bool `json:"HasWon"`
+	WinnerName string `json:"WinnerName"`
 }
 
 //----------------------------------------------------
