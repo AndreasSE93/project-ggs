@@ -152,6 +152,25 @@ func fillPixel(gameBoard achtungBoard, x, y int, n byte, time uint16) {
 }
 
 
+func WinnerWinnerChickenDinner(pA []messages.Player) (bool, string) {
+
+	winnerScore := len(pA)*5
+	highestScore := 0
+	winnerName := ""
+	winner := false
+	for i:= 0 ; i<len(pA); i++{
+		if pA[i].Score > highestScore {
+			highestScore = pA[i].Score
+		} 
+		if highestScore > winnerScore {
+			winnerName = pA[i].PlayerName
+			winner = true
+		}
+	}
+	return winner, winnerName
+}
+
+
 
 /*
 

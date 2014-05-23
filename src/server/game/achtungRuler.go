@@ -69,7 +69,7 @@ return -1
 func snakesHandler(pA []messages.Player, gameRoom *GameRoom, newGameRoom chan messages.RoomData, termChan chan interface{}) { 
 	gameBoard := games.InitBoardSnakes()
 	
-	sMess := SingleMessage{}
+//	sMess := SingleMessage{}
 	msg := MultipleMessage{}
 	msg.ClientCount = gameRoom.roomData.CS.ClientCount
 	skip := true
@@ -82,7 +82,7 @@ func snakesHandler(pA []messages.Player, gameRoom *GameRoom, newGameRoom chan me
 			msg.ClientCount = gameRoom.roomData.CS.ClientCount
 		case <- termChan:
 			return
-		case pA = <- paChannel:
+	
 		default:
 		}
 		
@@ -101,15 +101,26 @@ func snakesHandler(pA []messages.Player, gameRoom *GameRoom, newGameRoom chan me
 		games.DoMove(pA, gameBoard, Time, skip)
 		clear := games.AchtungFinished(pA, gameBoard)
 	
-		msg.message = encoders.EncodeSnakeMessage(messages.SNAKES_MOVES_ID, pA, clear)
+		msg.message = encoders.EncodeSnakeMessage(messages.SNAKES_MOVES_ID, pA, clear, false, "")
 		msg.conn = gameRoom.roomData.CS.Clients
 		gameRoom.SendMult <- msg
 		
 		if clear {
+			/*hasWon, WinnerName := games.WinnerWinnerChickenDinner(pA)
+			if hasWon {
+				msg.message = encoders.EncodeSnakeMessage(messages.SNAKES_MOVES_ID, pA, clear, hasWon, WinnerName)
+				msg.conn = gameRoom.roomData.CS.Clients
+				gameRoom.SendMult <- msg
+				pA =  games.InitAchtungPlayerArray(gameRoom.roomData.CS.ClientCount, gameRoom.roomData.CS.MaxSize)
+				setNames(gameRoom, pA)
+				
+				
+				
+			}*/
 			Time = 0
 			time.Sleep(3 * time.Second)
 		
-			}
+			
 			
 		} else {
 			time.Sleep(15 * time.Millisecond )

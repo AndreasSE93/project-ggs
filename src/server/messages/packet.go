@@ -164,6 +164,8 @@ type SnakeMessage struct {
 	PacketID int `json:"PacketID"`
 	PlayerArray []Player `json:"PlayerArray"`
 	ClearBoard bool
+	HasWon bool `json:"HasWon"`
+	WinnerName string `json:"WinnerName"`
 }
 
 //----------------------------------------------------
