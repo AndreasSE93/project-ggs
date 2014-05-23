@@ -91,13 +91,16 @@ public class SnakeHandler implements HandlerInterface, KeyListener, ActionListen
 			
 		case 302: // Recieved updated movements from players, repaint board
 			SnakeServerMessage SSM = SME.decode(message);
+			this.SG.achtungPanel.requestFocus();
 			if(!SSM.clearBoard)
 			SG.repaint(SSM.Players);
 				
 			else{
 			SG.renderNewGame();
+			System.out.println(SSM.hasWon);
 			if (SSM.hasWon){
 				JOptionPane.showMessageDialog(null, SSM.winnerName + " has won!", "WinnerWinnerChickenDinner", JOptionPane.INFORMATION_MESSAGE);
+				
 			}
 				}
 			if (SG.nameSet == 0)
