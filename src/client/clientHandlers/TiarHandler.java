@@ -87,7 +87,8 @@ public class TiarHandler implements HandlerInterface, ActionListener, MouseListe
 				e.printStackTrace();
 			}
 		}
-		return null;
+		tg.window.setVisible(false);
+		return saveMsg;
 	}
 
 	public void decodeAndRender(int id, String message) throws JSONException {
