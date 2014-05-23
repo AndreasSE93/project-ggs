@@ -19,18 +19,7 @@ public class ChatMessageEncoder {
 		
 	}
 	
-	public String encode(TTTMessage mess) throws JSONException {
-		
-		JSONObject obj = new JSONObject();
-		
-	    obj.put("message", mess.message);
-	    obj.put("PacketID", mess.id);
-	    obj.put("user", mess.user);
 
-		String message = obj.toString();
-		return message;
-		
-	}
 
 	public Message decode(String enc) throws JSONException {
 		

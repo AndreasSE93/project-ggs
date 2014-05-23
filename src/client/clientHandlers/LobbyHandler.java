@@ -23,7 +23,7 @@ import packageManaging.StageFlipper;
 import graphicalReference.ChatGUI;
 import graphicalReference.LobbyGUI;
 
-import clientCore.Monitor;
+
 import clientNetworking.NetManager;
 
 public class LobbyHandler implements HandlerInterface, ActionListener {
