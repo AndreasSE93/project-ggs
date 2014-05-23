@@ -156,8 +156,12 @@ func ClientListener(lm *lobbyMap.LobbyMap, db *database.Database, client connect
 			gameChan <- processed
 		case messages.KICK_ID:
 			gameChan <- processed
+			lm.Kick(client)
 			gameChan = lobbyChan
 			cr.Connect(processed.Origin)
+			refreshList := ReqUpdate(messages.UpdateRooms{}, *core)
+			finJSON <- encoders.EncodeRefreshList(refreshList)
+
 		case messages.SNAKES_CLIENT_ID:
 			gameChan <-processed
 		default:

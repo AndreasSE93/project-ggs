@@ -109,7 +109,7 @@ func kickClient(toKick joiner, lm *LobbyMap, hostCollection map[int]messages.Roo
 			room.CS.ClientCount--
 			hostCollection[room.CS.RoomID] = room
 			lm.clientDB.SetRoom(toKick.client, -1)
-			
+			fmt.Println("f1")
 			room.SS.GameChan <- messages.ProcessedMessage{
 				ID: messages.JOIN_ID,
 				Origin: toKick.client,

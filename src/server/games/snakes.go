@@ -162,7 +162,7 @@ func WinnerWinnerChickenDinner(pA []messages.Player) (bool, string) {
 		if pA[i].Score > highestScore {
 			highestScore = pA[i].Score
 		} 
-		if highestScore > winnerScore {
+		if pA[i].Score > winnerScore {
 			winnerName = pA[i].PlayerName
 			winner = true
 		}

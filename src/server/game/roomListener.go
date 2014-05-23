@@ -76,19 +76,20 @@ func gameRoomListener(gameRoom *GameRoom) {
 				gameRoom.SendSingle <- SingleMessage{encoders.EncodeStartable(true), gameRoom.roomData.CS.Clients[0]}
 			}
 		case messages.KICK_ID:
-			if room := gameRoom.lm.Kick(processed.Origin); room != nil {
+			/*if room := gameRoom.lm.Kick(processed.Origin); room != nil {
 				gameRoom.roomData = *room
 			} else {
 				break
 			}
+*/
 			gameRoom.SendSingle <- SingleMessage{encoders.EncodeKick(), processed.Origin}
-			gameRoom.SendSingle <- SingleMessage{encoders.EncodeStartable(false), gameRoom.roomData.CS.Clients[0]}
+			/*gameRoom.SendSingle <- SingleMessage{encoders.EncodeStartable(false), gameRoom.roomData.CS.Clients[0]}
 			gameRoom.SendMult <- MultipleMessage{encoders.EncodeJoinedRoom(gameRoom.roomData), gameRoom.roomData.CS.ClientCount, gameRoom.roomData.CS.Clients}
 			if gameRoom.Started == true {
 				gameRoom.Started = false
 				gameRoom.Startable = false
 				gameRoom.SendMult <- MultipleMessage{encoders.EncodeStartGame(false, 0), gameRoom.roomData.CS.ClientCount, gameRoom.roomData.CS.Clients}
-			}
+			}*/
 		case messages.START_ID:
 			if gameRoom.Startable {
 				gameRoom.Started = true
