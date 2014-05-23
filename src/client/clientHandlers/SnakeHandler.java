@@ -6,6 +6,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.IOException;
 
+import javax.swing.JOptionPane;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -91,6 +93,9 @@ public class SnakeHandler implements HandlerInterface, KeyListener, ActionListen
 			SnakeServerMessage SSM = SME.decode(message);
 			if(!SSM.clearBoard)
 			SG.repaint(SSM.Players);
+				if (SSM.hasWon){
+					JOptionPane.showMessageDialog(null, SSM.winnerName + " has won!", "WinnerWinnerChickenDinner", JOptionPane.INFORMATION_MESSAGE);
+				}
 			else
 			SG.renderNewGame();
 			if (SG.nameSet == 0)
