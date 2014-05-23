@@ -11,19 +11,7 @@ public class LobbyMessageEncoder{
 		
 	}
 
-	
-	public String encode(LobbyClientMessage mess) throws JSONException {
-		
-		JSONObject obj = new JSONObject();
-		
-	    obj.put("actionType", mess.actionType);
-	    obj.put("actionId", mess.actionId);
-	    obj.put("Message", mess.mess);
-	   
-		String message = obj.toString();
-		return message;
-		
-	}
+
 
 	
 	public LobbyServerMessage decode(String mess) throws JSONException {
