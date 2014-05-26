@@ -9,7 +9,7 @@ import clientNetworking.NetManager;
 
 import packageManaging.CreateGameMessage;
 import packageManaging.CreateGameMessageEncoder;
-import packageManaging.TiarStartedMessage;
+import packageManaging.StartedMessage;
 import packageManaging.TiarStartedMessageEncoder;
 
 public class TestClass implements Runnable{
@@ -52,7 +52,7 @@ public class TestClass implements Runnable{
 
 		
 		try {
-			JSONtext = tiStarter.encode(new TiarStartedMessage());
+			JSONtext = tiStarter.encode(new StartedMessage());
 			sendMessage(JSONtext,network);
 			System.out.println("Sent message");
 		} catch (JSONException e) {
@@ -102,7 +102,7 @@ public class TestClass implements Runnable{
 
 		
 		try {
-			JSONtext = tiStarter.encode(new TiarStartedMessage());
+			JSONtext = tiStarter.encode(new StartedMessage());
 			sendMessage(JSONtext,network);
 		
 		} catch (JSONException e) {

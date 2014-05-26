@@ -1,6 +1,6 @@
 package packageManaging;
 
-public class TiarStartableMessage {
+public class StartableMessage {
 
 	public final int PacketID = 202;
 	public boolean isStartable;
