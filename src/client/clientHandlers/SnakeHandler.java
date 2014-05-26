@@ -6,10 +6,13 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.IOException;
 
+import javax.swing.JOptionPane;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import packageManaging.HostRoomEncoder;
+import packageManaging.KickMessage;
 import packageManaging.KickMessageEncoder;
 import packageManaging.StageFlipper;
 import packageManaging.TiarStartableMessage;
@@ -50,11 +53,11 @@ public class SnakeHandler implements HandlerInterface, KeyListener, ActionListen
 		SG.achtungPanel.addKeyListener(this);
 		SG.startGame.addActionListener(this);
 		SG.startGame.addKeyListener(this);
+		SG.leaveGame.addActionListener(this);
 		
 		while (loop) {
 			try {
 				String mess = receiveMessage();
-				//System.out.println(mess);
 				int id = retrieveId(mess);
 				decodeAndRender(id, mess);
 
@@ -63,6 +66,7 @@ public class SnakeHandler implements HandlerInterface, KeyListener, ActionListen
 			}
 		}
 
+		SG.window.setVisible(false);
 		return saveMsg;
 	}
 
@@ -82,16 +86,27 @@ public class SnakeHandler implements HandlerInterface, KeyListener, ActionListen
 			break;
 			
 		case 404:
+			System.out.println("404 kcik");
 			this.saveMsg = new StageFlipper(kEnc.decode(message));
 			this.loop = false;
 			break;
 			
 		case 302: // Recieved updated movements from players, repaint board
 			SnakeServerMessage SSM = SME.decode(message);
+			this.SG.achtungPanel.requestFocus();
 			if(!SSM.clearBoard)
 			SG.repaint(SSM.Players);
-			else
+				
+			else{
 			SG.renderNewGame();
+			System.out.println(SSM.hasWon);
+			if (SSM.hasWon){
+				JOptionPane.showMessageDialog(null, SSM.winnerName + " has won!", "WinnerWinnerChickenDinner", JOptionPane.INFORMATION_MESSAGE);
+				
+			}
+				}
+			if (SG.nameSet == 0)
+			SG.setNames(SSM);
 			
 			break;
 			
@@ -100,6 +115,8 @@ public class SnakeHandler implements HandlerInterface, KeyListener, ActionListen
 		}
 	}
 
+	
+	
 	@Override
 	public void sendMessage(String message) {
 		
@@ -138,6 +155,7 @@ public class SnakeHandler implements HandlerInterface, KeyListener, ActionListen
 		}
 		if(keyEvent != "" && started){
 		SnakeUserMessage SUM = new SnakeUserMessage(Player, keyEvent);
+
 		try {
 			sendMessage(SME.encodeSnakeUserMessage(SUM));
 		} catch (JSONException e1) {
@@ -168,7 +186,7 @@ public class SnakeHandler implements HandlerInterface, KeyListener, ActionListen
 		if(startable){
 			try {
 				JSONtext = tiStarter.encode(new TiarStartedMessage());
-				System.out.println(JSONtext);
+
 				sendMessage(JSONtext);
 			} catch (JSONException e1) {
 				// TODO Auto-generated catch block
@@ -177,6 +195,24 @@ public class SnakeHandler implements HandlerInterface, KeyListener, ActionListen
 			
 			
 		}
+		
+		case "kick":
+			try {
+				JSONtext = kEnc.encode(new KickMessage());
+				//aJOsSystem.out.println(JSONtext);
+				sendMessage(JSONtext);
+			} catch (JSONException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		
+			
+		
+		
+			
+		default:
+			break;
+		
 		
 	 }
 

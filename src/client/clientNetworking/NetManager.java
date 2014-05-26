@@ -40,6 +40,7 @@ public class NetManager {
 		}
 		
 		message = nextLine;
+		System.out.println(message);
 		return message;
 	}
 	

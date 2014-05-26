@@ -23,7 +23,7 @@ import packageManaging.StageFlipper;
 import graphicalReference.ChatGUI;
 import graphicalReference.LobbyGUI;
 
-import clientCore.Monitor;
+
 import clientNetworking.NetManager;
 
 public class LobbyHandler implements HandlerInterface, ActionListener {
@@ -80,7 +80,7 @@ public class LobbyHandler implements HandlerInterface, ActionListener {
 		while (loop) {
 			try {
 				String mess = receiveMessage();
-			
+				System.out.println(mess);
 				int id = retrieveId(mess);
 				decodeAndRender(id, mess);
 				
@@ -88,7 +88,6 @@ public class LobbyHandler implements HandlerInterface, ActionListener {
 				e.printStackTrace();
 			}
 		}
-		System.out.println("After while");
 		lg.lobby.setVisible(false);
 		return this.saveMsg;
 	}
@@ -123,7 +122,7 @@ public class LobbyHandler implements HandlerInterface, ActionListener {
 			
 		case "createbutton":
 			try {
-				JSONtext = gme.encode(new CreateGameMessage(lg.createList.getSelectedValue(), 4 , this.userName));
+				JSONtext = gme.encode(new CreateGameMessage(lg.createList.getSelectedValue(), 2 , this.userName));
 				System.out.println("hello");
 			} catch (JSONException e1) {
 				// TODO Auto-generated catch block

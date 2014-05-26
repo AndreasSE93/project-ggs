@@ -31,7 +31,6 @@ public class TableModel extends AbstractTableModel {
 		return data.length;
 
 	}
-
 	public void addAll(String[][] L) {
 		data = new String[L.length][4];
 

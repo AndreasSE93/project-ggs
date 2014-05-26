@@ -37,10 +37,11 @@ public class TiarGUI extends GameLogic {
 	public JButton[] game = new JButton[9];
 	
 	public JButton startGame;
+	public JButton leaveGame;
 
 	public JFrame window = new JFrame();
 	public JPanel chatPanel = new JPanel();
-	public JTextArea gameName = new JTextArea("Tic Tac Toe");;
+	public JTextArea gameName = new JTextArea("                Tic Tac Toe");
 
 	public ChatGUI chat;
 
@@ -50,7 +51,7 @@ public class TiarGUI extends GameLogic {
 	
 	public void render(String usr) {
 
-		window.setSize(1035,720);
+		window.setSize(1035,790);
 		window.setLayout(new BorderLayout());
 		
 		window.setLocationRelativeTo(null);
@@ -62,8 +63,8 @@ public class TiarGUI extends GameLogic {
 		gamePane.setPreferredSize(new Dimension(1035, 550));
 		gamePane.setBackground(Color.BLACK);
 
-		JPanel gameInfo = new JPanel();
-		gameInfo.setPreferredSize(new Dimension(150,550));
+		JPanel gameInfo = new JPanel(new BorderLayout());
+		gameInfo.setPreferredSize(new Dimension(200,550));
 		gameInfo.setBackground(Color.gray.darker());
 		gamePane.add(gameInfo, BorderLayout.EAST);
 		
@@ -75,11 +76,26 @@ public class TiarGUI extends GameLogic {
 		gameName.setBackground(Color.gray.darker());
 		gameName.setForeground(Color.WHITE);
 		
-		startGame = new JButton("Start Game");
-		startGame.setActionCommand("startButton");
-		gameInfo.add(gameName, BorderLayout.NORTH);
-		gameInfo.add(startGame);
 		
+		JPanel buttons = new JPanel();
+
+		leaveGame = new JButton("Leave");
+		leaveGame.setFont(font);
+		leaveGame.setBackground(Color.gray.darker());
+		leaveGame.setActionCommand("kick");
+
+		startGame = new JButton("Start");
+		startGame.setFont(font);
+		startGame.setBackground(Color.gray.darker());
+		startGame.setActionCommand("startButton");
+
+		buttons.setBackground(Color.gray.darker());
+		buttons.add(startGame);
+		buttons.add(leaveGame);
+		
+		gameInfo.add(buttons, BorderLayout.SOUTH);
+		gameInfo.add(gameName, BorderLayout.NORTH);
+
 		
 		JPanel gameCointainer = new JPanel();
 		gameCointainer.setBackground(Color.DARK_GRAY.darker());
@@ -92,15 +108,17 @@ public class TiarGUI extends GameLogic {
 
 		gameBoard.setBorder(new EmptyBorder(10,10,10,10));
 		
-		gameBoard.add(a1);
-		gameBoard.add(a2);
-		gameBoard.add(a3);
-		gameBoard.add(b1);
-		gameBoard.add(b2);
-		gameBoard.add(b3);
-		gameBoard.add(c1);
-		gameBoard.add(c2);
-		gameBoard.add(c3);
+		
+		game[0] = a1;
+		game[1] = a2;
+		game[2] = a3;
+		game[3] = b1;
+		game[4] = b2;
+		game[5] = b3;
+		game[6] = c1;
+		game[7] = c2;
+		game[8] = c3;
+		
 		
 		a1.setName("a1");
 		a2.setName("a2");
@@ -111,29 +129,11 @@ public class TiarGUI extends GameLogic {
 		c1.setName("c1");
 		c2.setName("c2");
 		c3.setName("c3");
-
-
-		a1.setPreferredSize(new Dimension(150, 150));
-		a2.setPreferredSize(new Dimension(150, 150));
-		a3.setPreferredSize(new Dimension(150, 150));
-		b1.setPreferredSize(new Dimension(150, 150));
-		b2.setPreferredSize(new Dimension(150, 150));
-		b3.setPreferredSize(new Dimension(150, 150));
-		c1.setPreferredSize(new Dimension(150, 150));
-		c2.setPreferredSize(new Dimension(150, 150));
-		c3.setPreferredSize(new Dimension(150, 150));
-
-		game[0] = a1;
-		game[1] = a2;
-		game[2] = a3;
-		game[3] = b1;
-		game[4] = b2;
-		game[5] = b3;
-		game[6] = c1;
-		game[7] = c2;
-		game[8] = c3;
+		
 
 		for(int i =0; i<game.length; i++){
+			gameBoard.add(game[i]);
+			game[i].setPreferredSize(new Dimension(150, 150));
 			invisibleButton(game[i]);
 			
 		}
@@ -199,7 +199,7 @@ public class TiarGUI extends GameLogic {
 		a.setBorder(new EmptyBorder(5,5,5,5));
 	}
 	
-	public int getInt(String Pos) {
+   public int getInt(String Pos) {
 		switch (Pos) {
 		case "a1":
 			return 0;

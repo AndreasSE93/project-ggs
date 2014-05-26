@@ -13,6 +13,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import packageManaging.ChatMessageEncoder;
+import packageManaging.KickMessage;
 import packageManaging.KickMessageEncoder;
 import packageManaging.Message;
 import packageManaging.StageFlipper;
@@ -63,6 +64,7 @@ public class TiarHandler implements HandlerInterface, ActionListener, MouseListe
 		tg.startGame.addActionListener(this);
 
 		tg.chat.field.addActionListener(this);
+		tg.leaveGame.addActionListener(this);
 
 		tg.window.setVisible(true);
 		return runTicTac();
@@ -85,7 +87,8 @@ public class TiarHandler implements HandlerInterface, ActionListener, MouseListe
 				e.printStackTrace();
 			}
 		}
-		return null;
+		tg.window.setVisible(false);
+		return saveMsg;
 	}
 
 	public void decodeAndRender(int id, String message) throws JSONException {
@@ -107,12 +110,14 @@ public class TiarHandler implements HandlerInterface, ActionListener, MouseListe
 					tg.updateGameBoard(mess.Gameboard);
 			
 				if(mess.HasWon != 0){
-					JOptionPane.showMessageDialog(null, "Player: " + Integer.toString(mess.HasWon) + " has won!", "Winner!", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Player: " + Integer.toString(mess.HasWon) + " has won!", "Winner!", JOptionPane.INFORMATION_MESSAGE);
 					tg.clearBoard();
 				}
 				if (mess.IsDraw ==1 ){
+					JOptionPane.showMessageDialog(null, "The game is a draw!", "Draw!", JOptionPane.INFORMATION_MESSAGE);
 					tg.clearBoard();
 				}
+				
 			}
 			break;
 			
@@ -129,6 +134,7 @@ public class TiarHandler implements HandlerInterface, ActionListener, MouseListe
 			break;
 			
 		case 404:
+			System.out.println("kickM");
 			this.saveMsg = new StageFlipper(kEnc.decode(message));
 			this.loop = false;
 			break;
@@ -188,6 +194,20 @@ public class TiarHandler implements HandlerInterface, ActionListener, MouseListe
 				
 				
 			}
+		break;
+		case "kick":
+			
+				try {
+					JSONtext = kEnc.encode(new KickMessage());
+					System.out.println("Sending kick");
+					sendMessage(JSONtext);
+				} catch (JSONException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				
+			
 		break;
 		default:
 	
