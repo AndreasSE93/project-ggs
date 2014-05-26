@@ -61,7 +61,7 @@ func connectionHandler(connectorChannel chan connection.Connector, db *database.
 func waitingLobbyManager(lobbyContact chan chan connection.Connector) {
 	db := database.New()
 
-	lm := lobbyMap.Init(db)
+	lm := lobbyMap.New(db)
 
 	connectionChannel := make(chan connection.Connector)
 	lobbyContact <- connectionChannel

@@ -1,3 +1,4 @@
+// Package lobbyMap implements a database for storing and handling lobby rooms.
 package lobbyMap
 
 import (
@@ -33,6 +34,7 @@ type getter struct {
 	sendBack chan messages.RoomData
 }
 
+// Creates a new room based on s.rd with an unique ID and sends it to s.sendBack.
 func createRoom(s speaker, lm *LobbyMap, hostCollection map[int]messages.RoomData) {
 	s.rd.CS.RoomID = lm.nextID
 	lm.nextID++
@@ -52,6 +54,7 @@ func createRoom(s speaker, lm *LobbyMap, hostCollection map[int]messages.RoomDat
 	s.sendBack <- s.rd
 }
 
+// Adds associate.client to room associate.RoomID and sends back the updated room to associate.sendBack.
 func joinRoom(associate joiner, lm *LobbyMap, hostCollection map[int]messages.RoomData) {
 	room, ok := hostCollection[associate.RoomID]
 	if room.CS.ClientCount < room.CS.MaxSize && ok {
@@ -72,10 +75,12 @@ func joinRoom(associate joiner, lm *LobbyMap, hostCollection map[int]messages.Ro
 	}
 }
 
+// Deletes the room.
 func deleteRoom(RoomID int, hostCollection map[int]messages.RoomData) {
 	delete(hostCollection, RoomID)
 }
 
+// Sends a slice of all rooms in the lobby to sendBack.
 func refreshShadow(sendBack chan []messages.RoomData, hostCollection map[int]messages.RoomData) {
 	giant := make([]messages.RoomData, len(hostCollection))
 	i := 0
@@ -86,6 +91,7 @@ func refreshShadow(sendBack chan []messages.RoomData, hostCollection map[int]mes
 	sendBack <- giant[0:i]
 }
 
+// Removes toKick.client from room toKick.RoomID and sends back the updated room to toKick.sendBack.
 func kickClient(toKick joiner, lm *LobbyMap, hostCollection map[int]messages.RoomData) {
 	room, ok := hostCollection[lm.clientDB.GetRoom(toKick.client)]
 	if ok {
@@ -125,11 +131,13 @@ func kickClient(toKick joiner, lm *LobbyMap, hostCollection map[int]messages.Roo
 	}
 }
 
+// Sends room getter.RoomID to getter.sendBack.
 func getRoom(get getter, hostCollection map[int]messages.RoomData) {
 	//fmt.Printf("Getting room %d: %+v\n", get.id, hostCollection[get.id])
 	get.sendBack <- hostCollection[get.id]
 }
 
+// Go-routine for handling 
 func mapHandler(lm *LobbyMap, hostCollection map[int]messages.RoomData) {
 	for {
 		select {
@@ -149,11 +157,8 @@ func mapHandler(lm *LobbyMap, hostCollection map[int]messages.RoomData) {
 	}
 }
 
-func GetEmptyRoomData() messages.RoomData {
-	return *new(messages.RoomData)
-}
-
-func Init(clientDB *database.Database) *LobbyMap {
+// New returns a new, empty, lobbyMap.
+func New(clientDB *database.Database) *LobbyMap {
 	hostCollection := make(map[int]messages.RoomData)
 	lm := new(LobbyMap)
 	lm.add = make(chan speaker)
@@ -168,6 +173,8 @@ func Init(clientDB *database.Database) *LobbyMap {
 	return lm
 }
 
+// Host creates and returns a new lobby room based on rd.
+// The room will be assigned a new unique ID automatically.
 func (lm LobbyMap) Host(rd messages.RoomData) messages.RoomData {
 	sendBack := make(chan messages.RoomData)
 	speaker := speaker{rd, sendBack}
@@ -175,23 +182,27 @@ func (lm LobbyMap) Host(rd messages.RoomData) messages.RoomData {
 	return <- sendBack
 }
 
-func (lm LobbyMap) Join(id int, client connection.Connector) *messages.RoomData {
+// Join adds client too room roomID and returns the updated room.
+func (lm LobbyMap) Join(roomID int, client connection.Connector) *messages.RoomData {
 	sendBack := make(chan *messages.RoomData)
-	joiner := joiner{id, client, sendBack}
+	joiner := joiner{roomID, client, sendBack}
 	lm.join <- joiner
 	return <- sendBack
 }
 
-func (lm LobbyMap) Delete(RoomID int) {
-	lm.del <- RoomID
+// Deletes removes room roomID
+func (lm LobbyMap) Delete(roomID int) {
+	lm.del <- roomID
 }
 
+// GetShadow returns a slice of rooms currently in the lobby.
 func (lm LobbyMap) GetShadow() []messages.RoomData {
 	sendBack := make(chan []messages.RoomData)
 	lm.getShadow <- sendBack
 	return <-sendBack
 }
 
+// Kick removes conn from the the room conn is currently in.
 func (lm LobbyMap) Kick(conn connection.Connector) *messages.RoomData {
 	kicker := new(joiner)
 	kicker.sendBack = make(chan *messages.RoomData)
@@ -201,6 +212,7 @@ func (lm LobbyMap) Kick(conn connection.Connector) *messages.RoomData {
 	return <- kicker.sendBack
 }
 
+// GetRoom returns a copy of room roomID.
 func (lm LobbyMap) GetRoom(roomID int) messages.RoomData {
 	get := new(getter)
 	get.id = roomID
