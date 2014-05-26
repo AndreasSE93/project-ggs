@@ -1,3 +1,4 @@
+// Package game provides management of a hosted game room.
 package game
 
 import(
@@ -106,6 +107,7 @@ func gameRoomListener(gameRoom *GameRoom) {
 	}
 }
 
+// CreateGameRoom initialises everything needed to simulate a game and a game room.
 func CreateGameRoom(rd messages.RoomData, lm *lobbyMap.LobbyMap) {
 	defer func() {
 		lm.Delete(rd.CS.RoomID)

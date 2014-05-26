@@ -1,3 +1,4 @@
+// Package lobbyManager is listening to a client and performs the action wanted when in lobby.
 package lobbyManager
 
 import (
@@ -74,6 +75,7 @@ func messageInterpreter(messageTransfer chan string, sendToLobby chan messages.P
 	}
 }
 
+// ActivateReceiver collects incoming messages from a client and interprets to correct action chosen on clientside.
 func ActivateReceiver(messageProcessing chan messages.ProcessedMessage, client connection.Connector) {
 	messageTransfer := make(chan string)
 	defer close(messageTransfer)
@@ -90,6 +92,7 @@ func ActivateReceiver(messageProcessing chan messages.ProcessedMessage, client c
 	}
 }
 
+// ActivateSender sends a JSON package to the client.
 func ActivateSender(serverTerminal chan string, client connection.Connector) {
 	for {
 		jsonString := <- serverTerminal
@@ -98,6 +101,7 @@ func ActivateSender(serverTerminal chan string, client connection.Connector) {
 	}
 }
 
+// ClientListener initiates everything needed to handle a client from the server.
 func ClientListener(lm *lobbyMap.LobbyMap, db *database.Database, client connection.Connector, cr *chatRoom.ChatRoom) {
 	defer client.Connection.Close()
 

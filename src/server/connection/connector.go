@@ -1,3 +1,4 @@
+// Package connection contains info about one client on the server.
 package connection
 
 import (

@@ -1,3 +1,4 @@
+// Package database provides a database to save arbitrary data in.
 package database
 
 type getter struct {
@@ -43,6 +44,7 @@ func refreshShadow(sendBack chan []interface{}, dbList map[interface{}]interface
 	sendBack <- giant[0:i]
 }
 
+// New generates a new empty database and returns functions to operate on it.
 func New() *Database {
 	db := new(Database)
 	db.add = make(chan Element)
@@ -53,14 +55,17 @@ func New() *Database {
 	return db
 }
 
+// Add adds an element with given key and value. If it doesn't exist already.
 func (db Database) Add(key interface{}, value interface{}) {
 	db.add <- Element{key, value}
 }
 
+// Delete deletes the element connected to the given key, if it exists.
 func (db Database) Delete(key interface{}) {
 	db.del <- key
 }
 
+// Get returns the element connected to the given key.
 func (db Database) Get(key interface{}) interface{} {
 	ch := make(chan interface{})
 	getter := getter{key, ch}
@@ -68,6 +73,7 @@ func (db Database) Get(key interface{}) interface{} {
 	return <- ch
 }
 
+// GetShadow returns a list of all elements in the database.
 func (db Database) GetShadow() []interface{} {
 	sendBack := make(chan []interface{})
 	db.getShadow <- sendBack
