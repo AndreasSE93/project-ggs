@@ -16,47 +16,47 @@ JAVAC=javac -d $(CLIENT_BIN_PATH) -sourcepath $(CLIENT_SRC_PATH)
 all: server
 
 
+.PHONY: all server ./bin/server client $(CLIENT_BIN_PATH)/%.class runserver runclient docs fmt clean package
+
+
 # Executables
 
-.PHONY:
 server: ./bin/server
 
 ./bin/server: ./src/server
 	$(GOINSTALL) server
 
 
-.PHONY:
 client: $(CLIENT_BIN_PATH)/clientCore/Core.class
 
-$(CLIENT_BIN_PATH)/%.class: $(CLIENT_SRC_PATH)/%.java $(CLIENT_SRC_PATH)/
+$(CLIENT_BIN_PATH)/%.class: $(CLIENT_SRC_PATH)/%.java
 	@echo "javac ... $<"
 	@$(JAVAC) $<
 
 
 # Tools
 
-.PHONY:
 runserver: server
 	./bin/server
 
-.PHONY:
 runclient: client
 	java clientCore.Core
+
+docs:
+	@echo 'Hosting documentation on "http://localhost:8050/pkg/server/":'
+	godoc -index -http=':8050'
 
 
 # Maintenance
 
-.PHONY:
 fmt:
 	find ./src/server -name '*.go' -exec go fmt \{\} \;
 
 
-.PHONY:
 clean:
 	rm -fR ./bin/* ./pkg/*
 
 
-.PHONY:
 package: project-ggs.tar.bz2
 
 project-ggs.tar.bz2: clean
