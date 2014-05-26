@@ -9,7 +9,7 @@ public class SnakePlayer {
 	private boolean Alive;
 	public double []playerArray;
 	private int Score;
-	SnakePlayer(int player, double x, double y, boolean alive, int s,double []pa){
+	public SnakePlayer(int player, double x, double y, boolean alive, int s,double []pa){
 		PlayerID = player;
 		PosX = x;
 		PosY = y;
