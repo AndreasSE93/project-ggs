@@ -180,14 +180,14 @@ public class SnakeHandler implements HandlerInterface, KeyListener, ActionListen
 				JSONtext = enc.encode(new StartedMessage());
 
 				sendMessage(JSONtext);
-				break;
+				
 			} catch (JSONException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			
 			
-		}
+		} break;
 		
 		case "kick":
 			try {
@@ -197,8 +197,9 @@ public class SnakeHandler implements HandlerInterface, KeyListener, ActionListen
 			} catch (JSONException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
-			break;
-			}
+			
+			}break;
+			
 		
 			
 		
