@@ -6,8 +6,8 @@ import javax.swing.JOptionPane;
 
 import org.json.JSONException;
 
+import packageManaging.Encoder;
 import packageManaging.InitializeClientMessage;
-import packageManaging.InitializeClientMessageEncoder;
 import packageManaging.StageFlipper;
 
 import clientHandlers.LobbyHandler;
@@ -49,10 +49,10 @@ public class Monitor {
 				return;
 			}
 			InitializeClientMessage icm = new InitializeClientMessage(userName);
-			InitializeClientMessageEncoder icme = new InitializeClientMessageEncoder();
+			Encoder enc = new Encoder();
 			String mess;
 			try {
-				mess = icme.encode(icm);
+				mess = enc.encode(icm);
 				net.send(mess);
 			} catch (JSONException e) {
 				JOptionPane.showMessageDialog(null, "Can't connect to server!",
