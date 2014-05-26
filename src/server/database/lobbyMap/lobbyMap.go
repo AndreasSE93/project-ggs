@@ -1,7 +1,7 @@
 package lobbyMap
 
 import (
-	"fmt"
+	//"fmt"
 	"server/connection"
 	"server/database"
 	"server/messages"
@@ -38,7 +38,6 @@ func createRoom(s speaker, lm *LobbyMap, hostCollection map[int]messages.RoomDat
 	lm.nextID++
 
 	if roomID := lm.clientDB.GetRoom(s.rd.CS.Clients[0]); roomID > 0 {
-		fmt.Println("KIIIIIIIICKED")
 		kicker := joiner{}
 		kicker.sendBack = make(chan *messages.RoomData)
 		kicker.RoomID = roomID
@@ -89,11 +88,9 @@ func refreshShadow(sendBack chan []messages.RoomData, hostCollection map[int]mes
 
 func kickClient(toKick joiner, lm *LobbyMap, hostCollection map[int]messages.RoomData) {
 	room, ok := hostCollection[lm.clientDB.GetRoom(toKick.client)]
-
 	if ok {
 		found := false
 		for key := range room.CS.Clients {
-
 			if room.CS.Clients[key].ConnectorID == toKick.client.ConnectorID || found {
 				found = true
 				if key < len(room.CS.Clients)-1 {
@@ -104,12 +101,10 @@ func kickClient(toKick joiner, lm *LobbyMap, hostCollection map[int]messages.Roo
 			}
 		}
 		if found {
-			fmt.Println("F")
 			//fmt.Printf("Kicked client %d: %+v\n", toKick.client.ConnectorID, room)
 			room.CS.ClientCount--
 			hostCollection[room.CS.RoomID] = room
 			lm.clientDB.SetRoom(toKick.client, -1)
-			fmt.Println("f1")
 			room.SS.GameChan <- messages.ProcessedMessage{
 				ID: messages.JOIN_ID,
 				Origin: toKick.client,
@@ -118,14 +113,9 @@ func kickClient(toKick joiner, lm *LobbyMap, hostCollection map[int]messages.Roo
 					RoomID: room.CS.RoomID,
 				},
 			}
-			fmt.Println("G")
-			
 		}
-		fmt.Println("H")
 		if room.CS.ClientCount <= 0 {
-			
 			deleteRoom(room.CS.RoomID, hostCollection)
-			
 			toKick.sendBack <- nil
 		} else {
 			toKick.sendBack <- &room
@@ -203,7 +193,6 @@ func (lm LobbyMap) GetShadow() []messages.RoomData {
 }
 
 func (lm LobbyMap) Kick(conn connection.Connector) *messages.RoomData {
-
 	kicker := new(joiner)
 	kicker.sendBack = make(chan *messages.RoomData)
 	kicker.RoomID = conn.CurrentRoom
