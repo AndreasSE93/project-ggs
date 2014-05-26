@@ -1,7 +1,7 @@
 package games
 
 import (
-	"fmt"
+	//"fmt"
 	"math"
 	"time"
 	"math/rand"
@@ -35,12 +35,10 @@ func InitAchtungPlayerArray(numPlayers int, maxPlayers int) (pA []messages.Playe
 }
 
 func ResetAchtungPlayerArray(pA []messages.Player) {
-	fmt.Println("BEFORE",pA)
 	for player := range(pA) {
 		pA[player] = InitAchtungPlayer(pA[player], pA[player].PlayerID)
 		
 	}
-	fmt.Println("AFTER" ,pA)
 	return
 }
 
@@ -75,7 +73,7 @@ func LegalMoveSnakes (player *messages.Player, gameBoard achtungBoard, playerArr
 	}
 	
 	if id := gameBoard[int(player.PosX)][int(player.PosY)]; id.Player != 0 && (time - id.Creation > 360 / TURN_DELTA / 2  || id.Player != byte(player.PlayerID))  {
-		println("Player", player.PlayerID, "hit player", id.Player, id.Creation, time, 360 / TURN_DELTA / 2)
+		//println("Player", player.PlayerID, "hit player", id.Player, id.Creation, time, 360 / TURN_DELTA / 2)
 		player.Alive = false
 		addPoints(playerArray, 1)
 		return false
