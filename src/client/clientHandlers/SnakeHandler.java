@@ -27,7 +27,6 @@ public class SnakeHandler implements HandlerInterface, KeyListener, ActionListen
 	NetManager network;
 	final String userName;
 	int Player = 2;
-
 	Encoder enc = new Encoder();
 	StageFlipper saveMsg;
 	SnakeGUI SG;
@@ -181,6 +180,7 @@ public class SnakeHandler implements HandlerInterface, KeyListener, ActionListen
 				JSONtext = enc.encode(new StartedMessage());
 
 				sendMessage(JSONtext);
+				break;
 			} catch (JSONException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -197,6 +197,7 @@ public class SnakeHandler implements HandlerInterface, KeyListener, ActionListen
 			} catch (JSONException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
+			break;
 			}
 		
 			
