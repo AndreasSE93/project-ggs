@@ -91,7 +91,6 @@ public class SnakeHandler implements HandlerInterface, KeyListener, ActionListen
 				
 			else{
 			SG.renderNewGame();
-			System.out.println(SSM.hasWon);
 			if (SSM.hasWon){
 				JOptionPane.showMessageDialog(null, SSM.winnerName + " has won!", "WinnerWinnerChickenDinner", JOptionPane.INFORMATION_MESSAGE);
 				
@@ -180,25 +179,25 @@ public class SnakeHandler implements HandlerInterface, KeyListener, ActionListen
 				JSONtext = enc.encode(new StartedMessage());
 
 				sendMessage(JSONtext);
-				break;
+				
 			} catch (JSONException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			
 			
-		}
+		} break;
 		
 		case "kick":
 			try {
 				JSONtext = enc.encode(new KickMessage());
-				//aJOsSystem.out.println(JSONtext);
 				sendMessage(JSONtext);
 			} catch (JSONException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
-			break;
-			}
+			
+			}break;
+			
 		
 			
 		

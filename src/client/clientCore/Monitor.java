@@ -34,7 +34,7 @@ public class Monitor {
 
 	public void init() {
 
-		this.conn = new Connection("130.243.137.81", 8080);
+		this.conn = new Connection("130.243.137.68", 8080);
 
 		this.net = new NetManager(conn);
 		try {
@@ -71,7 +71,6 @@ public class Monitor {
 	public void Tick() {
 		while (true) {
 			if (this.stage == 1) {
-				System.out.println("eneter stat 1");
 				this.LH = new LobbyHandler(net, userName);
 				StageFlipper passOn = LH.init(new StageFlipper());
 				stop(passOn);
@@ -101,7 +100,6 @@ public class Monitor {
 			}
 
 		} else if (flipper.packageID == 404) {
-			System.out.println("Sate 1");
 			this.stage = 1;
 		} else {
 			System.out

@@ -92,7 +92,6 @@ public class TiarHandler implements HandlerInterface, ActionListener, MouseListe
 		switch (id) {
 		
 		case 100: // Chat message
-			System.out.println(message);
 			Message chatMessage = enc.chattMessageDecode(message);
 			tg.chat.chatUpdate(chatMessage.message, chatMessage.user);
 			break;
@@ -127,7 +126,7 @@ public class TiarHandler implements HandlerInterface, ActionListener, MouseListe
 			StartedMessage startedGame = enc.startedMessageDecode(message);
 			this.started = startedGame.started;
 			this.Player = startedGame.playerID;
-			System.out.println("STARTEDMESSAGE" + this.Player);
+			
 			break;
 			
 		case 404:
@@ -195,7 +194,6 @@ public class TiarHandler implements HandlerInterface, ActionListener, MouseListe
 			
 				try {
 					JSONtext = enc.encode(new KickMessage());
-					System.out.println("Sending kick");
 					sendMessage(JSONtext);
 				} catch (JSONException e1) {
 					// TODO Auto-generated catch block
