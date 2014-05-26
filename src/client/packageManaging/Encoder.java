@@ -115,7 +115,7 @@ public class Encoder {
 
 	public JoinMessage joinMessageDecode(String mess) throws JSONException {
 		JSONObject obj = new JSONObject(mess);
-		System.out.println(mess);
+		
 
 		JoinMessage lsm = new JoinMessage();
 		JSONObject i = obj.getJSONObject("hostRoom");
@@ -279,7 +279,6 @@ public class Encoder {
 					l.getDouble("PosX"), l.getDouble("PosY"),
 					l.getBoolean("Alive"), l.getInt("Score"), p);
 			sp.PlayerName = l.getString("PlayerName");
-			// System.out.println(sp.PlayerName);
 			SSM.hasWon = obj.getBoolean("HasWon");
 			SSM.winnerName = obj.getString("WinnerName");
 			SSM.Players[i] = sp;

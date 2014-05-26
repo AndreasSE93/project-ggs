@@ -74,7 +74,6 @@ public class LobbyHandler implements HandlerInterface, ActionListener {
 		while (loop) {
 			try {
 				String mess = receiveMessage();
-				System.out.println(mess);
 				int id = retrieveId(mess);
 				decodeAndRender(id, mess);
 				
@@ -117,7 +116,6 @@ public class LobbyHandler implements HandlerInterface, ActionListener {
 		case "createbutton":
 			try {
 				JSONtext = enc.encode(new CreateGameMessage(lg.createList.getSelectedValue(), 2 , this.userName));
-				System.out.println("hello");
 			} catch (JSONException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
