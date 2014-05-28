@@ -18,6 +18,19 @@
    sodipodi:docname="ClientListener.svg">
   <defs
      id="defs4">
+    <marker
+       inkscape:stockid="TriangleOutS"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="TriangleOutS"
+       style="overflow:visible">
+      <path
+         id="path4274"
+         d="M 5.77,0.0 L -2.88,5.0 L -2.88,-5.0 L 5.77,0.0 z "
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1.0pt"
+         transform="scale(0.2)" />
+    </marker>
     <linearGradient
        id="linearGradient3771"
        osb:paint="solid">
@@ -44,7 +57,7 @@
      inkscape:pageshadow="2"
      inkscape:zoom="1.4"
      inkscape:cx="347.80132"
-     inkscape:cy="730.29339"
+     inkscape:cy="701.72196"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -70,6 +83,11 @@
      inkscape:groupmode="layer"
      id="layer1">
     <path
+       style="fill:none;stroke:#d45500;stroke-width:4;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="M 445.92476,244.00122 590.50381,622.866"
+       id="path4120"
+       inkscape:connector-curvature="0" />
+    <path
        style="fill:none;stroke:#ff6600;stroke-width:4;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none"
        d="m 380.71429,95.93361 0.71428,128.57143"
        id="path4044"
@@ -90,8 +108,8 @@
        id="path3997"
        inkscape:connector-curvature="0" />
     <path
-       style="fill:none;stroke:#0000ff;stroke-width:4.07826948;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-       d="m 589.34345,418.81657 2.74168,191.37692"
+       style="fill:none;stroke:#0000ff;stroke-width:4.00172234;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#TriangleOutS)"
+       d="m 589.30518,418.7783 2.7816,181.61548"
        id="path4001"
        inkscape:connector-curvature="0" />
     <rect
@@ -269,8 +287,8 @@
        id="path3995"
        inkscape:connector-curvature="0" />
     <path
-       style="fill:none;stroke:#0000ff;stroke-width:4.01711988;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
-       d="m 426.43714,422.37074 1.41145,104.2686"
+       style="fill:none;stroke:#0000ff;stroke-width:3.94994402;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#TriangleOutS)"
+       d="m 426.41867,422.33715 1.43034,99.47949"
        id="path3999"
        inkscape:connector-curvature="0" />
     <rect
@@ -291,5 +309,45 @@
          id="tspan3797-3"
          x="357.92081"
          y="89.072624">Main</tspan></text>
+    <path
+       sodipodi:type="star"
+       style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:0.79299998;stroke-miterlimit:4;stroke-dasharray:none"
+       id="path4748-6"
+       sodipodi:sides="5"
+       sodipodi:cx="68.571426"
+       sodipodi:cy="512.36218"
+       sodipodi:r1="53.57143"
+       sodipodi:r2="26.785713"
+       sodipodi:arg1="0.92729522"
+       sodipodi:arg2="1.5556137"
+       inkscape:flatsided="true"
+       inkscape:rounded="0"
+       inkscape:randomized="0"
+       d="m 100.71428,555.21933 -62.969731,0.95611 -20.368038,-59.59232 50.381594,-37.78619 51.505575,36.23916 z"
+       inkscape:transform-center-x="0.25133006"
+       inkscape:transform-center-y="-4.8759975"
+       transform="translate(170.25133,76.304568)" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:4;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none;marker-end:url(#TriangleOutS)"
+       d="m 239.28571,451.6479 -1.42857,82.85714"
+       id="path4768"
+       inkscape:connector-curvature="0" />
+    <text
+       xml:space="preserve"
+       style="font-size:18px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="239.07959"
+       y="583.79077"
+       id="text5138"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan5140"
+         x="241.94482"
+         y="583.79077"
+         style="text-align:center;text-anchor:middle">Send to </tspan><tspan
+         sodipodi:role="line"
+         x="239.07959"
+         y="606.29077"
+         id="tspan5142"
+         style="text-align:center;text-anchor:middle">client</tspan></text>
   </g>
 </svg>
