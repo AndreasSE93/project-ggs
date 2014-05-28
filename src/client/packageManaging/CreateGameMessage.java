@@ -1,14 +1,7 @@
 package packageManaging;
 
 
-/**
- * Used to create a generic gameroom on the server with a fixed size.
- * 
- * 
- * 
- * @author Grupp 8
- *
- */
+
 
 public class CreateGameMessage {
 	final int PacketID = 101;

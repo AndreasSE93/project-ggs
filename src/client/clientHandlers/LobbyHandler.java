@@ -40,6 +40,7 @@ public class LobbyHandler implements HandlerInterface, ActionListener {
 	}
 	
 	public StageFlipper init(StageFlipper nothing) {
+		
 
 		String firstcall;
 		LobbyServerMessage LM = null;
@@ -108,7 +109,6 @@ public class LobbyHandler implements HandlerInterface, ActionListener {
 					JOptionPane.showMessageDialog(null, "Room is full!", "Warning", JOptionPane.ERROR_MESSAGE);
 				}
 			} catch (JSONException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			break;
@@ -117,7 +117,6 @@ public class LobbyHandler implements HandlerInterface, ActionListener {
 			try {
 				JSONtext = enc.encode(new CreateGameMessage(lg.createList.getSelectedValue(), 2 , this.userName));
 			} catch (JSONException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			break;
@@ -126,7 +125,6 @@ public class LobbyHandler implements HandlerInterface, ActionListener {
 			try {
 				JSONtext = enc.encode(new RefreshMessage());
 			} catch (JSONException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			break;

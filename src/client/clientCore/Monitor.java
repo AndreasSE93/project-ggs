@@ -34,7 +34,7 @@ public class Monitor {
 
 	public void init() {
 
-		this.conn = new Connection("130.243.137.68", 8080);
+		this.conn = new Connection("130.243.137.81", 8080);
 
 		this.net = new NetManager(conn);
 		try {
@@ -58,11 +58,9 @@ public class Monitor {
 				JOptionPane.showMessageDialog(null, "Can't connect to server!",
 						"Warning", JOptionPane.ERROR_MESSAGE);
 			}
-			//this.LH = new LobbyHandler(net, userName);
 			this.stage = 1;
 			Tick();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
