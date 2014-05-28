@@ -145,7 +145,6 @@ func ClientListener(lm *lobbyMap.LobbyMap, db *database.Database, client connect
 			}
 		case messages.JOIN_ID:
 			joinedRoom := ReqJoin(processed.Join, *core)
-			fmt.Println(joinedRoom.SS.GameChan)
 			gameChan = joinedRoom.SS.GameChan
 			gameChan <- processed
 			cr.Disconnect(processed.Origin)

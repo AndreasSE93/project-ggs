@@ -133,19 +133,21 @@ public class SnakeGUI {
 
 	public void updateScore(SnakePlayer p) {
 		int id = p.PlayerID - 1;
-		String stringText = playerScores[id].getText();
+		if (id >= 0) {
+			String stringText = playerScores[id].getText();
+		
 		int index = 0;
 		for (int i = stringText.length() - 1; i >= 0; i--) {
 			if (stringText.substring(i - 1, i).equals(":")) {
 				index = i;
 				break;
 			}
-
+		
 		}
 
 		playerScores[id].setText(stringText.substring(0, index) + " "
 				+ p.getScore());
-
+		}
 	}
 
 	public void repaint(SnakePlayer[] players) {
@@ -154,6 +156,10 @@ public class SnakeGUI {
 
 				updateScore(players[i]);
 				for (int d = 0; d < 10; d = d + 2) {
+					 int player = players[i].PlayerID - 1;
+					 if (player >= 0){
+						 
+					 
 					bi.setRGB((int) players[i].playerArray[d],
 							(int) players[i].playerArray[d + 1],
 							ColorArray[players[i].PlayerID - 1]);
@@ -168,7 +174,7 @@ public class SnakeGUI {
 
 				gamePane.setIcon(ii);
 				gamePane.validate();
-				// }
+				 }
 			}
 		}
 	}

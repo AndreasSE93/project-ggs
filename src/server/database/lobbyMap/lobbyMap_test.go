@@ -47,7 +47,7 @@ func joinRooms(clientIDChan chan int, lm *LobbyMap) {
 }
 
 func TestHost(t *testing.T) {
-	lm := Init(database.New())
+	lm := New(database.New())
 
 	gid := make(chan int)
 	go genID(gid)

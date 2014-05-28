@@ -12,17 +12,15 @@ import javax.swing.JOptionPane;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import packageManaging.ChatMessageEncoder;
+
+import packageManaging.Encoder;
 import packageManaging.KickMessage;
-import packageManaging.KickMessageEncoder;
 import packageManaging.Message;
 import packageManaging.StageFlipper;
-import packageManaging.TiarStartableMessage;
-import packageManaging.TiarStartableMessageEncoder;
-import packageManaging.TiarStartedMessage;
-import packageManaging.TiarStartedMessageEncoder;
+import packageManaging.StartableMessage;
+import packageManaging.StartedMessage;
 import packageManaging.TiarUserMessage;
-import packageManaging.TiarUserMessageEncoder;
+
 
 import tiar.TiarGUI;
 import clientNetworking.NetManager;
@@ -32,11 +30,9 @@ import clientNetworking.NetManager;
 public class TiarHandler implements HandlerInterface, ActionListener, MouseListener {
 	NetManager network;
 	TiarGUI tg;
-	ChatMessageEncoder cme = new ChatMessageEncoder();
-	TiarUserMessageEncoder tume = new TiarUserMessageEncoder();
-	TiarStartableMessageEncoder tsme = new TiarStartableMessageEncoder();
-	TiarStartedMessageEncoder tiStarter = new TiarStartedMessageEncoder();
-	KickMessageEncoder kEnc = new KickMessageEncoder();
+
+	
+	Encoder enc = new Encoder();
 	StageFlipper saveMsg;
 	int Player;
 	final String userName;
@@ -72,6 +68,7 @@ public class TiarHandler implements HandlerInterface, ActionListener, MouseListe
 	
 	public StageFlipper runTicTac() {
 		if(saveMsg != null) {
+			@SuppressWarnings("unused")
 			StageFlipper startup = saveMsg;
 			//Use the message when starting gameroom
 			saveMsg = null;
@@ -95,13 +92,12 @@ public class TiarHandler implements HandlerInterface, ActionListener, MouseListe
 		switch (id) {
 		
 		case 100: // Chat message
-			System.out.println(message);
-			Message chatMessage = cme.decode(message);
+			Message chatMessage = enc.chattMessageDecode(message);
 			tg.chat.chatUpdate(chatMessage.message, chatMessage.user);
 			break;
 		
 		case 201: // Move message
-			TiarUserMessage mess = tume.decode(message);
+			TiarUserMessage mess = enc.tiarUserMessageDecode(message);
 			if (this.started) {
 				if (mess.isValid == 1) {
 					tg.updateGameBoard(mess.Gameboard);
@@ -122,20 +118,19 @@ public class TiarHandler implements HandlerInterface, ActionListener, MouseListe
 			break;
 			
 		case 202:
-			TiarStartableMessage tsm = tsme.decode(message);
+			StartableMessage tsm = enc.startebleMessageDecode(message);
 			this.startable = tsm.isStartable;
 			break;
 			
 		case 203:
-			TiarStartedMessage startedGame = tiStarter.decode(message);
+			StartedMessage startedGame = enc.startedMessageDecode(message);
 			this.started = startedGame.started;
 			this.Player = startedGame.playerID;
-			System.out.println("STARTEDMESSAGE" + this.Player);
+			
 			break;
 			
 		case 404:
-			System.out.println("kickM");
-			this.saveMsg = new StageFlipper(kEnc.decode(message));
+			this.saveMsg = new StageFlipper(enc.kickMessageDecode(message));
 			this.loop = false;
 			break;
 
@@ -174,7 +169,7 @@ public class TiarHandler implements HandlerInterface, ActionListener, MouseListe
 		case "chatmessage": // JTextField
 			try {
 
-				JSONtext = cme.encode(new Message(tg.chat.field.getText(),
+				JSONtext = enc.encode(new Message(tg.chat.field.getText(),
 						tg.chat.userName));
 				tg.chat.field.setText("");
 				sendMessage(JSONtext);
@@ -185,7 +180,7 @@ public class TiarHandler implements HandlerInterface, ActionListener, MouseListe
 		case "startButton":
 			if(startable){
 				try {
-					JSONtext = tiStarter.encode(new TiarStartedMessage());
+					JSONtext = enc.encode(new StartedMessage());
 					sendMessage(JSONtext);
 				} catch (JSONException e1) {
 					// TODO Auto-generated catch block
@@ -198,8 +193,7 @@ public class TiarHandler implements HandlerInterface, ActionListener, MouseListe
 		case "kick":
 			
 				try {
-					JSONtext = kEnc.encode(new KickMessage());
-					System.out.println("Sending kick");
+					JSONtext = enc.encode(new KickMessage());
 					sendMessage(JSONtext);
 				} catch (JSONException e1) {
 					// TODO Auto-generated catch block
@@ -225,7 +219,7 @@ public class TiarHandler implements HandlerInterface, ActionListener, MouseListe
 			if (tg.gl.validMove(move, this.Player)) {
 				TiarUserMessage tum = new TiarUserMessage(move, this.Player);
 				try {
-					sendMessage(tume.encode(tum));
+					sendMessage(enc.encode(tum));
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

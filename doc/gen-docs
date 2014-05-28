@@ -1,0 +1,9 @@
+#!/usr/bin/zsh
+DOCS=$PWD/html
+cd ..
+for pkgDir in src/server/**/
+do
+	pkg=`echo $pkgDir |sed 's|^src/\(.*\)/$|\1|'`
+	mkdir -p $DOCS/$pkg || exit
+	godoc -html $pkg >|$DOCS/$pkg/index.htm || exit
+done

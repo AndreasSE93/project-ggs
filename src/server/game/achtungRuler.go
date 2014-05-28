@@ -5,7 +5,7 @@ import(
 	"server/encoders"
 	"server/games"
 	"server/messages"
-	"fmt"
+	//"fmt"
 	"math/rand"
 )
 
@@ -20,14 +20,12 @@ func snakeListener(gameRoom *GameRoom) {
 	}
 	newGameRoom := make(chan messages.RoomData)
 	termChan    := make(chan interface{})
-	fmt.Println(gameRoom.roomData.CS.ClientCount)
 	PlayerArray := games.InitAchtungPlayerArray(gameRoom.roomData.CS.ClientCount, gameRoom.roomData.CS.MaxSize)
 	setNames(gameRoom, PlayerArray)
 	go snakesHandler(PlayerArray, gameRoom, newGameRoom, termChan)
 	for processed := range gameRoom.RuleChan {
 		switch processed.ID {
 		case messages.SNAKES_CLIENT_ID:
-			fmt.Println("ID",processed.Snakes.PlayerID)
 			PlayerArray[processed.Snakes.PlayerID-1] = games.UpdateMoveSnakes(PlayerArray[processed.Snakes.PlayerID-1], processed.Snakes.Move)
 		case messages.JOIN_ID:
 			newGameRoom <- gameRoom.lm.GetRoom(gameRoom.roomData.CS.RoomID)

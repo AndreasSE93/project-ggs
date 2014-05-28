@@ -11,17 +11,13 @@ import javax.swing.JOptionPane;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import packageManaging.HostRoomEncoder;
+import packageManaging.Encoder;
 import packageManaging.KickMessage;
-import packageManaging.KickMessageEncoder;
 import packageManaging.StageFlipper;
-import packageManaging.TiarStartableMessage;
-import packageManaging.TiarStartableMessageEncoder;
-import packageManaging.TiarStartedMessage;
-import packageManaging.TiarStartedMessageEncoder;
+import packageManaging.StartableMessage;
+import packageManaging.StartedMessage;
 
 import snake.SnakeGUI;
-import snake.SnakeMessageEncoder;
 import snake.SnakeServerMessage;
 import snake.SnakeUserMessage;
 
@@ -31,11 +27,7 @@ public class SnakeHandler implements HandlerInterface, KeyListener, ActionListen
 	NetManager network;
 	final String userName;
 	int Player = 2;
-	SnakeMessageEncoder SME = new SnakeMessageEncoder();
-	HostRoomEncoder hre = new HostRoomEncoder();
-	KickMessageEncoder kEnc = new KickMessageEncoder();
-	TiarStartableMessageEncoder tsme = new TiarStartableMessageEncoder();
-	TiarStartedMessageEncoder tiStarter = new TiarStartedMessageEncoder();
+	Encoder enc = new Encoder();
 	StageFlipper saveMsg;
 	SnakeGUI SG;
 	boolean loop = true;
@@ -74,32 +66,31 @@ public class SnakeHandler implements HandlerInterface, KeyListener, ActionListen
 		switch (id) {
 		
 		case 202:
-			TiarStartableMessage tsm = tsme.decode(message);
+			StartableMessage tsm = enc.startebleMessageDecode(message);
 			this.startable = tsm.isStartable;
 			break;
 			
 		case 203:
-			TiarStartedMessage startedGame = tiStarter.decode(message);
+			StartedMessage startedGame = enc.startedMessageDecode(message);
 			this.started = startedGame.started;
 			this.Player = startedGame.playerID;
 			this.SG.achtungPanel.requestFocus();
 			break;
 			
 		case 404:
-			System.out.println("404 kcik");
-			this.saveMsg = new StageFlipper(kEnc.decode(message));
+			
+			this.saveMsg = new StageFlipper(enc.kickMessageDecode(message));
 			this.loop = false;
 			break;
 			
 		case 302: // Recieved updated movements from players, repaint board
-			SnakeServerMessage SSM = SME.decode(message);
+			SnakeServerMessage SSM = enc.snakeServerMessageDecode(message);
 			this.SG.achtungPanel.requestFocus();
 			if(!SSM.clearBoard)
 			SG.repaint(SSM.Players);
 				
 			else{
 			SG.renderNewGame();
-			System.out.println(SSM.hasWon);
 			if (SSM.hasWon){
 				JOptionPane.showMessageDialog(null, SSM.winnerName + " has won!", "WinnerWinnerChickenDinner", JOptionPane.INFORMATION_MESSAGE);
 				
@@ -157,7 +148,7 @@ public class SnakeHandler implements HandlerInterface, KeyListener, ActionListen
 		SnakeUserMessage SUM = new SnakeUserMessage(Player, keyEvent);
 
 		try {
-			sendMessage(SME.encodeSnakeUserMessage(SUM));
+			sendMessage(enc.encode(SUM));
 		} catch (JSONException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -185,26 +176,28 @@ public class SnakeHandler implements HandlerInterface, KeyListener, ActionListen
 		case "startButton":
 		if(startable){
 			try {
-				JSONtext = tiStarter.encode(new TiarStartedMessage());
+				JSONtext = enc.encode(new StartedMessage());
 
 				sendMessage(JSONtext);
+				
 			} catch (JSONException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			
 			
-		}
+		} break;
 		
 		case "kick":
 			try {
-				JSONtext = kEnc.encode(new KickMessage());
-				//aJOsSystem.out.println(JSONtext);
+				JSONtext = enc.encode(new KickMessage());
 				sendMessage(JSONtext);
 			} catch (JSONException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
-			}
+			
+			}break;
+			
 		
 			
 		

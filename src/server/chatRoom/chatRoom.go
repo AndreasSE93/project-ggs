@@ -9,8 +9,8 @@ import (
 	"server/encoders"
 )
 
-// Channels for sending requests to receiver.
 type ChatRoom struct {
+	// Channels for sending requests to receiver.
 	add chan connection.Connector
 	del chan int
 	collectMsg chan messages.ProcessedMessage

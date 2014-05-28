@@ -6,8 +6,8 @@ import javax.swing.JOptionPane;
 
 import org.json.JSONException;
 
+import packageManaging.Encoder;
 import packageManaging.InitializeClientMessage;
-import packageManaging.InitializeClientMessageEncoder;
 import packageManaging.StageFlipper;
 
 import clientHandlers.LobbyHandler;
@@ -34,7 +34,7 @@ public class Monitor {
 
 	public void init() {
 
-		this.conn = new Connection("130.243.137.81", 8080);
+		this.conn = new Connection("130.243.137.68", 8080);
 
 		this.net = new NetManager(conn);
 		try {
@@ -49,10 +49,10 @@ public class Monitor {
 				return;
 			}
 			InitializeClientMessage icm = new InitializeClientMessage(userName);
-			InitializeClientMessageEncoder icme = new InitializeClientMessageEncoder();
+			Encoder enc = new Encoder();
 			String mess;
 			try {
-				mess = icme.encode(icm);
+				mess = enc.encode(icm);
 				net.send(mess);
 			} catch (JSONException e) {
 				JOptionPane.showMessageDialog(null, "Can't connect to server!",
@@ -71,7 +71,6 @@ public class Monitor {
 	public void Tick() {
 		while (true) {
 			if (this.stage == 1) {
-				System.out.println("eneter stat 1");
 				this.LH = new LobbyHandler(net, userName);
 				StageFlipper passOn = LH.init(new StageFlipper());
 				stop(passOn);
@@ -101,7 +100,6 @@ public class Monitor {
 			}
 
 		} else if (flipper.packageID == 404) {
-			System.out.println("Sate 1");
 			this.stage = 1;
 		} else {
 			System.out

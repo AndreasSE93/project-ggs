@@ -3,7 +3,6 @@ package lobbyManager
 import (
 	"fmt"
 	"server/connection"
-	"server/database/lobbyMap"
 	"server/messages"
 )
 
@@ -13,7 +12,7 @@ func ReqHost(hostNew messages.HostNew, clientInfo ClientCore) (hostedRoom messag
 			err = fmt.Errorf("%v", rec)
 		}
 	}()
-	rd := lobbyMap.GetEmptyRoomData()
+	rd := messages.RoomData{}
 	rd.CS.RoomID = -1
 	rd.CS.ClientCount = 1
 	rd.CS.RoomName = hostNew.RoomName
