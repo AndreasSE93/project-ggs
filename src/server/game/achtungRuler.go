@@ -48,7 +48,12 @@ func setNames (gameRoom *GameRoom, pA []messages.Player){
 	}
 
 }
+func resetScore (gameRoom *GameRoom, pA []messages.Player){
+	for i := 0; i < len(pA); i++ {
+		pA[i].Score = 0
+	}
 
+}
 func findSmallestID(pA []messages.Player) int {
 
 	for player:= range pA {
@@ -101,17 +106,18 @@ func snakesHandler(pA []messages.Player, gameRoom *GameRoom, newGameRoom chan me
 		gameRoom.SendMult <- msg
 		
 		if clear {
-			/*hasWon, WinnerName := games.WinnerWinnerChickenDinner(pA)
+			hasWon, WinnerName := games.WinnerWinnerChickenDinner(pA)
 			if hasWon {
 				msg.message = encoders.EncodeSnakeMessage(messages.SNAKES_MOVES_ID, pA, clear, hasWon, WinnerName)
 				msg.conn = gameRoom.roomData.CS.Clients
 				gameRoom.SendMult <- msg
-				pA =  games.InitAchtungPlayerArray(gameRoom.roomData.CS.ClientCount, gameRoom.roomData.CS.MaxSize)
+			//	pA =  games.InitAchtungPlayerArray(gameRoom.roomData.CS.ClientCount, gameRoom.roomData.CS.MaxSize)
+			
 				setNames(gameRoom, pA)
+				resetScore(gameRoom, pA)
 				
 				
-				
-			}*/
+			}
 			Time = 0
 			time.Sleep(3 * time.Second)
 		
