@@ -2,7 +2,6 @@
 package lobbyMap
 
 import (
-	"fmt"
 	"server/connection"
 	"server/database"
 	"server/messages"
@@ -91,7 +90,6 @@ func refreshShadow(sendBack chan []messages.RoomData, hostCollection map[int]mes
 		giant[i] = hostCollection[m]
 		i++
 	}
-	fmt.Printf("\nHOST COLLECTION: %+v\n\n", hostCollection)
 	sendBack <- giant[0:i]
 }
 
