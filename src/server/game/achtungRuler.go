@@ -114,10 +114,19 @@ func snakesHandler(pA []messages.Player, gameRoom *GameRoom, newGameRoom chan me
 			//	pA =  games.InitAchtungPlayerArray(gameRoom.roomData.CS.ClientCount, gameRoom.roomData.CS.MaxSize)
 			
 				setNames(gameRoom, pA)
-				resetScore(gameRoom, pA)
-				
+				resetScore(gameRoom, pA)	
+				pA = games.UpdateAllMovesSnakes(pA, gameBoard, Time, skip)
+				games.DoMove(pA, gameBoard, Time, skip)
+				msg.message = encoders.EncodeSnakeMessage(messages.SNAKES_MOVES_ID, pA, false, false, "")
+				msg.conn = gameRoom.roomData.CS.Clients
+				gameRoom.SendMult <- msg
 				
 			}
+			pA = games.UpdateAllMovesSnakes(pA, gameBoard, Time, skip)
+			//games.DoMove(pA, gameBoard, Time, skip)
+			msg.message = encoders.EncodeSnakeMessage(messages.SNAKES_MOVES_ID, pA, false, false, "")
+			msg.conn = gameRoom.roomData.CS.Clients
+			gameRoom.SendMult <- msg
 			Time = 0
 			time.Sleep(3 * time.Second)
 		
