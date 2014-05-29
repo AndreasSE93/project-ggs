@@ -69,11 +69,9 @@ public class Monitor {
 				JOptionPane.showMessageDialog(null, "Can't connect to server!",
 						"Warning", JOptionPane.ERROR_MESSAGE);
 			}
-			//this.LH = new LobbyHandler(net, userName);
 			this.stage = 1;
 			Tick();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

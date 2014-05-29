@@ -8,6 +8,8 @@ import java.io.IOException;
 
 import javax.swing.JOptionPane;
 
+
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -22,6 +24,8 @@ import snake.SnakeServerMessage;
 import snake.SnakeUserMessage;
 
 import clientNetworking.NetManager;
+
+/* Handler and initializer for a Achtung Die Kurve game */
 
 public class SnakeHandler implements HandlerInterface, KeyListener, ActionListener {
 	NetManager network;
@@ -97,6 +101,8 @@ public class SnakeHandler implements HandlerInterface, KeyListener, ActionListen
 			}
 				}
 			if (SG.nameSet == 0)
+				
+				
 			SG.setNames(SSM);
 			
 			break;
@@ -150,7 +156,6 @@ public class SnakeHandler implements HandlerInterface, KeyListener, ActionListen
 		try {
 			sendMessage(enc.encode(SUM));
 		} catch (JSONException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		}
@@ -158,13 +163,13 @@ public class SnakeHandler implements HandlerInterface, KeyListener, ActionListen
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
+
 
 	}
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
+
 
 	}
 
@@ -181,7 +186,6 @@ public class SnakeHandler implements HandlerInterface, KeyListener, ActionListen
 				sendMessage(JSONtext);
 				
 			} catch (JSONException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			
@@ -193,7 +197,6 @@ public class SnakeHandler implements HandlerInterface, KeyListener, ActionListen
 				JSONtext = enc.encode(new KickMessage());
 				sendMessage(JSONtext);
 			} catch (JSONException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			
 			}break;
@@ -201,6 +204,8 @@ public class SnakeHandler implements HandlerInterface, KeyListener, ActionListen
 		
 			
 		
+			
+			
 		
 			
 		default:

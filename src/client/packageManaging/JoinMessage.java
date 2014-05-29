@@ -6,7 +6,7 @@ public class JoinMessage {
 	public String GameType, GameName;
 	
 	
-	/* NOT DONE YET */
+
 	
 	public JoinMessage() {
 		

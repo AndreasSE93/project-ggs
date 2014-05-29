@@ -103,7 +103,7 @@ public class TiarGUI extends GameLogic {
 		
 		ImagePanel gameBoard = new ImagePanel();
 		gameBoard.setLayout(new GridLayout(3,3));
-		//gameBoard.setVisible(true);
+		
 
 
 		gameBoard.setBorder(new EmptyBorder(10,10,10,10));
@@ -163,7 +163,7 @@ public class TiarGUI extends GameLogic {
 				img1 = ImageIO.read(imageCross);
 				img2 = ImageIO.read(imageCircle);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			}
 		
@@ -255,9 +255,7 @@ public class TiarGUI extends GameLogic {
 
 	class ImagePanel extends JPanel{
 
-	    /**
-		 * 
-		 */
+	 
 		private static final long serialVersionUID = 1L;
 		private BufferedImage image;
 

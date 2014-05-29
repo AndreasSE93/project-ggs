@@ -11,7 +11,7 @@ import snake.SnakeUserMessage;
 
 /* 							 CLASS SPECIFICATION 
  *        Encoders (Client -> Server) and decoders (Server -> client) for JSON messages sent by and to the server
- *        Each message will have a specified ID to know what type of message is being sent and recieved to server.
+ *        Each message will have a specified ID to know what type of message is being sent and received to-from server.
  *        
  *        ID Specification list:
  *        
