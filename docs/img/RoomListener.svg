@@ -14,7 +14,10 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.48.4 r9939"
-   sodipodi:docname="RoomListener.svg">
+   sodipodi:docname="RoomListener.svg"
+   inkscape:export-filename="/home/petter/skola/OSM/OSM/projekt/docs/img/RoomListener.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
   <defs
      id="defs4">
     <marker
@@ -41,7 +44,7 @@
      inkscape:pageshadow="2"
      inkscape:zoom="1.3249068"
      inkscape:cx="278.48686"
-     inkscape:cy="274.96972"
+     inkscape:cy="305.16052"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -71,6 +74,11 @@
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(-8.2821194,1.2407449)">
+    <path
+       style="fill:none;stroke:#0000ff;stroke-width:4;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#TriangleOutS)"
+       d="M 587.1805,486.84443 157.01412,403.08517"
+       id="path7124"
+       inkscape:connector-curvature="0" />
     <path
        style="fill:#ff6600;stroke:#ff6600;stroke-width:4;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
        d="M 389.56901,256.02304 667.82312,455.78107"
@@ -436,5 +444,10 @@
          x="492.86484"
          y="243.86037"
          id="tspan3970">     with four players</tspan></text>
+    <path
+       style="fill:none;stroke:#0000ff;stroke-width:4;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#TriangleOutS)"
+       d="M 582.01935,475.64511 344.00888,417.13018"
+       id="path6940"
+       inkscape:connector-curvature="0" />
   </g>
 </svg>
