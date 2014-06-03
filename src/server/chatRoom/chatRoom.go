@@ -50,7 +50,6 @@ func sender(outgoing chan send) {
 	for msg := range outgoing {
 		for _, e := range msg.shadow {
 			conn := e.(connection.Connector)
-			fmt.Println(conn.UserName)
 			conn.Connection.Write([]byte(encoders.EncodeChatMessage(msg.msg.ChatM, msg.msg.Origin) + "\n"))
 		}
 	}

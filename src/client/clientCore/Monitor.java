@@ -33,8 +33,19 @@ public class Monitor {
 
 
 	public void init() {
-
-		this.conn = new Connection("130.243.137.68", 8080);
+	String serverConnectStr = "Enter server: ";
+		while (true) {
+			String hostStr = JOptionPane.showInputDialog(serverConnectStr, Connection.DEFAULT_HOST + ":" + String.valueOf(Connection.DEFAULT_PORT));
+			if (hostStr == null) {
+				return;
+			}
+			try {
+				this.conn = new Connection(hostStr);
+				break;
+			} catch (NumberFormatException e) {
+				serverConnectStr = "Invalid port. Enter server:";
+			}
+		}
 
 		this.net = new NetManager(conn);
 		try {
@@ -58,11 +69,9 @@ public class Monitor {
 				JOptionPane.showMessageDialog(null, "Can't connect to server!",
 						"Warning", JOptionPane.ERROR_MESSAGE);
 			}
-			//this.LH = new LobbyHandler(net, userName);
 			this.stage = 1;
 			Tick();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

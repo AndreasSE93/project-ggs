@@ -94,8 +94,7 @@ func ActivateReceiver(messageProcessing chan messages.ProcessedMessage, client c
 
 // ActivateSender sends a JSON package to the client.
 func ActivateSender(serverTerminal chan string, client connection.Connector) {
-	for {
-		jsonString := <- serverTerminal
+	for jsonString := range serverTerminal {
 		//fmt.Printf("Sending to client %d: %s\n", client.ConnectorID, jsonString)
 		client.Connection.Write([]byte(jsonString + "\n"))
 	}
@@ -111,6 +110,7 @@ func ClientListener(lm *lobbyMap.LobbyMap, db *database.Database, client connect
 	processedChan := make(chan messages.ProcessedMessage)
 
 	finJSON := make(chan string)
+	defer close(finJSON)
 	
 	go ActivateReceiver(processedChan, core.client)
 	go ActivateSender(finJSON, core.client)
@@ -125,6 +125,7 @@ func ClientListener(lm *lobbyMap.LobbyMap, db *database.Database, client connect
 	cr.Connect(client)
 
 	lobbyChan := make(chan messages.ProcessedMessage)
+	defer close(lobbyChan)
 	gameChan := lobbyChan
 	go receiveLobbyChat(lobbyChan, cr)
 

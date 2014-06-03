@@ -16,7 +16,7 @@ JAVAC=javac -d $(CLIENT_BIN_PATH) -sourcepath $(CLIENT_SRC_PATH)
 all: server
 
 
-.PHONY: all server ./bin/server client $(CLIENT_BIN_PATH)/%.class runserver runclient docs fmt clean package
+.PHONY: all server ./bin/server client $(CLIENT_BIN_PATH)/%.class runserver runclient docs tests fmt clean package
 
 
 # Executables
@@ -45,6 +45,10 @@ runclient: client
 docs:
 	@echo 'Hosting documentation on "http://localhost:8050/pkg/server/":'
 	godoc -index -http=':8050'
+
+tests:
+	go test server/database
+	go test server/database/lobbyMap
 
 
 # Maintenance

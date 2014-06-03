@@ -2,7 +2,6 @@
 package lobbyMap
 
 import (
-	//"fmt"
 	"server/connection"
 	"server/database"
 	"server/messages"
@@ -77,6 +76,9 @@ func joinRoom(associate joiner, lm *LobbyMap, hostCollection map[int]messages.Ro
 
 // Deletes the room.
 func deleteRoom(RoomID int, hostCollection map[int]messages.RoomData) {
+	if gameChan := hostCollection[RoomID].SS.GameChan; gameChan != nil {
+		close(gameChan)
+	}
 	delete(hostCollection, RoomID)
 }
 

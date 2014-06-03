@@ -1,7 +1,6 @@
 package packageManaging;
 
 
-/* Might need more variables */
 
 public class TiarUserMessage {
 

@@ -134,7 +134,7 @@ public class TiarHandler implements HandlerInterface, ActionListener, MouseListe
 			this.loop = false;
 			break;
 
-		default: // Should not come here
+		default: 
 			System.out.println(id + "\nstring: " + message);
 			break;
 
@@ -183,7 +183,6 @@ public class TiarHandler implements HandlerInterface, ActionListener, MouseListe
 					JSONtext = enc.encode(new StartedMessage());
 					sendMessage(JSONtext);
 				} catch (JSONException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 				
@@ -196,7 +195,6 @@ public class TiarHandler implements HandlerInterface, ActionListener, MouseListe
 					JSONtext = enc.encode(new KickMessage());
 					sendMessage(JSONtext);
 				} catch (JSONException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 				
@@ -221,7 +219,6 @@ public class TiarHandler implements HandlerInterface, ActionListener, MouseListe
 				try {
 					sendMessage(enc.encode(tum));
 				} catch (JSONException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -233,25 +230,25 @@ public class TiarHandler implements HandlerInterface, ActionListener, MouseListe
 
 	@Override
 	public void mouseEntered(MouseEvent arg0) {
-		// TODO Auto-generated method stub
+
 
 	}
 
 	@Override
 	public void mouseExited(MouseEvent arg0) {
-		// TODO Auto-generated method stub
+
 
 	}
 
 	@Override
 	public void mousePressed(MouseEvent arg0) {
-		// TODO Auto-generated method stub
+
 
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent arg0) {
-		// TODO Auto-generated method stub
+
 
 	}
 

@@ -121,7 +121,7 @@ public class SnakeGUI {
 			playerScores[i].setBackground(Color.gray.darker());
 			
 
-			
+			      
 			Color clr = new Color(ColorArray[i]);
 			playerScores[i].setForeground(clr);
 			panelScores.add(playerScores[i]);
