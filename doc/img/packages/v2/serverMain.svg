@@ -312,7 +312,7 @@
              height="41"
              x="438.5"
              y="200" /></flowRegion><flowPara
-           id="flowPara3264"></flowPara></flowRoot>    </g>
+           id="flowPara3264" /></flowRoot>    </g>
     <path
        inkscape:connector-curvature="0"
        id="path3268"
@@ -321,8 +321,8 @@
     <path
        inkscape:connector-curvature="0"
        id="path3270"
-       d="m -761.14612,506.86218 30.53815,0"
-       style="fill:none;stroke:#000000;stroke-width:1.99999988;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:3.99999995, 3.99999995;stroke-dashoffset:0;marker-start:none;marker-end:url(#EmptyTriangleOutM)"
-       sodipodi:nodetypes="cc" />
+       d="m -739.93292,579.6764 25.79551,0 0,-39.8381"
+       style="fill:none;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:3.99999991, 3.99999991;stroke-dashoffset:0;marker-start:none;marker-end:url(#EmptyTriangleOutM)"
+       sodipodi:nodetypes="ccc" />
   </g>
 </svg>
