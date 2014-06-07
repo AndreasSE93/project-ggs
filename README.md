@@ -1,45 +1,24 @@
-Project
-=======
+Project GGS
+===========
 
-* PROJEKTRAPPORT
-  * [GGS - Projektrapport](https://docs.google.com/document/d/1iZoRp350gvUfxcr-iesviBv2d8UuIjbj-WgcRntKAYU/edit?usp=sharing)
-* GOLANG DOCUMENTATION 
-  * [Documentation Root](http://golang.org/doc/)
+This is a go on trying to implement a multiplayer game server in
+[Go](http://golang.org/). It is desinged for concurrency and the ability to
+easily implement more games on the server with as much ease as possible.
 
-* GOLANG BLOG
-  * [Slices](http://blog.golang.org/slices)
-  * [GO profiling routines](http://blog.golang.org/profiling-go-programs)
+It currently has two games implemented:
+[Tic-tac-toe](https://en.wikipedia.org/wiki/Tic-tac-toe) and
+[Achtung, die Kurve!](https://en.wikipedia.org/wiki/Achtung,_die_Kurve!).
+A simple Java based client is available for both of those games.
 
-* GO PACKAGES LIBRARY
-  * [Packages Root](http://golang.org/pkg/)
+Installation
+------------
 
-* Languages
-  * Go (server)
-  * Java (client-side, GUI)
-* [Trello board](https://trello.com/b/tPu9UPz6/osm) for organization
+The server and client can be compiled and run using `make`.
 
-Design patterns
----------------
-
-* Model View Controller
-
-Server
-------
-* Ideas
-  * Create a simple server package for our implementation?
-
-Stage 1:
-* Be able to start a generic game server. 
-* Communication to processes/clients to the right client using Go
-* Create clients
-
-Client
-------
-
-* Communication to the server
-
-
-
-Thinking
-------
-*  [One way of seeing a problem](https://groups.google.com/forum/#!topic/golang-nuts/I5jajojO10o)
+Command          | Action
+---------------- | ----------------------------------------
+`make runserver` | Runs the server
+`make runclient` | Runs the client
+`make test`      | Runs test cases
+`make docs`      | Starts documentation server on port 8050
+`make clean`     | Cleans up generated binary files
