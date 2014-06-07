@@ -11,12 +11,10 @@ export CLASSPATH=$(CLIENT_BIN_PATH):$(CLIENT_SRC_PATH)/org.json-20120521.jar
 JAVAC=javac -d $(CLIENT_BIN_PATH) -sourcepath $(CLIENT_SRC_PATH)
 
 
-.DEFAULT:
-.PHONY:
 all: server
 
 
-.PHONY: all server ./bin/server client $(CLIENT_BIN_PATH)/%.class runserver runclient docs tests fmt clean package
+.PHONY: all server ./bin/server client $(CLIENT_BIN_PATH)/%.class runserver runclient docs tests fmt clean package archive
 
 
 # Executables
@@ -68,5 +66,9 @@ project-ggs.tar.bz2: clean
 
 project-ggs-%.tar.bz2: clean
 	git archive --prefix="project-ggs-$*/" -o "project-ggs-$*.tar.gz" "$*"
+
+
+archive: clean
+	tar -c --force-local -f `date +'OSM_2014_group_08_final_deliverable__%F__%T__.tar.gz'` --gzip .
 
 
