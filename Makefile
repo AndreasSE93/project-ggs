@@ -28,6 +28,7 @@ server: ./bin/server
 client: $(CLIENT_BIN_PATH)/clientCore/Core.class
 
 $(CLIENT_BIN_PATH)/%.class: $(CLIENT_SRC_PATH)/%.java
+	mkdir -p $(CLIENT_BIN_PATH)
 	@echo "javac ... $<"
 	@$(JAVAC) $<
 
