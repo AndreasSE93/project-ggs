@@ -63,13 +63,9 @@ clean:
 package: project-ggs.tar.bz2
 
 project-ggs.tar.bz2: clean
-	git archive --prefix=project-ggs/ -o project-ggs.tar.gz master
+	git archive --prefix=project-ggs/ -o project-ggs.tar.bz2 master
 
 project-ggs-%.tar.bz2: clean
-	git archive --prefix="project-ggs-$*/" -o "project-ggs-$*.tar.gz" "$*"
-
-
-archive: clean
-	tar -c --force-local -f `date +'OSM_2014_group_08_final_deliverable__%F__%T__.tar.gz'` --gzip .
+	git archive --prefix="project-ggs-$*/" -o "project-ggs-$*.tar.bz2" "$*"
 
 
